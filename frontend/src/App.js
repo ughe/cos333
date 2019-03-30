@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import IdeaSummary from 'IdeaSummary';
 
 class App extends Component {
   render() {
