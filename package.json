@@ -10,8 +10,8 @@
     "start": "cd frontend && node scripts/start.js",
     "build": "cd frontend && node scripts/build.js",
     "test": "cd frontend && node scripts/test.js",
-    "storybook": "cd frontend && start-storybook -p 6006",
-    "build-storybook": "cd frontend && build-storybook",
+    "storybook": "cd frontend && yarn storybook",
+    "build-storybook": "cd frontend && yarn build-storybook",
     "postinstall": "cd frontend && yarn && cd ../backend && yarn"
   },
   "browserslist": [
