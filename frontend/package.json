@@ -1,5 +1,5 @@
 {
-  "name": "tiger-app",
+  "name": "tiger-teams",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
@@ -115,10 +115,6 @@
       "web.jsx",
       "jsx",
       "node"
-    ],
-    "watchPlugins": [
-      "/home/wughetta/workspace/333cos/app/node_modules/jest-watch-typeahead/filename.js",
-      "/home/wughetta/workspace/333cos/app/node_modules/jest-watch-typeahead/testname.js"
     ]
   },
   "babel": {
