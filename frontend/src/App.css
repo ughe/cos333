@@ -2,22 +2,40 @@
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 15vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(30px + 2vmin);
   color: white;
 }
+
+.App-IdeaBox {
+  padding-top: 3vh;
+  max-width: 120vh;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.App-IdeaBox-Header {
+  background-color: orange;
+  min-height: 10vh;
+  padding-top: 5vh;
+  color: black;
+  font-size: calc(20px + 2vmin);
+  justify-content: center;
+}
+
+.App-IdeaBox-Tags button {
+  min-width: 30vh;
+  min-height: 10vh;
+  font-size: calc(10px + 2vmin);
+
+}
+
 
 .App-link {
   color: #61dafb;
