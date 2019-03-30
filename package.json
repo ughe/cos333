@@ -9,7 +9,7 @@
   "scripts": {
     "start": "yarn --cwd backend start",
     "build": "yarn --cwd backend build && yarn --cwd frontend build",
-    "test": "cd --cwd frontend test",
+    "test": "yarn --cwd frontend test",
     "storybook": "yarn --cwd frontend storybook",
     "build-storybook": "yarn --cwd frontend build-storybook",
     "postinstall": "yarn --cwd backend && yarn --cwd frontend"
