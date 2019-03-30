@@ -7,6 +7,6 @@
 ```
 npm install -g yarn
 yarn
-npm start
+yarn start
 ```
 
