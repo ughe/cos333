@@ -7,12 +7,12 @@
     "url": "https://github.com/ughe/cos333.git"
   },
   "scripts": {
-    "start": "cd frontend && yarn start",
-    "build": "cd frontend && yarn build",
-    "test": "cd frontend && yarn test",
-    "storybook": "cd frontend && yarn storybook",
-    "build-storybook": "cd frontend && yarn build-storybook",
-    "postinstall": "cd frontend && yarn && cd ../backend && yarn"
+    "start": "yarn --cwd backend start",
+    "build": "yarn --cwd backend build && yarn --cwd frontend build",
+    "test": "cd --cwd frontend test",
+    "storybook": "yarn --cwd frontend storybook",
+    "build-storybook": "yarn --cwd frontend build-storybook",
+    "postinstall": "yarn --cwd backend && yarn --cwd frontend"
   },
   "browserslist": [
     ">0.2%",
