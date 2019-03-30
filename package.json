@@ -11,7 +11,8 @@
     "build": "cd frontend && node scripts/build.js",
     "test": "cd frontend && node scripts/test.js",
     "storybook": "cd frontend && start-storybook -p 6006",
-    "build-storybook": "cd frontend && build-storybook"
+    "build-storybook": "cd frontend && build-storybook",
+    "postinstall": "cd frontend && yarn && cd ../backend && yarn"
   },
   "browserslist": [
     ">0.2%",
@@ -21,5 +22,9 @@
   ],
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "dependencies": {
+    "tigerteams-backend": "file:backend",
+    "tigerteams-frontend": "file:frontend"
   }
 }
