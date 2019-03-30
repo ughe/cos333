@@ -28,8 +28,8 @@ class App extends Component {
           </div>
         </div>
 
-        <Card> </Card>
-        <Card> </Card>
+        <Card message="MIKE"> </Card>
+        <Card message="Raymond"> </Card>
 
 
       </div>
