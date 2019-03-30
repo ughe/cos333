@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
+  "proxy": "http://localhost:4000",
   "repository": {
     "type": "git",
     "url": "https://github.com/ughe/cos333.git"
@@ -10,7 +11,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "browserslist": [
     ">0.2%",
@@ -31,6 +34,7 @@
     "babel-plugin-named-asset-import": "^0.3.1",
     "babel-preset-react-app": "^7.0.2",
     "bfj": "6.1.1",
+    "bootstrap": "^4.3.1",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "css-loader": "1.0.0",
     "dotenv": "6.0.0",
@@ -121,5 +125,11 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "@storybook/addon-actions": "^5.0.5",
+    "@storybook/addon-links": "^5.0.5",
+    "@storybook/addons": "^5.0.5",
+    "@storybook/react": "^5.0.5"
   }
 }
