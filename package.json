@@ -7,9 +7,9 @@
     "url": "https://github.com/ughe/cos333.git"
   },
   "scripts": {
-    "start": "cd frontend && node scripts/start.js",
-    "build": "cd frontend && node scripts/build.js",
-    "test": "cd frontend && node scripts/test.js",
+    "start": "cd frontend && yarn start",
+    "build": "cd frontend && yarn build",
+    "test": "cd frontend && yarn test",
     "storybook": "cd frontend && yarn storybook",
     "build-storybook": "cd frontend && yarn build-storybook",
     "postinstall": "cd frontend && yarn && cd ../backend && yarn"
@@ -24,6 +24,7 @@
     "extends": "react-app"
   },
   "dependencies": {
+    "react-router-dom": "^5.0.0",
     "tigerteams-backend": "file:backend",
     "tigerteams-frontend": "file:frontend"
   }
