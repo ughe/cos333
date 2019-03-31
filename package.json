@@ -7,7 +7,7 @@
     "url": "https://github.com/ughe/cos333.git"
   },
   "scripts": {
-    "start": "serve -s frontend/build",
+    "start": "yarn --cwd backend start",
     "build": "yarn --cwd frontend build",
     "test": "yarn --cwd frontend test",
     "storybook": "yarn --cwd frontend storybook",
