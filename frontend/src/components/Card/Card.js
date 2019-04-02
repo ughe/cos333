@@ -1,28 +1,109 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import './Card.css';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+/*import CardMedia from '@material-ui/core/CardMedia';*/
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
+import TextField from '@material-ui/core/TextField';
+
+const sampleData = {"Item": {
+        '_id'       : {'S': "0"},
+        'netid'     : {'S': "aboppana"},
+        'title'     : {'S': "Database Title"},
+        'content'   : {'S': "This is a description. This is a description from the database"},
+        'photo_url' : {'S': "blank"},
+        'category'  : {'S': "Entreprenuership"},
+        'comments'  : {'SS' : ["a", "b"]},
+        'score'     : {'S': '3'},
+        'timestamp' : {'S' : "avi"},
+      }
+};
+
+let titles = sampleData["Item"]["title"]["S"];
+let descriptions = sampleData["Item"]["content"]["S"];
+let scores = sampleData["Item"]["score"]["S"];
 
 
-class Card extends Component {
+const styles = {
+  card: {
+    maxWidth: 345,
+    margin: '0 auto',
+  },
+  media: {
+    // ⚠️ object-fit is not supported by IE 11.
+    objectFit: 'cover',
+  },
+  upvote: {
+    color: 'green',
+  },
+  downvote: {
+    color: 'red',
+  },
+  score: {
+    marginLeft: '5px',
+    maxWidth: '50px',
+    textAlign: 'center',
+  },
+};
 
-  	render() {
-		return (
-			<div className="Card"> 
-				<header>
-					<h1>{this.props.message}</h1>
-				</header>
-				<button> Hello </button>
-			</div>
-	);
+
+class IdeaCard extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: this.props.title,
+      description: this.props.description,
+      score: this.props.score,
+    }
+  }
+
+  render () {
+
+    const { classes } = this.props;
+
+    return (
+      <Card className={classes.card}>
+        <CardActionArea>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {this.state.title}
+            </Typography>
+            <Typography component="p">
+              {this.state.description}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+          <Button size="small" color="primary">
+            Discuss
+          </Button>
+          <Button size="small" className = {classes.upvote}>
+            Upvote
+          </Button>
+
+          <Button size="small" className = {classes.downvote}>
+            Downvote
+          </Button>
+
+          <TextField variant = "outlined" className = {classes.score} defaultValue={this.state.score}> 
+          </TextField>
+        </CardActions>
+
+      </Card>
+    );
   }
 }
 
-Card.propTypes = {
-	message: PropTypes.string
-}
+IdeaCard.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
-Card.defaultProps = {
-	message: 'Default'
-}
 
-export default Card;
+export default withStyles(styles)(IdeaCard);
+

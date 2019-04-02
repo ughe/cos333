@@ -4,3 +4,7 @@
 	max-width: 30vh;
 
 }
+
+.upvote {
+	text-decoration-color: red;
+}

@@ -1,9 +1,23 @@
 import React, { Component } from 'react';
 import './App.css';
-import Card from './components/Card/Card';
+import IdeaFeed from './components/IdeaFeed';
+
 
 class App extends Component {
+
+
   render() {
+
+/*
+    const cards = [];
+
+    for(int i = 0; i < 10; i++)
+    {
+      cards.push(<IdeaCard />);
+    }
+    */
+    /*const elements = ["a", "b", "c"]*/
+
     return (
 
       <div className="App">
@@ -27,11 +41,15 @@ class App extends Component {
 
           </div>
         </div>
+        
+        {/*
+        {elements.map((value,index) => {
+          return <IdeaCard title="avi"/>
+        })}
+        */}
 
-        <Card message="MIKE"> </Card>
-        <Card message="Raymond"> </Card>
-
-
+        <IdeaFeed />
+    
       </div>
 
     );
