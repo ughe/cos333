@@ -2,19 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-/*import CardMedia from '@material-ui/core/CardMedia';*/
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import TextField from '@material-ui/core/TextField';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
-import Comment from './comment.svg';
+//import Icon from '@material-ui/core/Icon';
+//import IconButton from '@material-ui/core/IconButton';
+//import Comment from './comment.svg';
 
-
+/*
 const sampleData = {"Item": {
         '_id'       : {'S': "0"},
         'netid'     : {'S': "aboppana"},
@@ -28,10 +28,11 @@ const sampleData = {"Item": {
       }
 };
 
+
 let titles = sampleData["Item"]["title"]["S"];
 let descriptions = sampleData["Item"]["content"]["S"];
 let scores = sampleData["Item"]["score"]["S"];
-
+*/
 
 const styles = theme => ({
   card: {
@@ -62,6 +63,9 @@ const styles = theme => ({
     color: '#123456',
     marginLeft: 'auto',
   },
+  media: {
+    height: 140,
+  },
 });
 
 
@@ -73,6 +77,7 @@ class IdeaCard extends React.Component {
       title: this.props.title,
       description: this.props.description,
       score: this.props.score,
+      url: this.props.url,
     }
   }
 
@@ -83,12 +88,6 @@ class IdeaCard extends React.Component {
     return (
       <Card className={classes.card}>
       
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"/>
-        
-        <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
-
-
         <CardActionArea>
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
@@ -98,24 +97,15 @@ class IdeaCard extends React.Component {
               {this.state.description}
             </Typography>
           </CardContent>
+
+          <CardMedia
+            className={classes.media}
+            image= {this.state.url} 
+            title="Contemplative Reptile"
+          /> 
+
         </CardActionArea>
         <CardActions>
-
-          <IconButton className={classes.buttonUp} aria-label="arrow_upward">
-            <i className="material-icons">
-              arrow_upward
-            </i>
-          </IconButton>
-
-          <IconButton className={classes.buttonDown} aria-label="arrow_downward">
-            <i className="material-icons">
-              arrow_downward
-            </i>
-          </IconButton>
-
-          <IconButton className={classes.buttonMsg} aria-label="comment">
-            <i className="icon ion-md-text"></i>
-          </IconButton>
 
         </CardActions>
 
