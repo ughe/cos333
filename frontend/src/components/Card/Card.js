@@ -10,9 +10,9 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import TextField from '@material-ui/core/TextField';
-//import Icon from '@material-ui/core/Icon';
-//import IconButton from '@material-ui/core/IconButton';
-//import Comment from './comment.svg';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import Comment from './comment.svg';
 
 /*
 const sampleData = {"Item": {
@@ -88,6 +88,12 @@ class IdeaCard extends React.Component {
     return (
       <Card className={classes.card}>
       
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"/>
+        
+        <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
+
+
         <CardActionArea>
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
@@ -106,6 +112,22 @@ class IdeaCard extends React.Component {
 
         </CardActionArea>
         <CardActions>
+
+          <IconButton className={classes.buttonUp} aria-label="arrow_upward">
+            <i className="material-icons">
+              arrow_upward
+            </i>
+          </IconButton>
+
+          <IconButton className={classes.buttonDown} aria-label="arrow_downward">
+            <i className="material-icons">
+              arrow_downward
+            </i>
+          </IconButton>
+
+          <IconButton className={classes.buttonMsg} aria-label="comment">
+            <i className="icon ion-md-text"></i>
+          </IconButton>
 
         </CardActions>
 
