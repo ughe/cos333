@@ -1,7 +1,7 @@
 .Card {
 	background-color: orange;
-	min-width: 30vh;
-	max-width: 30vh;
+	min-width: 200pt;
+	max-width: 400pt;
 
 }
 

@@ -40,7 +40,7 @@ function FormRow(props) {
         <IdeaCard title={titles} description = {descriptions} score = {scores} />
       </Grid>
       <Grid item xs={4}>
-        <IdeaCard />
+        <IdeaCard title ="like"/>
       </Grid>
       <Grid item xs={4}>
         <IdeaCard />
