@@ -7,7 +7,7 @@
     "url": "https://github.com/ughe/cos333.git"
   },
   "scripts": {
-    "start": "yarn --cwd backend start && npm run open",
+    "start": "yarn --network-timeout 100000 && yarn --cwd frontend build && yarn --cwd backend start",
     "build": "yarn --cwd frontend build",
     "test": "yarn --cwd frontend test",
     "storybook": "yarn --cwd frontend storybook",
