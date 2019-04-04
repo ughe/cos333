@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import "./w3.css";
 import './App.css';
 import IdeaFeed from './components/IdeaFeed';
+import IdeaCard from './components/Card/Card'
 
 
 class App extends Component {
@@ -20,36 +22,44 @@ class App extends Component {
 
     return (
 
+
+
       <div className="App">
-        <header className="App-header">
-          Tiger Teams
-        </header>
 
-        <div className="App-IdeaBox">
-          <header className="App-IdeaBox-Header">
-            Idea Box
-          </header>
+        {/* TOP BAR */}
+        <div>
+          <div className="w3-bar w3-white w3-wide w3-padding w3-card w3-large">
 
-          <div className="App-IdeaBox-Tags">
-            <button> Entreprenership </button>
-            <button> Initiatives </button>
-            <button> Apps </button>
-            <button> Random </button>
-          </div>
+            <a href="#home" className="w3-bar-item w3-button">Tiger<b>TEAMS</b></a>
 
-          <div className="App-IdeaBox-Box">
+            <div className="w3-bar-item w3-hide-small w3-right">
+              <a href="#about" className="w3-bar-item w3-button">About</a>
+            </div>
+
+            <form className="w3-bar-item search-container center">
+                <input type="text" id="search-bar" placeholder="..."/>
+                <a href="#"><img className="search-icon" 
+                src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"/></a>
+            </form>
 
           </div>
         </div>
-        
-        {/*
-        {elements.map((value,index) => {
-          return <IdeaCard title="avi"/>
-        })}
-        */}
 
-        <IdeaFeed />
-    
+        <div>
+          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
+          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
+          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
+          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
+          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
+          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
+          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
+          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
+          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
+          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
+          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
+          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
+        </div>
+
       </div>
 
     );

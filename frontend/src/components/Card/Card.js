@@ -10,6 +10,10 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import TextField from '@material-ui/core/TextField';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import Comment from './comment.svg';
+
 
 const sampleData = {"Item": {
         '_id'       : {'S': "0"},
@@ -29,10 +33,15 @@ let descriptions = sampleData["Item"]["content"]["S"];
 let scores = sampleData["Item"]["score"]["S"];
 
 
-const styles = {
+const styles = theme => ({
   card: {
-    maxWidth: 345,
-    margin: '0 auto',
+    maxWidth: '500px',
+    minWidth: '250px',
+    [theme.breakpoints.down('sm')]: {
+      margin: '10px 2px 2px',
+    },
+    margin: '10px 10px',
+    display: 'inline-block',
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
@@ -49,7 +58,11 @@ const styles = {
     maxWidth: '50px',
     textAlign: 'center',
   },
-};
+  buttonMsg: {
+    color: '#123456',
+    marginLeft: 'auto',
+  },
+});
 
 
 class IdeaCard extends React.Component {
@@ -69,6 +82,13 @@ class IdeaCard extends React.Component {
 
     return (
       <Card className={classes.card}>
+      
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"/>
+        
+        <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
+
+
         <CardActionArea>
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
@@ -80,19 +100,23 @@ class IdeaCard extends React.Component {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
-            Discuss
-          </Button>
-          <Button size="small" className = {classes.upvote}>
-            Upvote
-          </Button>
 
-          <Button size="small" className = {classes.downvote}>
-            Downvote
-          </Button>
+          <IconButton className={classes.buttonUp} aria-label="arrow_upward">
+            <i className="material-icons">
+              arrow_upward
+            </i>
+          </IconButton>
 
-          <TextField variant = "outlined" className = {classes.score} defaultValue={this.state.score}> 
-          </TextField>
+          <IconButton className={classes.buttonDown} aria-label="arrow_downward">
+            <i className="material-icons">
+              arrow_downward
+            </i>
+          </IconButton>
+
+          <IconButton className={classes.buttonMsg} aria-label="comment">
+            <i className="icon ion-md-text"></i>
+          </IconButton>
+
         </CardActions>
 
       </Card>

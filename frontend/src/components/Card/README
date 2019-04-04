@@ -1,0 +1,27 @@
+Author: Mike Hallee
+File: README
+
+
+Experience:
+
+Working with the server to achieve an echo response of a query was pretty easy, 
+and utilizing sqlite wasn't too much of a challenge either.  The hardest part of 
+this first phase was figuring out the structure of the json field and how to 
+query it.  The browser interface was extremely time consuming and challenging 
+for me, though this was more a reflection of what I wanted the site to look
+like, which required a lot of css gymnastics.  I also ran into an issue where I 
+was using the python3 version of a simplehttpserver and it wasn't serving 
+images from the local directory properly, and it wasn't until after quite a 
+while that i gave up trying to figure out why/how to get around it and just
+went to the recomeneded python 2 format. 
+
+Hosting was mostly straightforward after I found a good guide on the heroku 
+website and ironed out some bugs with the file structure it requires and
+the dependencies and dynamically allocated port number.
+
+What I wish I knew:
+
+-doing the css is best with a small library or doing it yourself for an 
+application like this
+-go for the simplest and most functional design: not your own personal dream
+design like I did

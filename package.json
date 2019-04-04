@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "concurrently": "^4.1.0",
+    "material-design-icons": "^3.0.1",
     "serve": "^10.1.2",
     "tigerteams-backend": "file:backend",
     "tigerteams-frontend": "file:frontend"
