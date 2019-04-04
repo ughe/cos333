@@ -7,11 +7,9 @@
     "url": "https://github.com/ughe/cos333.git"
   },
   "scripts": {
-    "start": "yarn --network-timeout 100000 && yarn --cwd frontend build && yarn --cwd backend start",
     "build": "yarn --cwd frontend build",
+    "start": "yarn --cwd frontend build && yarn --cwd backend start",
     "test": "yarn --cwd frontend test",
-    "storybook": "yarn --cwd frontend storybook",
-    "build-storybook": "yarn --cwd frontend build-storybook",
     "postinstall": "yarn --cwd backend && yarn --cwd frontend",
     "heroku-postbuild": "yarn --cwd frontend build"
   },
@@ -25,9 +23,6 @@
     "extends": "react-app"
   },
   "dependencies": {
-    "concurrently": "^4.1.0",
-    "material-design-icons": "^3.0.1",
-    "serve": "^10.1.2",
     "tigerteams-backend": "file:backend",
     "tigerteams-frontend": "file:frontend"
   }
