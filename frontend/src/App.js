@@ -3,6 +3,7 @@ import "./w3.css";
 import './App.css';
 import IdeaFeed from './components/IdeaFeed';
 import IdeaCard from './components/Card/Card'
+import NewPost from './components/NewPost';
 
 
 class App extends Component {
@@ -44,6 +45,19 @@ class App extends Component {
 
           </div>
         </div>
+
+
+        <div>
+          <NewPost/>
+        </div>
+
+
+
+
+
+
+
+
 
         <div>
           <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
