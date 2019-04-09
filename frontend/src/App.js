@@ -3,6 +3,7 @@ import "./w3.css";
 import './App.css';
 import IdeaFeed from './components/IdeaFeed';
 import IdeaCard from './components/Card/Card'
+import NewPost from './components/NewPost';
 
 
 class App extends Component {
@@ -45,6 +46,10 @@ class App extends Component {
           </div>
         </div>
 
+        <div>
+          <NewPost/>
+        </div>
+
         <IdeaFeed/>
         
 
@@ -56,20 +61,12 @@ class App extends Component {
 
 export default App;
 
- /*
-        <div>
-          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
-          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" 
-          url = "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg" />
-          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
-          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
-          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
-          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
-          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
-          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
-          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
-          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
-          <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
-          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
-        </div>
-        */
+
+
+
+
+
+
+
+
+
