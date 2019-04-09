@@ -45,6 +45,18 @@ class App extends Component {
           </div>
         </div>
 
+        <IdeaFeed/>
+        
+
+      </div>
+
+    );
+  }
+}
+
+export default App;
+
+ /*
         <div>
           <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
           + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" 
@@ -60,11 +72,4 @@ class App extends Component {
           <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
           + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" />
         </div>
-
-      </div>
-
-    );
-  }
-}
-
-export default App;
+        */

@@ -31,9 +31,56 @@ const styles = theme => ({
   },
 });
 
-function FormRow(props) {
-  /*const { classes } = props;*/
+const experiment = () => {
+      return <div>
+        <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
+          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" 
+          url = "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg" />
 
+      </div>
+      }
+
+
+class IdeaFeed extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      list: [
+        {
+          title: "Hemp Roads",
+          description: "Hemp-based road paving is an environmentally-friendly and cost-effective technology that has not yet been implemented in the US market." ,
+          score: 55,
+          url: "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg",
+        },
+
+        {
+          title: "Hemp Roads",
+          description: "Hemp-based road paving is an environmentally-friendly and cost-effective technology that has not yet been implemented in the US market." ,
+          score: 55,
+          url: "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg",
+        },
+      ]
+    }
+  }
+
+  render () {
+
+    var elements = this.state.list.map(item => <IdeaCard title={item.title} description={item.description} score={item.score} url={item.url} />)
+
+    return (
+      <div>
+        {elements}
+      </div>
+
+    )
+  }
+}
+
+export default IdeaFeed
+
+//function FormRow(props) {
+  /*const { classes } = props;*/
+/*
   return (
     <React.Fragment>
       <Grid item xs={4}>
@@ -70,5 +117,6 @@ function NestedGrid(props) {
 NestedGrid.propTypes = {
   classes: PropTypes.object.isRequired,
 };
+*/
 
-export default withStyles(styles)(NestedGrid);
+//export default withStyles(styles)(NestedGrid);
