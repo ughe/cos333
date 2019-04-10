@@ -33,9 +33,12 @@ class NewPost extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {id: null}
+    this.state = {
+        id: null,
+      open: false,
     }
   }
+
   handleChange = (event) => {
      this.setState({id: event.target.value});
   }
@@ -44,17 +47,13 @@ class NewPost extends React.Component {
      event.preventDefault();
   }
 
-  state = {
-    open: false,
-  };
-
   handleClickOpen = () => {
     this.setState({ open: true });
-  };
+  }
 
   handleClose = () => {
     this.setState({ open: false });
-  };
+  }
 
   render() {
 
