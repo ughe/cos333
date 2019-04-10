@@ -4,6 +4,7 @@ import './App.css';
 import IdeaFeed from './components/IdeaFeed';
 import IdeaCard from './components/Card/Card'
 import NewPost from './components/NewPost';
+import SortBar from './components/SortBar';
 
 
 class App extends Component {
@@ -46,13 +47,13 @@ class App extends Component {
           </div>
         </div>
 
-        <div>
-          <NewPost/>
+        <div className="w3-bar">
+          <SortBar className="w3-bar-item"/>
+         <NewPost className="w3-bar-item" />
         </div>
 
         <IdeaFeed/>
         
-
       </div>
 
     );
