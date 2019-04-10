@@ -33,8 +33,15 @@ class NewPost extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = {id: null}
     }
+  }
+  handleChange = (event) => {
+     this.setState({id: event.target.value});
+  }
+  handleSubmit = (event) => {
+     //Make a network call somewhere
+     event.preventDefault();
   }
 
   state = {
@@ -71,6 +78,7 @@ class NewPost extends React.Component {
           open={this.state.open}
           onClose={this.handleClose}
           aria-labelledby="form-dialog-title"
+          onSubmit={this.handleSubmit}
         >
           <DialogTitle id="form-dialog-title">New Idea</DialogTitle>
           <DialogContent>
