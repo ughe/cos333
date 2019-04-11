@@ -14,6 +14,11 @@ const Sequelize = require('sequelize');
 const url = require('url');
 const port = process.env.PORT || 4000;
 const app = express();
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({
+  extended: true,
+}));
 
 if (process.env.DEBUG_TRUE) {
   app.set('showStackError', true);
@@ -244,20 +249,19 @@ app.get('/api', (req, res) => res.json({
 app.use('/api/get/user/:netid?', ensureAuth, function(req, res) {
   const netid = req.params.netid;
   const search = (netid) ? {where:{netid:netid}} : {};
-  console.log("CHILLING: " + netid);
   User.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.use('/api/get/idea/:id?', ensureAuth, function(req, res) {
+app.use('/api/get/idea/:id?', function(req, res) {
   const search = (req.params.id) ? {where:{id:req.params.id}} : {};
   Idea.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.use('/api/get/comment/:id?', ensureAuth, function(req, res) {
+app.use('/api/get/comment/:id?', function(req, res) {
   const search = (req.params.id) ? {where:{id:req.params.id}} : {};
   Comment.findAll(search)
   .then(function(data) { res.json(data); })
@@ -274,10 +278,17 @@ app.use('/api/set/user', ensureAuth, function(req, res) {
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.use('/api/set/idea', ensureAuth, function(req, res) {
+app.all('/api', ensureAuth, function(req, res) {
+  next();
+});
+
+app.post('/api/set/idea', function(req, res) {
+  
   const whoami = req.user;
   const netid = req.body.netid;
-  if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+  
+  //TODO RESOLVE BELOW
+  //if (whoami !== netid) {console.log("EarlyReturn"); return res.send('403 permission denied to update: ' + netid); }
 
   const id = req.body.id;
   if (id) {
@@ -307,5 +318,19 @@ app.use('/api/set/comment', ensureAuth, function(req, res) {
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   }
 });
+
+/*
+app.use('/api/del/idea/:id', function(req, res) {
+  Idea.destroy({where: {id: req.params.id,}})
+  .then(function(data) {
+    console.log('SUCCESS!');
+    res.redirect('/');
+  })
+  .catch(function(err) {
+    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
+  });
+});
+
+*/
 
 app.listen(port);

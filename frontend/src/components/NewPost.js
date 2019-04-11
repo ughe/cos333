@@ -34,14 +34,26 @@ class NewPost extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        id: null,
+      title: null,
+      description: null,
+      url: null,
       open: false,
     }
   }
 
-  handleChange = (event) => {
-     this.setState({id: event.target.value});
+  handleChangeTitle = (event) => {
+     this.setState({title: event.target.value});
   }
+
+  handleChangeDescription = (event) => {
+     this.setState({description: event.target.value});
+  }
+
+  handleChangeUrl = (event) => {
+     this.setState({url: event.target.value});
+  }
+
+
   handleSubmit = (event) => {
      //Make a network call somewhere
      event.preventDefault();
@@ -51,8 +63,41 @@ class NewPost extends React.Component {
     this.setState({ open: true });
   }
 
-  handleClose = () => {
+  handleClose = (title, content, photo_url) => (e) => {
+
+    
+    const idea = {
+      userNetid: "eiseisgruber",
+      title: this.state.title,
+      content: this.state.description,
+      photo_url: this.state.url,
+      upvotes: '[]',
+      downvotes: '[]',
+      tags: '[]',
+    };
+
+    fetch('/api/set/idea', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify(idea)
+    })
+    .then(data => {
+      window.location.reload();
+    })
+    .catch(err => {
+      console.log(err);
+    });
+
+
+
+
     this.setState({ open: false });
+
+
+
   }
 
   render() {
@@ -94,6 +139,7 @@ class NewPost extends React.Component {
               multiline
               rows ="1"
               rowsMax="2"
+              onChange={this.handleChangeTitle}
             />
             <br/>
 
@@ -110,6 +156,7 @@ class NewPost extends React.Component {
               multiline
               rows ="2"
               rowsMax="4"
+              onChange={this.handleChangeDescription}
             />
 
             <DialogContentText>
@@ -125,13 +172,14 @@ class NewPost extends React.Component {
               multiline
               rows ="1"
               rowsMax="2"
+              onChange={this.handleChangeUrl}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleClose} color="secondary">
+            <Button onClick={this.handleClose(this.state.title, this.state.content, this.state.photo_url)} color="secondary">
               Post
             </Button>
           </DialogActions>
