@@ -12,19 +12,8 @@ class App extends Component {
 
   render() {
 
-/*
-    const cards = [];
-
-    for(int i = 0; i < 10; i++)
-    {
-      cards.push(<IdeaCard />);
-    }
-    */
-    /*const elements = ["a", "b", "c"]*/
 
     return (
-
-
 
       <div className="App">
 
