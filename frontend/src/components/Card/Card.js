@@ -47,6 +47,7 @@ const styles = theme => ({
   media: {
     // ⚠️ object-fit is not supported by IE 11.
     objectFit: 'cover',
+    height: '140px',
   },
   upvote: {
     color: 'green',
@@ -57,14 +58,11 @@ const styles = theme => ({
   score: {
     marginLeft: '5px',
     maxWidth: '50px',
-    textAlign: 'center',
+    color: 'blue',
   },
   buttonMsg: {
     color: '#123456',
     marginLeft: 'auto',
-  },
-  media: {
-    height: 140,
   },
 });
 
@@ -125,9 +123,13 @@ class IdeaCard extends React.Component {
             </i>
           </IconButton>
 
+          <div className={classes.score}> {this.state.score} </div>
+
           <IconButton className={classes.buttonMsg} aria-label="comment">
             <i className="icon ion-md-text"></i>
           </IconButton>
+
+
 
         </CardActions>
 

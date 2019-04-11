@@ -4,6 +4,7 @@ import './App.css';
 import IdeaFeed from './components/IdeaFeed';
 import IdeaCard from './components/Card/Card'
 import NewPost from './components/NewPost';
+import SortBar from './components/SortBar';
 
 
 class App extends Component {
@@ -11,19 +12,8 @@ class App extends Component {
 
   render() {
 
-/*
-    const cards = [];
-
-    for(int i = 0; i < 10; i++)
-    {
-      cards.push(<IdeaCard />);
-    }
-    */
-    /*const elements = ["a", "b", "c"]*/
 
     return (
-
-
 
       <div className="App">
 
@@ -46,13 +36,13 @@ class App extends Component {
           </div>
         </div>
 
-        <div>
-          <NewPost/>
+        <div className="w3-bar">
+          <SortBar className="w3-bar-item"/>
+         <NewPost className="w3-bar-item" />
         </div>
 
         <IdeaFeed/>
         
-
       </div>
 
     );
