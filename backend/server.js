@@ -137,7 +137,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET_KEY,
   saveUninitialized: false,
   resave: false,
-  cookie: { secure: !process.env.DEBUG_TRUE },
+  cookie: {
+    secure: false,
+    maxAge: 604800,
+  },
 }));
 app.use(passport.initialize());
 app.use(passport.session());
