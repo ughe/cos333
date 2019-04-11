@@ -31,6 +31,15 @@ const styles = theme => ({
   },
 });
 
+const experiment = () => {
+      return <div>
+        <IdeaCard title = "Hemp Roads" description = {"Hemp-based road paving is an environmentally-friendly" 
+          + " and cost-effective technology that has not yet been implemented in the US market."} score = "55" 
+          url = "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg" />
+
+      </div>
+      }
+
 
 class IdeaFeed extends React.Component {
   constructor(props) {
@@ -50,57 +59,14 @@ class IdeaFeed extends React.Component {
           score: 55,
           url: "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg",
         },
-
-        {
-          title: "Hemp Roads",
-          description: "Hemp-based road paving is an environmentally-friendly and cost-effective technology that has not yet been implemented in the US market." ,
-          score: 55,
-          url: "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg",
-        },
       ]
     }
   }
 
-  
-  componentDidMount() {
-    fetch('/api/User')
-    .then(results => {
-      return results.json();
-    }).then(data => {
-
-      let random = JSON.stringify(data);
-      //let dataArray = this.state.list.splice();
-      
-
-      for(var i = 0; i < data[0]["Items"].length; i++)
-      {
-
-        let randomIdea = {
-        title: JSON.stringify(data[0]["Items"][i]),
-        description: "Hemp-based road paving is an environmentally-friendly and cost-effective technology that has not yet been implemented in the US market.",
-        score: 55,
-        url: "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg",
-        };
-
-        this.setState({
-        list: [
-        ...this.state.list,
-        randomIdea
-        ]
-        });
-      }
-
-    
-    });
-
-  }
-
   render () {
 
-    console.log(this.state.list);
-    
-    var elements = this.state.list.map((item, index) => <IdeaCard key={index} title={item.title} description={item.description} score={item.score} url={item.url} />)
-    
+    var elements = this.state.list.map(item => <IdeaCard title={item.title} description={item.description} score={item.score} url={item.url} />)
+
     return (
       <div>
         {elements}
