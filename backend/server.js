@@ -152,6 +152,15 @@ var cas_strategy = new cas.Strategy(
 passport.use(cas_strategy);
 
 // CAS login
+app.use('/login', passport.authenticate('pucas'),
+  function(req, res, next) {
+    var netid = req.user.username;
+    console.log('[CAS] LOGIN ' + netid);
+    res.redirect('/');
+  }
+);
+
+/*
 app.use('/login', passport.authenticate('pucas', { failureRedirect: '/failed_login' }),
   function(req, res, next) {
     const netid = req.user.username;
@@ -178,6 +187,7 @@ app.use('/login', passport.authenticate('pucas', { failureRedirect: '/failed_log
     });
   }
 );
+*/
 
 // CAS logout
 app.use('/logout', function(req, res, next) {
@@ -241,7 +251,6 @@ app.get('/api', (req, res) => res.json({
 app.use('/api/get/user/:netid?', ensureAuth, function(req, res) {
   const netid = req.params.netid;
   const search = (netid) ? {where:{netid:netid}} : {};
-  console.log("CHILLING: " + netid);
   User.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
