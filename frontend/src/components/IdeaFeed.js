@@ -36,34 +36,13 @@ class IdeaFeed extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      list: [
-        {
-          title: "Hemp Roads",
-          description: "Hemp-based road paving is an environmentally-friendly and cost-effective technology that has not yet been implemented in the US market." ,
-          score: 55,
-          url: "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg",
-        },
-
-        {
-          title: "Hemp Roads",
-          description: "Hemp-based road paving is an environmentally-friendly and cost-effective technology that has not yet been implemented in the US market." ,
-          score: 55,
-          url: "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg",
-        },
-
-        {
-          title: "Hemp Roads",
-          description: "Hemp-based road paving is an environmentally-friendly and cost-effective technology that has not yet been implemented in the US market." ,
-          score: 55,
-          url: "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg",
-        },
-      ]
+      list: []
     }
   }
 
   
   componentDidMount() {
-    fetch('/api/User')
+    fetch('/api/get/idea')
     .then(results => {
       return results.json();
     }).then(data => {
@@ -72,14 +51,14 @@ class IdeaFeed extends React.Component {
       //let dataArray = this.state.list.splice();
       
 
-      for(var i = 0; i < data[0]["Items"].length; i++)
+      for(var i = 0; i < data.length; i++)
       {
 
         let randomIdea = {
-        title: JSON.stringify(data[0]["Items"][i]),
-        description: "Hemp-based road paving is an environmentally-friendly and cost-effective technology that has not yet been implemented in the US market.",
+        title: data[i]["title"],
+        description: data[i]["content"],
         score: 55,
-        url: "http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg",
+        url: data[i]["photo_url"],
         };
 
         this.setState({
