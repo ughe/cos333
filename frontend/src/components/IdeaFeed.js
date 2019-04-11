@@ -63,7 +63,7 @@ class IdeaFeed extends React.Component {
 
   
   componentDidMount() {
-    fetch('http://tigerteams.herokuapp.com/api/User')
+    fetch('/api/User')
     .then(results => {
       return results.json();
     }).then(data => {
