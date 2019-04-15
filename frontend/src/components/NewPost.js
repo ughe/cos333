@@ -54,16 +54,16 @@ class NewPost extends React.Component {
   }
 
 
-  handleSubmit = (event) => {
+  handleClose = (event) => {
      //Make a network call somewhere
-     event.preventDefault();
+     this.setState({ open: false });
   }
 
   handleClickOpen = () => {
     this.setState({ open: true });
   }
 
-  handleClose = (title, content, photo_url) => (e) => {
+  handleSubmit = (title, content, photo_url) => (e) => {
 
     
     const idea = {
@@ -179,7 +179,7 @@ class NewPost extends React.Component {
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleClose(this.state.title, this.state.content, this.state.photo_url)} color="secondary">
+            <Button onClick={this.handleSubmit(this.state.title, this.state.content, this.state.photo_url)} color="secondary">
               Post
             </Button>
           </DialogActions>

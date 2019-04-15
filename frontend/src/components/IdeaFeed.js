@@ -3,23 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import IdeaCard from './Card/Card'
-
-const sampleData = {"Item": {
-        '_id'       : {'S': "0"},
-        'netid'     : {'S': "aboppana"},
-        'title'     : {'S': "Database Title"},
-        'content'   : {'S': "This is a description. This is a description from the database"},
-        'photo_url' : {'S': "blank"},
-        'category'  : {'S': "Entreprenuership"},
-        'comments'  : {'SS' : ["a", "b"]},
-        'score'     : {'S': '3'},
-        'timestamp' : {'S' : "avi"},
-      }
-};
-
-let titles = sampleData["Item"]["title"]["S"];
-let descriptions = sampleData["Item"]["content"]["S"];
-let scores = sampleData["Item"]["score"]["S"];
+import Discussion from './Discussion'
 
 
 const styles = theme => ({
@@ -35,8 +19,14 @@ const styles = theme => ({
 class IdeaFeed extends React.Component {
   constructor(props) {
     super(props)
+
+    this.handler = this.handler.bind(this)
+    this.closer = this.closer.bind(this)
+
     this.state = {
-      list: []
+      list: [],
+      discussion: false,
+      openIdea: -1,
     }
   }
 
@@ -50,7 +40,7 @@ class IdeaFeed extends React.Component {
       let random = JSON.stringify(data);
       //let dataArray = this.state.list.splice();
       
-
+      let fetchedData = []
       for(var i = 0; i < data.length; i++)
       {
 
@@ -59,77 +49,71 @@ class IdeaFeed extends React.Component {
         description: data[i]["content"],
         score: 55,
         url: data[i]["photo_url"],
+        id: data[i]["id"],
         };
 
-        this.setState({
-        list: [
-        ...this.state.list,
-        randomIdea
-        ]
-        });
+        fetchedData = [...fetchedData,randomIdea];
+
       }
 
-    
+
+      this.setState({
+        list: [
+        ...this.state.list,
+        ...fetchedData
+        ]
+      });
+
     });
 
   }
 
+/*
+  handler(param) {
+    this.setState({ 
+      discussion: false,
+      openIdea: param,
+      });
+  }
+  */
+
+  handler(param) {
+    this.setState({
+      discussion: true,
+      openIdea: param,
+    });
+  }
+
+  closer() {
+    this.setState({
+      discussion: false,
+      openIdea: -1
+    });
+  }
+
+
   render () {
-
-    console.log(this.state.list);
     
-    var elements = this.state.list.map((item, index) => <IdeaCard key={index} title={item.title} description={item.description} score={item.score} url={item.url} />)
+    var elements = this.state.list.map((item, index) => <IdeaCard discussion={this.handler} key={index} title={item.title} description={item.description} score={item.score} url={item.url} id={item.id}/>)
     
-    return (
-      <div>
-        {elements}
-      </div>
+    if (this.state.discussion)
+    {
+      return (
+        <div>
+          <Discussion idea={this.state.openIdea} close={this.closer}/>
+        </div>
 
-    )
+      );
+    } else {
+      return (
+        <div>
+          {elements}
+        </div>
+      );
+    }
+
+    
   }
 }
 
 export default IdeaFeed
-
-//function FormRow(props) {
-  /*const { classes } = props;*/
-/*
-  return (
-    <React.Fragment>
-      <Grid item xs={4}>
-        <IdeaCard title={titles} description = {descriptions} score = {scores} />
-      </Grid>
-      <Grid item xs={4}>
-        <IdeaCard title ="like"/>
-      </Grid>
-      <Grid item xs={4}>
-        <IdeaCard />
-      </Grid>
-    </React.Fragment>
-  );
-}
-
-FormRow.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-function NestedGrid(props) {
-  const { classes } = props;
-
-  return (
-    <div className={classes.root}>
-      <Grid container spacing={8}>
-        <Grid container item xs={12} spacing={24}>
-          <FormRow classes={classes} />
-        </Grid>
-      </Grid>
-    </div>
-  );
-}
-
-NestedGrid.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-*/
-
-//export default withStyles(styles)(NestedGrid);
