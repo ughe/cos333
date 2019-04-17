@@ -13,6 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import Comment from './comment.svg';
+import Discussion from '../Discussion';
 
 /*
 const sampleData = {"Item": {
@@ -71,13 +72,21 @@ class IdeaCard extends React.Component {
 
   constructor(props) {
     super(props);
+    this.discussion = this.discussion.bind(this)
     this.state = {
       title: this.props.title,
       description: this.props.description,
       score: this.props.score,
       url: this.props.url,
+      id: this.props.id,
+      open: false
     }
   }
+
+  discussion = (id) => (e) => {
+    this.props.discussion(id);
+  }
+
 
   render () {
 
@@ -90,7 +99,6 @@ class IdeaCard extends React.Component {
       rel="stylesheet"/>
         
         <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
-
 
         <CardActionArea>
           <CardContent>
@@ -125,7 +133,7 @@ class IdeaCard extends React.Component {
 
           <div className={classes.score}> {this.state.score} </div>
 
-          <IconButton className={classes.buttonMsg} aria-label="comment">
+          <IconButton className={classes.buttonMsg} aria-label="comment" onClick={this.discussion(this.state.id)}>
             <i className="icon ion-md-text"></i>
           </IconButton>
 
