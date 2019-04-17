@@ -217,21 +217,6 @@ app.use('/whoami', ensureAuth, function(req, res) {
 });
 
 /**********************************************************************
- * AWS DynamoDB Configuration
- **********************************************************************/
-
-/*
-const AWS = require('aws-sdk');
-AWS.config.update({
-  accessKeyId: process.env.DYNAMO_ACCESS_KEY_ID,
-  secretAccessKey: process.env.SECRET_DYNAMO_ACCESS_KEY,
-  region: 'us-east-1'
-});
-var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-var docClient = new AWS.DynamoDB.DocumentClient({region: 'us-east-1'});
-*/
-
-/**********************************************************************
  * REST
  **********************************************************************/
 
@@ -283,10 +268,10 @@ app.all('/api', ensureAuth, function(req, res) {
 });
 
 app.post('/api/set/idea', function(req, res) {
-  
+
   const whoami = req.user;
   const netid = req.body.netid;
-  
+
   //TODO RESOLVE BELOW
   //if (whoami !== netid) {console.log("EarlyReturn"); return res.send('403 permission denied to update: ' + netid); }
 
