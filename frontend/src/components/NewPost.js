@@ -13,7 +13,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import theme from '../theme';
-
+import Checkbox from '@material-ui/core/Checkbox';
+import CheckBoxes from './CheckBoxes';
 
 
 const styles = theme => ({
@@ -33,10 +34,12 @@ class NewPost extends React.Component {
 
   constructor(props) {
     super(props);
+    this.handleChecks = this.handleChecks.bind(this)
     this.state = {
       title: null,
       description: null,
-      url: null,
+      photo_url: null,
+      tags: [],
       open: false,
     }
   }
@@ -50,9 +53,14 @@ class NewPost extends React.Component {
   }
 
   handleChangeUrl = (event) => {
-     this.setState({url: event.target.value});
+     this.setState({photo_url: event.target.value});
   }
 
+  handleChecks (param) {
+    this.setState({ 
+      tags: [...this.state.tags, param]
+    });
+  }
 
   handleClose = (event) => {
      //Make a network call somewhere
@@ -63,18 +71,17 @@ class NewPost extends React.Component {
     this.setState({ open: true });
   }
 
-  handleSubmit = (title, content, photo_url) => (e) => {
+  handleSubmit = (title, content, photo_url, tags) => (e) => {
 
     
     const idea = {
-      userNetid: "eiseisgruber",
+      user_netid: "eiseisgruber",
       title: this.state.title,
       content: this.state.description,
       photo_url: this.state.url,
-      upvotes: '[]',
-      downvotes: '[]',
-      tags: '[]',
+      net_votes: 0,
     };
+
 
     fetch('/api/set/idea', {
       method: 'POST',
@@ -86,6 +93,7 @@ class NewPost extends React.Component {
     })
     .then(data => {
       window.location.reload();
+      console.log(data);
     })
     .catch(err => {
       console.log(err);
@@ -141,6 +149,7 @@ class NewPost extends React.Component {
               rowsMax="2"
               onChange={this.handleChangeTitle}
             />
+
             <br/>
 
             <DialogContentText>
@@ -159,6 +168,8 @@ class NewPost extends React.Component {
               onChange={this.handleChangeDescription}
             />
 
+            <br/>
+
             <DialogContentText>
               Enter an image url to display as a thumbnail photo symbolizing something about your idea
             </DialogContentText>
@@ -174,12 +185,22 @@ class NewPost extends React.Component {
               rowsMax="2"
               onChange={this.handleChangeUrl}
             />
+
+            <DialogContentText>
+              Select all tags that apply.
+            </DialogContentText>
+            <CheckBoxes margin="dense" tags ={this.handleChecks}/>
+
+            <br/>
           </DialogContent>
+
+
+
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleSubmit(this.state.title, this.state.content, this.state.photo_url)} color="secondary">
+            <Button onClick={this.handleSubmit(this.state.title, this.state.content, this.state.photo_url, this.state.tags)} color="secondary">
               Post
             </Button>
           </DialogActions>

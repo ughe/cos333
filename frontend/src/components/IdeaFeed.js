@@ -47,12 +47,12 @@ class IdeaFeed extends React.Component {
         let randomIdea = {
         title: data[i]["title"],
         description: data[i]["content"],
-        score: 55,
-        url: data[i]["photo_url"],
+        net_votes: data[i]["net_votes"],
+        photo_url: data[i]["photo_url"],
         id: data[i]["id"],
         };
 
-        fetchedData = [...fetchedData,randomIdea];
+        fetchedData = [randomIdea,...fetchedData];
 
       }
 
@@ -67,15 +67,6 @@ class IdeaFeed extends React.Component {
     });
 
   }
-
-/*
-  handler(param) {
-    this.setState({ 
-      discussion: false,
-      openIdea: param,
-      });
-  }
-  */
 
   handler(param) {
     this.setState({
@@ -94,7 +85,7 @@ class IdeaFeed extends React.Component {
 
   render () {
     
-    var elements = this.state.list.map((item, index) => <IdeaCard discussion={this.handler} key={index} title={item.title} description={item.description} score={item.score} url={item.url} id={item.id}/>)
+    var elements = this.state.list.map((item, index) => <IdeaCard discussion={this.handler} key={index} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id}/>)
     
     if (this.state.discussion)
     {

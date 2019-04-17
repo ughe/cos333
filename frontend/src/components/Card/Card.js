@@ -15,25 +15,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Comment from './comment.svg';
 import Discussion from '../Discussion';
 
-/*
-const sampleData = {"Item": {
-        '_id'       : {'S': "0"},
-        'netid'     : {'S': "aboppana"},
-        'title'     : {'S': "Database Title"},
-        'content'   : {'S': "This is a description. This is a description from the database"},
-        'photo_url' : {'S': "blank"},
-        'category'  : {'S': "Entreprenuership"},
-        'comments'  : {'SS' : ["a", "b"]},
-        'score'     : {'S': '3'},
-        'timestamp' : {'S' : "avi"},
-      }
-};
 
 
-let titles = sampleData["Item"]["title"]["S"];
-let descriptions = sampleData["Item"]["content"]["S"];
-let scores = sampleData["Item"]["score"]["S"];
-*/
+
+
 
 const styles = theme => ({
   card: {
@@ -56,7 +41,7 @@ const styles = theme => ({
   downvote: {
     color: 'red',
   },
-  score: {
+  net_votes: {
     marginLeft: '5px',
     maxWidth: '50px',
     color: 'blue',
@@ -76,8 +61,8 @@ class IdeaCard extends React.Component {
     this.state = {
       title: this.props.title,
       description: this.props.description,
-      score: this.props.score,
-      url: this.props.url,
+      net_votes: this.props.net_votes,
+      photo_url: this.props.photo_url,
       id: this.props.id,
       open: false
     }
@@ -112,7 +97,7 @@ class IdeaCard extends React.Component {
 
           <CardMedia
             className={classes.media}
-            image= {this.state.url} 
+            image= {this.state.photo_url} 
             title="Contemplative Reptile"
           /> 
 
@@ -131,7 +116,7 @@ class IdeaCard extends React.Component {
             </i>
           </IconButton>
 
-          <div className={classes.score}> {this.state.score} </div>
+          <div className={classes.net_votes}> {this.state.net_votes} </div>
 
           <IconButton className={classes.buttonMsg} aria-label="comment" onClick={this.discussion(this.state.id)}>
             <i className="icon ion-md-text"></i>
