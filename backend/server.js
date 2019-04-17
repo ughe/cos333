@@ -56,7 +56,6 @@ User.init({
   first: Sequelize.STRING,
   photo_url: Sequelize.STRING,
 }, {
-  underscored: true,
   sequelize,
   modelName: 'user',
 });
@@ -66,11 +65,8 @@ Idea.init({
   title: Sequelize.STRING,
   content: Sequelize.STRING,
   photo_url: Sequelize.STRING,
-  downvotes: Sequelize.STRING,
-  upvotes: Sequelize.STRING,
-  tags: Sequelize.STRING,
+  net_votes: Sequelize.INTEGER,
 }, {
-  underscored: true,
   sequelize,
   modelName: 'idea',
 });
@@ -81,10 +77,8 @@ Idea.belongsTo(User);
 class Comment extends Sequelize.Model {}
 Comment.init({
   content: Sequelize.STRING,
-  downvotes: Sequelize.STRING,
-  upvotes: Sequelize.STRING,
+  net_votes: Sequelize.INTEGER,
 }, {
-  underscored: true,
   sequelize,
   modelName: 'comment',
 });
@@ -98,6 +92,31 @@ Comment.belongsTo(Idea);
 Comment.hasMany(Comment);
 Comment.belongsTo(Comment);
 
+class Tag extends Sequelize.Model {}
+Tag.init({
+  name: Sequelize.STRING,
+}, {
+  sequelize,
+  modelName: 'tag',
+});
+Idea.hasMany(Tag);
+Tag.belongsTo(Idea);
+
+class Vote extends Sequelize.Model {}
+Vote.init({
+  netid: Sequelize.STRING,
+  is_upvote: Sequelize.BOOLEAN,
+  is_idea: Sequelize.BOOLEAN,
+}, {
+  sequelize,
+  modelName: 'vote',
+});
+Idea.hasMany(Vote);
+Vote.belongsTo(Idea);
+Comment.hasMany(Vote);
+Vote.belongsTo(Comment);
+
+// Re-set database structure (dumps all data)
 //sequelize.sync({force: true});
 
 // Route for checking databse connection
@@ -239,15 +258,33 @@ app.use('/api/get/user/:netid?', ensureAuth, function(req, res) {
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.use('/api/get/idea/:id?', function(req, res) {
-  const search = (req.params.id) ? {where:{id:req.params.id}} : {};
+app.use('/api/get/idea/:id?/:many?', function(req, res) {
+  var many = [];
+  if (req.params.many === 'comments') {
+    many = [Comment];
+  } else if (req.params.many === 'votes') {
+    many = [Vote];
+  }
+  const search = (req.params.id) ? {
+    where:{id:req.params.id},
+    include:many,
+  } : {};
   Idea.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.use('/api/get/comment/:id?', function(req, res) {
-  const search = (req.params.id) ? {where:{id:req.params.id}} : {};
+app.use('/api/get/comment/:id?/:many?', function(req, res) {
+  var many = [];
+  if (req.params.many === 'comments') {
+    many = [Comment];
+  } else if (req.params.many === 'votes') {
+    many = [Vote];
+  }
+  const search = (req.params.id) ? {
+    where:{id:req.params.id},
+    include:many,
+  } : {};
   Comment.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
@@ -256,17 +293,16 @@ app.use('/api/get/comment/:id?', function(req, res) {
 app.use('/api/set/user', ensureAuth, function(req, res) {
   const whoami = req.user;
   const netid = req.body.netid;
-  if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+  if (whoami !== netid) {
+    return res.send('403 permission denied to update: ' + netid);
+  }
 
   User.update(req.body)
   .then(function(data) { res.json(req.body); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.all('/api', ensureAuth, function(req, res) {
-  next();
-});
-
+// TODO: this should ensureAuth
 app.post('/api/set/idea', function(req, res) {
 
   const whoami = req.user;
