@@ -8,8 +8,25 @@ import SortBar from './components/SortBar';
 import Login from './components/Login';
 import Helmet from 'react-helmet';
 
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
+import Search from './components/Search';
+
 
 class App extends Component {
+   constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this)
+    this.state = {
+      query: null,
+    }
+  }
+
+  handleChange = (event) => {
+    //this.setState({ query: event.target.value });
+    console.log(document.getElementById("search").value);
+  }
 
 
   render() {
@@ -38,11 +55,18 @@ class App extends Component {
               <a href="#about" className="w3-bar-item w3-button">About</a>
             </div>
 
+            <Search/>
+
 
             <form className="w3-bar-item search-container center">
-                <input type="text" id="search-bar" placeholder="..."/>
-                <a href="#"><img className="search-icon" 
-                src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"/></a>
+                
+                <input id="search" type="text" id="search-bar" placeholder="..."/>
+                <IconButton onClick={this.handleChange} aria-label="search" style={{float: 'right'}}>
+                  <i className="material-icons">
+                    search
+                  </i>
+                </IconButton>
+                
             </form>
 
           </div>
