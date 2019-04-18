@@ -6,6 +6,7 @@ import IdeaCard from './components/Card/Card'
 import NewPost from './components/NewPost';
 import SortBar from './components/SortBar';
 import Login from './components/Login';
+import Helmet from 'react-helmet';
 
 
 class App extends Component {
@@ -15,8 +16,12 @@ class App extends Component {
 
 
     return (
+      
 
       <div className="App">
+        <Helmet>
+          <style>{'body { background-color: #D3D3D3; }'}</style>
+        </Helmet>
 
         {/* TOP BAR */}
         <div>
@@ -24,10 +29,15 @@ class App extends Component {
             <a href="#home" className="w3-bar-item w3-button">Tiger<b>TEAMS</b></a>
 
             <div className="w3-bar-item w3-hide-small w3-right">
+              <Login className="w3-bar-item w3-hide-small w3-right" />
+            </div>
+
+
+
+            <div className="w3-bar-item w3-hide-small w3-right">
               <a href="#about" className="w3-bar-item w3-button">About</a>
             </div>
 
-            <Login className="w3-bar-item w3-hide-small w3-right" />
 
             <form className="w3-bar-item search-container center">
                 <input type="text" id="search-bar" placeholder="..."/>

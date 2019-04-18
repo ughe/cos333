@@ -29,6 +29,7 @@ const styles = theme => ({
 });
 
 
+
 class Login extends React.Component {
 
   constructor(props) {
@@ -43,6 +44,7 @@ class Login extends React.Component {
 
   handleClickOpen = () => {
     this.setState({ open: true });
+    window.location.assign('/login');
   };
 
   handleClose = () => {
@@ -59,8 +61,8 @@ class Login extends React.Component {
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>
 
-        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleClickOpen}>
-                Filter Ideas
+        <Button variant="contained" color="white" className={classes.button} onClick={this.handleClickOpen}>
+                Login
 				<i class="material-icons">
 					person_outline
 				</i>

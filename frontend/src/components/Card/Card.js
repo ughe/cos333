@@ -17,16 +17,15 @@ import Discussion from '../Discussion';
 
 
 
-
-
-
 const styles = theme => ({
   card: {
     maxWidth: '500px',
     minWidth: '250px',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('600')]: {
       margin: '10px 2px 2px',
+      width: "99%",
     },
+
     margin: '10px 10px',
     display: 'inline-block',
   },
@@ -78,7 +77,7 @@ class IdeaCard extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} onClick={this.discussion(this.state.id)}>
       
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>

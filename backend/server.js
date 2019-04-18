@@ -263,6 +263,7 @@ app.get('/api', (req, res) => res.json({
   set_idea: '/api/set/idea/',
   set_comment: '/api/set/comment/',
   filter: '/api/get/idea/tag/name_of_the_tag',
+  search: '/api/get/idea/search/query',
 }));
 
 
@@ -278,19 +279,20 @@ app.use('/api/get/idea/tag/:name', function(req, res) {
   Idea.findAll({include:[{
     model: Tag,
     where: {name: req.params.name},
-    order: '"updatedAt" DESC',
   }]})
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.use('/api/get/idea/:id/comment', function(req, res) {
-  Idea.findAll({include:[{
-    model: Comment,
-    where: {ideaId: req.params.id},
-    include:[Vote,Comment],
-    order: '"updatedAt" DESC',
-  }]})
+app.use('/api/get/idea/search/:query', function(req, res) {
+  Idea.findAll({
+    where: {
+      [Sequelize.Op.or]: [
+        {title: { [ Sequelize.Op.like ]: '%' + req.params.query + '%' }},
+        {content: { [ Sequelize.Op.like ]: '%' + req.params.query + '%' }},
+      ],
+    },
+  })
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
@@ -299,7 +301,6 @@ app.use('/api/get/idea/:id?', function(req, res) {
   const search = (req.params.id) ? {
     where:{id:req.params.id},
     include:[Tag,Vote,Comment],
-    order: '"updatedAt" DESC',
   } : {include:[Tag,Vote,Comment]};
   Idea.findAll(search)
   .then(function(data) { res.json(data); })
@@ -310,8 +311,7 @@ app.use('/api/get/comment/:id?', function(req, res) {
   const search = (req.params.id) ? {
     where:{id:req.params.id},
     include:[Comment, Vote],
-    order: '"updatedAt" DESC',
-  } : {include:[Comment, Vote],order: '"updatedAt" DESC',};
+  } : {include:[Comment, Vote]};
   Comment.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
@@ -320,6 +320,13 @@ app.use('/api/get/comment/:id?', function(req, res) {
 app.use('/api/get/tag/:name?', function(req, res) {
   const search = (req.params.name) ? {where:{name:req.params.name}} : {};
   Tag.findAll(search)
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
+
+app.use('/api/get/vote/:id?', function(req, res) {
+  const search = (req.params.id) ? {where:{name:req.params.id}} : {};
+  Vote.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
