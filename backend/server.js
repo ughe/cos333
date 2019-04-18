@@ -231,7 +231,7 @@ function ensureAuth(req, res, next) {
   }
 }
 
-app.use('/whoami', ensureAuth, function(req, res) {
+app.use('/api/whoami', ensureAuth, function(req, res) {
   res.json({user: req.user});
 });
 
@@ -241,12 +241,18 @@ app.use('/whoami', ensureAuth, function(req, res) {
 
 app.get('/api', (req, res) => res.json({
   user: req.user,
+  whoami: '/api/whoami',
   login: '/api/login',
   logout: '/api/logout',
   users: '/api/get/user',
   ideas: '/api/get/idea',
+  idea_comments: '/api/get/idea/372/comments',
+  idea_votes: '/api/get/idea/372/votes',
   comments: '/api/get/comment',
-  set: '/api/set/idea/0'
+  comment_comments: '/api/get/comment/372/comments',
+  comment_votes: '/api/get/comment/732/votes',
+  set_idea: '/api/set/idea/',
+  set_comment: '/api/set/comment/',
 }));
 
 
@@ -302,9 +308,7 @@ app.use('/api/set/user', ensureAuth, function(req, res) {
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-// TODO: this should ensureAuth
-app.post('/api/set/idea', function(req, res) {
-
+app.post('/api/set/idea', ensureAuth, function(req, res) {
   const whoami = req.user;
   const netid = req.body.netid;
 
@@ -314,13 +318,75 @@ app.post('/api/set/idea', function(req, res) {
   const id = req.body.id;
   if (id) {
     Idea.update(req.body)
-    .then(function(data) { res.json(req.body); })
+    .then(function(data) { res.json(data.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   } else {
     Idea.create(req.body)
-    .then(function(data) { res.json(req.body); })
+    .then(function(data) { res.json(data.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   }
+});
+
+app.post('/api/set/comment', ensureAuth, function(req, res) {
+  const whoami = req.user;
+  const netid = req.body.netid;
+  //if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+
+  const id = req.body.id;
+  if (id) {
+    Comment.update(req.body)
+    .then(function(data) { res.json(data.body); })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  } else {
+    Comment.create(req.body)
+    .then(function(data) { res.json(data.body); })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  }
+});
+
+app.post('/api/set/vote', ensureAuth, function(req, res) {
+  const whoami = req.user;
+  const netid = req.body.netid;
+  //if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+
+  const id = req.body.id;
+  if (id) {
+    Vote.update(req.body)
+    .then(function(data) { res.json(data.body); })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  } else {
+    Vote.create(req.body)
+    .then(function(data) { res.json(data.body); })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  }
+});
+
+// TODO
+app.post('/api/set/tag', ensureAuth, function(req, res) {
+  const id = req.body.id;
+  if (id) {
+    Tag.update(req.body)
+    .then(function(data) { res.json(data.body); })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  } else {
+    Tag.create(req.body)
+    .then(function(data) { res.json(data.body); })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  }
+});
+
+
+
+/*
+app.use('/api/del/idea/:id', function(req, res) {
+  Idea.destroy({where: {id: req.params.id,}})
+  .then(function(data) {
+    console.log('SUCCESS!');
+    res.redirect('/');
+  })
+  .catch(function(err) {
+    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
+  });
 });
 
 app.use('/api/set/comment', ensureAuth, function(req, res) {
@@ -340,17 +406,6 @@ app.use('/api/set/comment', ensureAuth, function(req, res) {
   }
 });
 
-/*
-app.use('/api/del/idea/:id', function(req, res) {
-  Idea.destroy({where: {id: req.params.id,}})
-  .then(function(data) {
-    console.log('SUCCESS!');
-    res.redirect('/');
-  })
-  .catch(function(err) {
-    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
-  });
-});
 
 */
 
