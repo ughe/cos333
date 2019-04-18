@@ -91,8 +91,12 @@ class NewPost extends React.Component {
 
       body: JSON.stringify(idea)
     })
+    .then(function(response){
+      return response.json();
+    })
     .then(data => {
-      window.location.reload();
+      console.log("hello");
+      //window.location.reload();
       console.log(data);
     })
     .catch(err => {
