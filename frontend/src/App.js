@@ -11,8 +11,6 @@ import Helmet from 'react-helmet';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
-import Search from './components/Search';
-
 
 class App extends Component {
    constructor(props) {
