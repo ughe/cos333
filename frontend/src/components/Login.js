@@ -44,6 +44,7 @@ class Login extends React.Component {
 
   handleClickOpen = () => {
     this.setState({ open: true });
+    window.location.assign('/login');
   };
 
   handleClose = () => {
