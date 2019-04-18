@@ -20,12 +20,11 @@ import Discussion from '../Discussion';
 const styles = theme => ({
   card: {
     maxWidth: '500px',
-    minWidth: '250px',
-    [theme.breakpoints.down('600')]: {
-      margin: '10px 2px 2px',
-      width: "99%",
+    minWidth: '200px',
+    [theme.breakpoints.down('sm')]: {
+    margin: '10px 5px 5px',
+    width: 'calc(100% - 10px)',
     },
-
     margin: '10px 10px',
     display: 'inline-block',
   },

@@ -13,11 +13,22 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
+import Comment from "./Comment"
+
 const styles = theme => ({
 	card: {
 		margin: 'auto',
 		backgroundColor: "",
 		maxWidth: '2000px',
+    margin: '5px 5px 5px',
+    width: 'calc(100% - 10px)',
+    display: 'inline-block',
+    float: 'right',
+  },
+  reply: {
+    margin: 'auto',
+    backgroundColor: "",
+    maxWidth: '2000px',
     margin: '10px 2px 2px',
     width: "99%",
     display: 'inline-block',
@@ -96,6 +107,7 @@ class Discussion extends React.Component {
   		const { classes } = this.props;
 
   		return (
+        <React.Fragment>
   			<Card className={classes.card} onClick={this.close}>
 
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -139,12 +151,12 @@ class Discussion extends React.Component {
               <IconButton className={classes.buttonMsg} aria-label="comment" >
                 <i className="icon ion-md-text"></i>
               </IconButton>
-
-
-
             </CardActions>
 
   			</Card>
+        <Comment className = "reply"/>
+        </React.Fragment>
+
   		);
   	}
 
