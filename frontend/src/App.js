@@ -48,12 +48,6 @@ class App extends Component {
           </div>
         </div>
 
-        <div className="w3-bar">
-          <SortBar className="w3-bar-item"/>
-         <NewPost className="w3-bar-item" />
-         
-        </div>
-
         <IdeaFeed/>
         
       </div>
