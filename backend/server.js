@@ -296,8 +296,8 @@ app.use('/api/get/comment/:id?/:many?', function(req, res) {
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.use('/api/get/tag/:id?', function(req, res) {
-  const search = (req.params.id) ? {where:{id:req.params.id}} : {};
+app.use('/api/get/tag/:name?', function(req, res) {
+  const search = (req.params.name) ? {where:{name:req.params.name}} : {};
   Tag.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
