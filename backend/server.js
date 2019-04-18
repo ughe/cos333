@@ -318,11 +318,11 @@ app.post('/api/set/idea', ensureAuth, function(req, res) {
   const id = req.body.id;
   if (id) {
     Idea.update(req.body)
-    .then(function(data) { res.json(data.body); })
+    .then(function(data) { res.json(req.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   } else {
     Idea.create(req.body)
-    .then(function(data) { res.json(data.body); })
+    .then(function(data) { res.json(req.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   }
 });
@@ -335,11 +335,11 @@ app.post('/api/set/comment', ensureAuth, function(req, res) {
   const id = req.body.id;
   if (id) {
     Comment.update(req.body)
-    .then(function(data) { res.json(data.body); })
+    .then(function(data) { res.json(req.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   } else {
     Comment.create(req.body)
-    .then(function(data) { res.json(data.body); })
+    .then(function(data) { res.json(req.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   }
 });
@@ -352,11 +352,11 @@ app.post('/api/set/vote', ensureAuth, function(req, res) {
   const id = req.body.id;
   if (id) {
     Vote.update(req.body)
-    .then(function(data) { res.json(data.body); })
+    .then(function(data) { res.json(req.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   } else {
     Vote.create(req.body)
-    .then(function(data) { res.json(data.body); })
+    .then(function(data) { res.json(req.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   }
 });
@@ -366,11 +366,11 @@ app.post('/api/set/tag', ensureAuth, function(req, res) {
   const id = req.body.id;
   if (id) {
     Tag.update(req.body)
-    .then(function(data) { res.json(data.body); })
+    .then(function(data) { res.json(req.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   } else {
     Tag.create(req.body)
-    .then(function(data) { res.json(data.body); })
+    .then(function(data) { res.json(req.body); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   }
 });
