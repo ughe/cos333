@@ -23,7 +23,6 @@ class App extends Component {
 
   handleChange = (event) => {
     //this.setState({ query: event.target.value });
-    console.log(document.getElementById("search").value);
   }
 
 
@@ -53,7 +52,7 @@ class App extends Component {
               <a href="#about" className="w3-bar-item w3-button">About</a>
             </div>
 
-            <Search/>
+
 
 
             <form className="w3-bar-item search-container center">
