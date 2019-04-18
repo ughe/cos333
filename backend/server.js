@@ -296,6 +296,14 @@ app.use('/api/get/comment/:id?/:many?', function(req, res) {
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
+app.use('/api/get/tag/:id?', function(req, res) {
+  const search = (req.params.id) ? {where:{id:req.params.id}} : {};
+  Tag.findAll(search)
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
+
+
 app.use('/api/set/user', ensureAuth, function(req, res) {
   const whoami = req.user;
   const netid = req.body.netid;
@@ -304,7 +312,7 @@ app.use('/api/set/user', ensureAuth, function(req, res) {
   }
 
   User.update(req.body)
-  .then(function(data) { res.json(req.body); })
+  .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
