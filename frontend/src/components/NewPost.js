@@ -78,9 +78,10 @@ class NewPost extends React.Component {
       userNetid: "aboppana",
       title: this.state.title,
       content: this.state.description,
-      photo_url: this.state.url,
+      photo_url: this.state.photo_url,
       net_votes: 0,
     };
+
 
     let id = -1;
 
@@ -97,11 +98,8 @@ class NewPost extends React.Component {
       return response.json();
     })
     .then(data => {
-    //window.location.reload();
-      console.log(data);
+
       id = data["id"];
-      console.log(id);
-      console.log(this.state.tags);
 
       if(typeof id !== 'undefined')
       {
@@ -122,10 +120,14 @@ class NewPost extends React.Component {
           });
         }
       }
+
+      window.location.reload();
+
       
       
     })
     .catch(err => {
+      window.location.assign('/login');
       console.log(err);
     });
 

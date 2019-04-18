@@ -13,6 +13,8 @@ import IconButton from '@material-ui/core/IconButton';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import theme from '../theme';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 
@@ -34,24 +36,23 @@ class SortBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-    }
+      anchorEl: null,
+    };
   }
 
-  state = {
-    open: false,
-  };
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ anchorEl: null });
   };
 
   render() {
 
     const { classes } = this.props;
+    const { anchorEl } = this.state;
+
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -59,13 +60,22 @@ class SortBar extends React.Component {
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>
 
-        <Button variant="contained" color="primary" className={classes.button} onClick={this.handleClickOpen}>
+        <Button aria-owns={anchorEl ? 'simple-menu' : undefined} aria-haspopup="true" variant="contained" color="primary" className={classes.button} onClick={this.handleClick}>
                 Filter Ideas
               <i className="material-icons rightIcon">
                 sort
               </i>
         </Button>
+      
+
+        <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
+          <MenuItem onClick={this.handleClose}>Entrepreneurship</MenuItem>
+          <MenuItem onClick={this.handleClose}>Clubs</MenuItem>
+          <MenuItem onClick={this.handleClose}>Initiatives</MenuItem>
+          <MenuItem onClick={this.handleClose}>Shower Thoughts</MenuItem>
+        </Menu>
       </MuiThemeProvider>
+
     );
   }
 }
