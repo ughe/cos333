@@ -13,16 +13,17 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
-import Comment from "./Comment";
+import Comment from "./Comment"
 
 const styles = theme => ({
 	card: {
 		margin: 'auto',
 		backgroundColor: "",
 		maxWidth: '2000px',
-    margin: '10px 5px 5px',
+    margin: '5px 5px 5px',
     width: 'calc(100% - 10px)',
     display: 'inline-block',
+    float: 'right',
   },
   reply: {
     margin: 'auto',
