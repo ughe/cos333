@@ -100,14 +100,16 @@ class IdeaFeed extends React.Component {
     
     console.log("here");
     console.log(this.state.list);
+    console.log(this.state.discussion);
 
     var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id}/>)
     
     if (this.state.discussion)
     {
+      console.log("Whoa");
       return (
         <div>
-          <Discussion idea={this.state.openIdea} close={this.closer}/>
+          <Discussion idea={this.state.openIdea} close={this.closer} refresh={this.handler}/>
         </div>
 
       );

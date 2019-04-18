@@ -15,6 +15,7 @@ import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   card: {
@@ -40,18 +41,24 @@ const styles = theme => ({
   }
 });
 
+
+
 class Comment extends React.Component {
     constructor(props) {
       super(props)
       this.state = {
-        title: "",
-        description:"",
+        content: "",
         net_votes: "",
-        photo_url: "",
+        author: "",
         id: "",
         open: false,
         expanded: true,
       }
+
+      this.state.content = this.props.content;
+      this.state.net_votes = this.props.net_votes;
+      this.state.author = this.props.author;
+      this.state.id = this.props.id;
     }
 
   handleExpandClick = () => {
@@ -61,12 +68,17 @@ class Comment extends React.Component {
   render() {
     const { classes } = this.props;
 
+    if(this.state.author === null)
+    {
+      this.state.author = 'No author';
+    }
+
     return (
       <Card className={classes.card}>
         <CardHeader
           avatar={
             <Avatar aria-label="Recipe" className={classes.avatar}>
-              A
+              {this.state.author.substring(0,2).toUpperCase()}
             </Avatar>
           }
           action={
@@ -74,86 +86,20 @@ class Comment extends React.Component {
               <MoreVertIcon />
             </IconButton>
           }
-          title="Avinash Boppana"
-          subheader="March 14, 2019"
+          title={this.props.author}
+          subheader="Recently"
         />
         <CardContent>
           <Typography component="p">
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
+            {this.props.content}
           </Typography>
         </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton aria-label="Add to favorites">
             <FavoriteIcon />
           </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
-          </IconButton>
-          <IconButton
-            className={classnames(classes.expand, {
-              [classes.expandOpen]: this.state.expanded
-            })}
-            onClick={this.handleExpandClick}
-            aria-expanded={this.state.expanded}
-            aria-label="Show more"
-          >
-            <i class="material-icons">
-            reply
-            </i>
-          </IconButton>
-        </CardActions>
-        <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-
-          <Card className={classes.card}>
-        <CardHeader
-          avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              A
-            </Avatar>
-          }
-          action={
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title="Avinash Boppana"
-          subheader="March 14, 2019"
-        />
-        <CardContent>
-          <Typography component="p">
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
-          </Typography>
-        </CardContent>
-        <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
-          </IconButton>
-          <IconButton
-            className={classnames(classes.expand, {
-              [classes.expandOpen]: this.state.expanded
-            })}
-            onClick={this.handleExpandClick}
-            aria-expanded={this.state.expanded}
-            aria-label="Show more"
-          >
-            <i class="material-icons">
-            reply
-            </i>
-          </IconButton>
           
         </CardActions>
-        </Card>
-          </CardContent>
-          
-        </Collapse>
       </Card>
     );
   }

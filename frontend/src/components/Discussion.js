@@ -14,6 +14,8 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
 import Comment from "./Comment"
+import NewComment from "./NewComment"
+import "../w3.css";
 
 const styles = theme => ({
 	card: {
@@ -60,13 +62,13 @@ class Discussion extends React.Component {
 	constructor(props) {
     	super(props)
     	this.close = this.close.bind(this)
+      this.update = this.update.bind(this)
       this.state = {
-        title: "",
-        description:"",
-        net_votes: "",
-        photo_url: "",
-        id: "",
-        open: false
+        title: null,
+        description: null,
+        photo_url: null,
+        id: this.props.idea,
+        commentList: [],
       }
   	}
 
@@ -74,8 +76,14 @@ class Discussion extends React.Component {
   		this.props.close();
   	}
 
+    update(){
+      console.log("HELLO2");
+      this.forceUpdate();
+      this.props.refresh(this.state.id);
+    }
+
     componentDidMount() {
-      var url = '/api/get/idea/' + this.props.idea
+      var url = '/api/get/idea/' + this.state.id
 
       fetch(url)
       .then(results => {
@@ -84,27 +92,57 @@ class Discussion extends React.Component {
 
         let random = JSON.stringify(data);
 
-
         this.setState({
           title: data[0]["title"],
           description: data[0]["content"],
           net_votes: data[0]["net_votes"],
           photo_url: data[0]["photo_url"],
           id: data[0]["id"],
-
         });
+
+          fetch('/api/get/idea/' + this.state.id)
+          .then(results => {
+            return results.json();
+          }).then(data => {
+
+            let fetchedData = []
+            for(var i = 0; i < data[0]["comments"].length; i++)
+            {
+
+              let randomComment = {
+                content: data[0]["comments"][i]["content"],
+                net_votes: data[0]["comments"][i]["net_votes"],
+                author: data[0]["comments"][i]["userNetid"],
+                id: data[0]["comments"][i]["id"],
+              };
+
+              fetchedData = [randomComment,...fetchedData];
+
+            }
+
+
+            this.setState({
+              commentList: [
+              ...this.state.commentList,
+              ...fetchedData
+              ]
+            });
+
+            console.log(this.state.commentList);
+
+          })
 
       });
 
     }
-
-
 
   	render () {
 
 
 
   		const { classes } = this.props;
+
+      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id}/>);
 
   		return (
         <React.Fragment>
@@ -154,7 +192,8 @@ class Discussion extends React.Component {
             </CardActions>
 
   			</Card>
-        <Comment className = "reply"/>
+        {elements}
+        <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
         </React.Fragment>
 
   		);

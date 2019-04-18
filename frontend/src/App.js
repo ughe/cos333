@@ -53,7 +53,7 @@ class App extends Component {
               <a href="#about" className="w3-bar-item w3-button">About</a>
             </div>
 
-            <Search/>
+           
 
 
             <form className="w3-bar-item search-container center">
