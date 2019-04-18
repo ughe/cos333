@@ -118,6 +118,15 @@ Vote.belongsTo(Comment);
 
 // Re-set database structure (dumps all data)
 //sequelize.sync({force: true});
+// Create object method:
+/*
+sequelize.sync().then(() => {
+  return Comment.create({
+    content: "insightful comment",
+    ideaId: 2,
+  });
+});
+*/
 
 // Route for checking databse connection
 app.get('/db', (req, res) =>
@@ -253,6 +262,7 @@ app.get('/api', (req, res) => res.json({
   comment_votes: '/api/get/comment/732/votes',
   set_idea: '/api/set/idea/',
   set_comment: '/api/set/comment/',
+  filter: '/api/get/idea/tag/name_of_the_tag',
 }));
 
 
@@ -264,33 +274,44 @@ app.use('/api/get/user/:netid?', ensureAuth, function(req, res) {
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.use('/api/get/idea/:id?/:many?', function(req, res) {
-  var many = [];
-  if (req.params.many === 'comments') {
-    many = [Comment];
-  } else if (req.params.many === 'votes') {
-    many = [Vote];
-  }
+app.use('/api/get/idea/tag/:name', function(req, res) {
+  Idea.findAll({include:[{
+    model: Tag,
+    where: {name: req.params.name},
+    order: '"updatedAt" DESC',
+  }]})
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
+
+app.use('/api/get/idea/:id/comment', function(req, res) {
+  Idea.findAll({include:[{
+    model: Comment,
+    where: {ideaId: req.params.id},
+    include:[Vote,Comment],
+    order: '"updatedAt" DESC',
+  }]})
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
+
+app.use('/api/get/idea/:id?', function(req, res) {
   const search = (req.params.id) ? {
     where:{id:req.params.id},
-    include:many,
-  } : {};
+    include:[Tag,Vote,Comment],
+    order: '"updatedAt" DESC',
+  } : {include:[Tag,Vote,Comment]};
   Idea.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-app.use('/api/get/comment/:id?/:many?', function(req, res) {
-  var many = [];
-  if (req.params.many === 'comments') {
-    many = [Comment];
-  } else if (req.params.many === 'votes') {
-    many = [Vote];
-  }
+app.use('/api/get/comment/:id?', function(req, res) {
   const search = (req.params.id) ? {
     where:{id:req.params.id},
-    include:many,
-  } : {};
+    include:[Comment, Vote],
+    order: '"updatedAt" DESC',
+  } : {include:[Comment, Vote],order: '"updatedAt" DESC',};
   Comment.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
@@ -369,7 +390,7 @@ app.post('/api/set/vote', ensureAuth, function(req, res) {
   }
 });
 
-// TODO
+// TODO auth
 app.post('/api/set/tag', ensureAuth, function(req, res) {
   const id = req.body.id;
   if (id) {
