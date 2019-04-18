@@ -75,14 +75,16 @@ class NewPost extends React.Component {
 
     
     const idea = {
-      user_netid: "eiseisgruber",
+      userNetid: "aboppana",
       title: this.state.title,
       content: this.state.description,
       photo_url: this.state.url,
       net_votes: 0,
     };
 
+    let id = -1;
 
+    //Idea Post
     fetch('/api/set/idea', {
       method: 'POST',
       headers: {
@@ -95,16 +97,42 @@ class NewPost extends React.Component {
       return response.json();
     })
     .then(data => {
-      console.log("hello");
-      //window.location.reload();
+    //window.location.reload();
       console.log(data);
+      id = data["id"];
+      console.log(id);
+      console.log(this.state.tags);
+
+      if(typeof id !== 'undefined')
+      {
+        for(var i = 0;  i < this.state.tags.length; i++)
+        {
+
+
+          fetch('/api/set/tag', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify({
+              name: this.state.tags[i],
+              ideaId: id,
+            })
+          });
+        }
+      }
+      
+      
     })
     .catch(err => {
       console.log(err);
     });
 
+    
 
-
+    //Tag Post
+    
 
     this.setState({ open: false });
 
