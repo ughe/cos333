@@ -324,6 +324,13 @@ app.use('/api/get/tag/:name?', function(req, res) {
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
+app.use('/api/get/vote/:id?', function(req, res) {
+  const search = (req.params.id) ? {where:{name:req.params.id}} : {};
+  Vote.findAll(search)
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
+
 
 app.use('/api/set/user', ensureAuth, function(req, res) {
   const whoami = req.user;
