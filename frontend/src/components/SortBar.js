@@ -44,8 +44,59 @@ class SortBar extends React.Component {
     this.setState({ anchorEl: event.currentTarget });
   };
 
-  handleClose = () => {
+  handleClose = (keyWord) => {
     this.setState({ anchorEl: null });
+  };
+
+  handleFiltered = (keyWord) => {
+    this.setState({ anchorEl: null });
+
+    let request = '';
+
+    if(keyWord === 'all')
+    {
+      request = '/api/get/idea';
+    } else {
+      request = '/api/get/idea/tag/' + keyWord;
+    }
+
+    console.log(request);
+
+    fetch(request)
+    .then(results => {
+      return results.json();
+    }).then(data => {
+
+      let random = JSON.stringify(data);
+      //let dataArray = this.state.list.splice();
+      
+      let fetchedData = []
+      for(var i = 0; i < data.length; i++)
+      {
+
+        let randomIdea = {
+          title: data[i]["title"],
+          description: data[i]["content"],
+          net_votes: data[i]["net_votes"],
+          photo_url: data[i]["photo_url"],
+        };
+
+        if(keyWord === 'all')
+        {
+          randomIdea.id = data[i]["id"];
+        } else {
+          randomIdea.id = data[i]["tags"][0]["ideaId"];
+        }
+
+
+
+        fetchedData = [randomIdea,...fetchedData];
+
+      }
+
+      this.props.filter(fetchedData);
+
+    });
   };
 
   render() {
@@ -69,10 +120,11 @@ class SortBar extends React.Component {
       
 
         <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose}>
-          <MenuItem onClick={this.handleClose}>Entrepreneurship</MenuItem>
-          <MenuItem onClick={this.handleClose}>Clubs</MenuItem>
-          <MenuItem onClick={this.handleClose}>Initiatives</MenuItem>
-          <MenuItem onClick={this.handleClose}>Shower Thoughts</MenuItem>
+          <MenuItem onClick={() => {this.handleFiltered('entreprenuership')}} >Entrepreneurship</MenuItem>
+          <MenuItem onClick={() => {this.handleFiltered('club')}}>Clubs</MenuItem>
+          <MenuItem onClick={() => {this.handleFiltered('initiative')}}>Initiatives</MenuItem>
+          <MenuItem onClick={() => {this.handleFiltered('shower thought')}}>Shower Thoughts</MenuItem>
+          <MenuItem onClick={() => {this.handleFiltered('all')}}>All</MenuItem>
         </Menu>
       </MuiThemeProvider>
 
