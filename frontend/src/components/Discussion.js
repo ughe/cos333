@@ -16,11 +16,10 @@ import CardContent from '@material-ui/core/CardContent';
 const styles = theme => ({
 	card: {
 		margin: 'auto',
-		backgroundColor: '#777A8A',
-		minWidth: '200px',
-		minHeight: '50px',
-
-    margin: '10px 10px',
+		backgroundColor: "",
+		maxWidth: '2000px',
+    margin: '10px 2px 2px',
+    width: "99%",
     display: 'inline-block',
   },
   media: {
@@ -51,11 +50,11 @@ class Discussion extends React.Component {
     	super(props)
     	this.close = this.close.bind(this)
       this.state = {
-        title: this.props.title,
-        description: this.props.description,
-        net_votes: this.props.net_votes,
-        photo_url: this.props.photo_url,
-        id: this.props.id,
+        title: "",
+        description:"",
+        net_votes: "",
+        photo_url: "",
+        id: "",
         open: false
       }
   	}
@@ -64,23 +63,45 @@ class Discussion extends React.Component {
   		this.props.close();
   	}
 
+    componentDidMount() {
+      var url = '/api/get/idea/' + this.props.idea
+
+      fetch(url)
+      .then(results => {
+        return results.json();
+      }).then(data => {
+
+        let random = JSON.stringify(data);
+
+
+        this.setState({
+          title: data[0]["title"],
+          description: data[0]["content"],
+          net_votes: data[0]["net_votes"],
+          photo_url: data[0]["photo_url"],
+          id: data[0]["id"],
+
+        });
+
+      });
+
+    }
+
+
+
   	render () {
+
+
 
   		const { classes } = this.props;
 
   		return (
-  			<Card className={classes.discussion} onClick={this.close}>
+  			<Card className={classes.card} onClick={this.close}>
 
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"/>
             
           <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
-
-
-  				<p>COMMENT PAGE</p>
-  				<Button onClick={this.close}> Close Discussion </Button>
-  				<p>Idea {this.props.idea}</p>
-
            
             <CardActionArea>
               <CardContent>

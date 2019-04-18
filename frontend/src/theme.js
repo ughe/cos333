@@ -6,9 +6,10 @@ const theme =  createMuiTheme({
     	suppressDeprecationWarnings: true,
   },
   	palette: {
-    	primary: {main: '#01BAEF'}, // bring blue
-    	secondary: {main: '#FF5900'},  // bring orange
-    	white: "value", 
+    	primary: {main: '#01BAEF'}, // blue
+    	secondary: {main: '#FF5900'},  // orange
+    	white: {main: '#FBFBFF'}, // ghost white
+    	lightgray: {main: '#D3D3D3'}, // light gray
   }, 
   	breakpoints: {
   		xs: "0",
