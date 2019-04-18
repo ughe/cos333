@@ -5,10 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import IdeaCard from './Card/Card'
 import Discussion from './Discussion'
 
-import "../w3.css";
-import NewPost from './NewPost';
-import SortBar from './SortBar';
-
 
 const styles = theme => ({
   root: {
@@ -26,7 +22,6 @@ class IdeaFeed extends React.Component {
 
     this.handler = this.handler.bind(this)
     this.closer = this.closer.bind(this)
-    this.filter = this.filter.bind(this)
 
     this.state = {
       list: [],
@@ -83,25 +78,14 @@ class IdeaFeed extends React.Component {
   closer() {
     this.setState({
       discussion: false,
-      openIdea: -1,
+      openIdea: -1
     });
-  }
-
-  filter(param){
-    this.setState({
-      list: param
-    });
-
-    console.log(this.state.list);
   }
 
 
   render () {
     
-    console.log("here");
-    console.log(this.state.list);
-
-    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id}/>)
+    var elements = this.state.list.map((item, index) => <IdeaCard discussion={this.handler} key={index} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id}/>)
     
     if (this.state.discussion)
     {
@@ -114,11 +98,6 @@ class IdeaFeed extends React.Component {
     } else {
       return (
         <div>
-          <div className="w3-bar">
-            <SortBar className="w3-bar-item" filter={this.filter}/>
-            <NewPost className="w3-bar-item" />
-          </div>
-
           {elements}
         </div>
       );

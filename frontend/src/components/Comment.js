@@ -18,7 +18,6 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 const styles = theme => ({
   card: {
-    float: 'right',
     maxWidth: '600px',
     margin: '10px 5px 50px',
   },
@@ -44,11 +43,14 @@ class Comment extends React.Component {
     constructor(props) {
       super(props)
       this.state = {
-        title: "",
-        description:"",
-        net_votes: "",
-        photo_url: "",
         id: "",
+        content: "",
+        net_votes:"",
+        postDate: "",
+        updateDate: "",
+        netid: "",
+        ideaId: "",
+        commentID: "",
         open: false,
         expanded: true,
       }
@@ -132,9 +134,6 @@ class Comment extends React.Component {
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton aria-label="Add to favorites">
             <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="Share">
-            <ShareIcon />
           </IconButton>
           <IconButton
             className={classnames(classes.expand, {

@@ -15,15 +15,16 @@ import IconButton from '@material-ui/core/IconButton';
 class App extends Component {
    constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this)
     this.state = {
       query: null,
+      search: null,
     }
   }
 
-  handleChange = (event) => {
-    //this.setState({ query: event.target.value });
-  }
+handleSearchChange(e) {
+   this.setState({search: e.target.value});
+   console.log(this.search)
+}
 
 
   render() {
@@ -53,12 +54,11 @@ class App extends Component {
             </div>
 
 
-
-
             <form className="w3-bar-item search-container center">
                 
                 <input id="search" type="text" id="search-bar" placeholder="..."/>
-                <IconButton onClick={this.handleChange} aria-label="search" style={{float: 'right'}}>
+                <IconButton onClick={this.handleChange} aria-label="search" style={{float: 'right'}}
+                    value={this.state.search} onChange={this.handleSearchChange}>
                   <i className="material-icons">
                     search
                   </i>
@@ -68,6 +68,10 @@ class App extends Component {
 
           </div>
         </div>
+
+        <p>
+        this.state.search
+        </p>
 
         <IdeaFeed/>
         

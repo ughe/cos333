@@ -22,8 +22,6 @@ const styles = theme => ({
 		maxWidth: '2000px',
     margin: '5px 5px 5px',
     width: 'calc(100% - 10px)',
-    display: 'inline-block',
-    float: 'right',
   },
   reply: {
     margin: 'auto',
@@ -31,7 +29,6 @@ const styles = theme => ({
     maxWidth: '2000px',
     margin: '10px 2px 2px',
     width: "99%",
-    display: 'inline-block',
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
@@ -154,7 +151,23 @@ class Discussion extends React.Component {
             </CardActions>
 
   			</Card>
-        <Comment className = "reply"/>
+        
+        <div>
+          <Comment className = "reply"/>
+        </div>
+
+        <div>
+          <Comment className = "reply"/>
+        </div>
+        <div>
+          <Comment className = "reply"/>
+        </div>
+                <div>
+          <Comment className = "reply"/>
+        </div>
+                <div>
+          <Comment className = "reply"/>
+        </div>
         </React.Fragment>
 
   		);
