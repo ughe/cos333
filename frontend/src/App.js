@@ -22,10 +22,8 @@ class App extends Component {
   }
 
   handleChange = (event) => {
-    //this.setState({ query: event.target.value });
-    console.log(document.getElementById("search").value);
+    this.setState({ query: event.target.value });
   }
-
 
   render() {
 
@@ -57,20 +55,15 @@ class App extends Component {
 
 
             <form className="w3-bar-item search-container center">
-                
-                <input id="search" type="text" id="search-bar" placeholder="..."/>
-                <IconButton onClick={this.handleChange} aria-label="search" style={{float: 'right'}}>
-                  <i className="material-icons">
-                    search
-                  </i>
-                </IconButton>
-                
+                <input id="search" type="text" id="search-bar" placeholder="..." onChange={this.handleChange}/>
+                <a href="#"><img className="search-icon" 
+                src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"/></a>
             </form>
 
           </div>
         </div>
 
-        <IdeaFeed/>
+        <IdeaFeed query={this.state.query}/>
         
       </div>
 

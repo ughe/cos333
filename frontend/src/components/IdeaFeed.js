@@ -73,6 +73,52 @@ class IdeaFeed extends React.Component {
 
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps["query"]);
+    console.log(JSON.stringify(nextProps).query);
+    let request = '/api/get/idea/search/' + nextProps["query"]
+
+    if(nextProps["query"] === '')
+    {
+      request = '/api/get/idea'
+    }
+
+    fetch(request)
+    .then(results => {
+      return results.json();
+    }).then(data => {
+
+      let random = JSON.stringify(data);
+      //let dataArray = this.state.list.splice();
+      console.log(random);
+      
+      let fetchedData = []
+      for(var i = 0; i < data.length; i++)
+      {
+
+        let randomIdea = {
+        title: data[i]["title"],
+        description: data[i]["content"],
+        net_votes: data[i]["net_votes"],
+        photo_url: data[i]["photo_url"],
+        id: data[i]["id"],
+        };
+
+        fetchedData = [randomIdea,...fetchedData];
+
+      }
+
+      console.log(fetchedData);
+
+      this.setState({
+        list: fetchedData
+      });
+
+    });
+  }
+
+
+
   handler(param) {
     this.setState({
       discussion: true,
