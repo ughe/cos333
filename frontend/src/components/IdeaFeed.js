@@ -150,29 +150,16 @@ class IdeaFeed extends React.Component {
 
     var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id}/>)
     
-    if (this.state.discussion)
-    {
-      console.log("Whoa");
-      return (
-        <div>
-          <Discussion idea={this.state.openIdea} close={this.closer} refresh={this.handler}/>
-        </div>
-
-      );
-    } else {
-      return (
-        <div>
+    return (
+      <div>
           <div className="w3-bar">
             <SortBar className="w3-bar-item" filter={this.filter}/>
             <NewPost className="w3-bar-item" />
           </div>
-
           {elements}
-        </div>
-      );
-    }
-
-    
+          <Discussion isOpen={this.state.discussion} idea={this.state.openIdea} close={this.closer} refresh={this.handler}/>
+      </div>
+    );
   }
 }
 

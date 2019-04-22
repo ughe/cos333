@@ -17,13 +17,19 @@ import Comment from "./Comment"
 import NewComment from "./NewComment"
 import "../w3.css";
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 const styles = theme => ({
 	card: {
 		margin: 'auto',
 		backgroundColor: "",
 		maxWidth: '2000px',
     margin: '5px 5px 5px',
-    width: 'calc(100% - 10px)',
+    width: '500px',
     display: 'inline-block',
     float: 'right',
   },
@@ -69,6 +75,7 @@ class Discussion extends React.Component {
         photo_url: null,
         id: this.props.idea,
         commentList: [],
+        open: this.props.isOpen,
       }
   	}
 
@@ -82,8 +89,75 @@ class Discussion extends React.Component {
       this.props.refresh(this.state.id);
     }
 
+    componentWillReceiveProps(nextProps)
+    {
+      this.setState({ open: nextProps.isOpen,
+                      id: nextProps.idea,
+
+      })
+
+      if(this.state.open)
+      {
+        var url = '/api/get/idea/' + this.state.id
+
+        console.log(url);
+
+        fetch(url)
+        .then(results => {
+          return results.json();
+        }).then(data => {
+
+          let random = JSON.stringify(data);
+
+          this.setState({
+            title: data[0]["title"],
+            description: data[0]["content"],
+            net_votes: data[0]["net_votes"],
+            photo_url: data[0]["photo_url"],
+            id: data[0]["id"],
+          });
+
+            fetch('/api/get/idea/' + this.state.id)
+            .then(results => {
+              return results.json();
+            }).then(data => {
+
+              let fetchedData = []
+              for(var i = 0; i < data[0]["comments"].length; i++)
+              {
+
+                let randomComment = {
+                  content: data[0]["comments"][i]["content"],
+                  net_votes: data[0]["comments"][i]["net_votes"],
+                  author: data[0]["comments"][i]["userNetid"],
+                  id: data[0]["comments"][i]["id"],
+                };
+
+                fetchedData = [randomComment,...fetchedData];
+
+              }
+
+
+              this.setState({
+                commentList: [
+                ...this.state.commentList,
+                ...fetchedData
+                ]
+              });
+
+              //console.log(this.state.commentList);
+
+            })
+
+        });
+      }
+    }
+
+    /*
     componentDidMount() {
       var url = '/api/get/idea/' + this.state.id
+
+      console.log(url);
 
       fetch(url)
       .then(results => {
@@ -128,16 +202,16 @@ class Discussion extends React.Component {
               ]
             });
 
-            console.log(this.state.commentList);
+            //console.log(this.state.commentList);
 
           })
 
       });
 
     }
+    */
 
   	render () {
-
 
 
   		const { classes } = this.props;
@@ -145,7 +219,7 @@ class Discussion extends React.Component {
       var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id}/>);
 
   		return (
-        <React.Fragment>
+        <Dialog open={this.state.open}>
   			<Card className={classes.card} onClick={this.close}>
 
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -194,7 +268,7 @@ class Discussion extends React.Component {
   			</Card>
         {elements}
         <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
-        </React.Fragment>
+        </Dialog>
 
   		);
   	}
