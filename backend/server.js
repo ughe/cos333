@@ -264,6 +264,8 @@ app.get('/api', (req, res) => res.json({
   set_comment: '/api/set/comment/',
   filter: '/api/get/idea/tag/name_of_the_tag',
   search: '/api/get/idea/search/query',
+  del: '/api/del/vote/idea/:ideaId/:netid',
+  del: '/api/del/vote/comment/:commentId/:netid',
 }));
 
 
@@ -411,6 +413,33 @@ app.post('/api/set/tag', ensureAuth, function(req, res) {
   }
 });
 
+app.use('/api/del/vote/idea/:ideaId/:netid', function(req, res) {
+  const whoami = req.user;
+  const netid = req.body.netid;
+  //if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+
+  Vote.destroy({where: {netid: req.params.netid, ideaId: req.params.ideaId, }})
+  .then(function(data) {
+    res.redirect('/');
+  })
+  .catch(function(err) {
+    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
+  });
+});
+
+app.use('/api/del/vote/comment/:commentId/:netid', function(req, res) {
+  const whoami = req.user;
+  const netid = req.body.netid;
+  //if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+
+  Vote.destroy({where: {netid: req.params.netid, commentId: req.params.commentId, }})
+  .then(function(data) {
+    res.redirect('/');
+  })
+  .catch(function(err) {
+    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
+  });
+});
 
 
 /*
