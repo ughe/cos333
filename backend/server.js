@@ -255,7 +255,7 @@ app.get('/api', (req, res) => res.json({
   logout: '/api/logout',
   users: '/api/get/user',
   ideas: '/api/get/idea',
-  idea: '/api/get/idea/372
+  idea: '/api/get/idea/372',
   votes: '/api/get/vote/idea/:ideaId/:netid',
   votes: '/api/get/vote/comment/:commentId/:netid',
   comments: '/api/get/comment',
