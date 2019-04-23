@@ -85,7 +85,14 @@ class NewPost extends React.Component {
 
     let id = -1;
 
+    let shouldOpen = false;
+
     //Idea Post
+    if (title === null || content === null || photo_url === null)
+    {
+      shouldOpen = true;
+    }
+    else {
     fetch('/api/set/idea', {
       method: 'POST',
       headers: {
@@ -130,15 +137,13 @@ class NewPost extends React.Component {
       window.location.assign('/login');
       console.log(err);
     });
-
+  }
     
 
     //Tag Post
     
 
-    this.setState({ open: false });
-
-
+    this.setState({ open: shouldOpen });
 
   }
 
@@ -182,6 +187,7 @@ class NewPost extends React.Component {
               rows ="1"
               rowsMax="2"
               onChange={this.handleChangeTitle}
+              required
             />
 
             <br/>
@@ -200,6 +206,7 @@ class NewPost extends React.Component {
               rows ="2"
               rowsMax="4"
               onChange={this.handleChangeDescription}
+              required
             />
 
             <br/>
@@ -218,6 +225,7 @@ class NewPost extends React.Component {
               rows ="1"
               rowsMax="2"
               onChange={this.handleChangeUrl}
+              required
             />
 
             <DialogContentText>

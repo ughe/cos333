@@ -76,7 +76,7 @@ class IdeaCard extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Card className={classes.card} onClick={this.discussion(this.state.id)}>
+      <Card className={classes.card} >
       
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>
@@ -85,10 +85,10 @@ class IdeaCard extends React.Component {
 
         <CardActionArea>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
+            <Typography onClick={this.discussion(this.state.id)} gutterBottom variant="h5" component="h2">
               {this.state.title}
             </Typography>
-            <Typography component="p">
+            <Typography component="p" onClick={this.discussion(this.state.id)}>
               {this.state.description}
             </Typography>
           </CardContent>
@@ -97,6 +97,7 @@ class IdeaCard extends React.Component {
             className={classes.media}
             image= {this.state.photo_url} 
             title="Contemplative Reptile"
+            onClick={this.discussion(this.state.id)}
           /> 
 
         </CardActionArea>

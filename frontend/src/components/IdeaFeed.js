@@ -78,7 +78,7 @@ class IdeaFeed extends React.Component {
     console.log(JSON.stringify(nextProps).query);
     let request = '/api/get/idea/search/' + nextProps["query"]
 
-    if(nextProps["query"] === '')
+    if(nextProps["query"] === '' || nextProps["query"] === null)
     {
       request = '/api/get/idea'
     }

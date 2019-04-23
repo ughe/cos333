@@ -140,6 +140,7 @@ class NewComment extends React.Component {
               rows ="1"
               rowsMax="2"
               onChange={this.handleChangeContent}
+              required
             />
 
             <br/>

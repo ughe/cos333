@@ -16,13 +16,37 @@ class App extends Component {
    constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this)
+    this.handleLogin = this.handleLogin.bind(this)
     this.state = {
       query: null,
+      logIn: false,
     }
   }
 
   handleChange = (event) => {
     this.setState({ query: event.target.value });
+  }
+
+  handleLogin = (event) => {
+    console.log(this.state.logIn);
+
+    if (this.state.logIn === false)
+    {
+      console.log(this.state.logIn);
+      fetch('/api/whoami')
+      .then(results => {
+        this.setState({logIn: true});
+        return results.json();
+      }).then(data => {
+        console.log(data);
+      })
+      .catch(err => {
+        console.log("hi");
+        this.setState({logIn: true});
+        window.location.assign('/login');
+      });
+    }
+    
   }
 
   render() {
@@ -31,7 +55,7 @@ class App extends Component {
     return (
       
 
-      <div className="App">
+      <div className="App" onClick={this.handleLogin}>
         <Helmet>
           <style>{'body { background-color: #D3D3D3; }'}</style>
         </Helmet>
