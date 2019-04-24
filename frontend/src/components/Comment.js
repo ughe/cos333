@@ -26,6 +26,11 @@ const styles = theme => ({
     margin: '0 auto',
     marginTop: '30px',
   },
+  replyCard:{
+    maxWidth: '400px',
+    margin: '0 auto',
+    marginTop: '10px',
+  },
   actions: {
     display: "flex"
   },
@@ -87,7 +92,7 @@ class Comment extends React.Component {
     }
 
     return (
-      <Card className={classes.card}>
+      <Card className={isTopLevel ? classes.card : classes.replyCard}>
         <CardHeader
           avatar={
             <Avatar aria-label="Recipe" className={classes.avatar}>

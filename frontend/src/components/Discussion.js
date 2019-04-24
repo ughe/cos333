@@ -61,6 +61,7 @@ class Discussion extends React.Component {
       this.state = {
         title: null,
         description: null,
+        net_votes: null,
         photo_url: null,
         id: this.props.idea,
         commentList: [],
@@ -78,57 +79,71 @@ class Discussion extends React.Component {
     }
 
     componentDidMount() {
-      var url = '/api/get/idea/' + this.state.id
 
-      fetch(url)
+      var topLevelIds = [];
+
+      fetch('/api/get/idea/' + this.state.id)
       .then(results => {
         return results.json();
-      }).then(data => {
+      })
+      .then(data => {
+        for(var i = 0; i < data[0]["comments"].length; i++)
+        {
+          topLevelIds = [...topLevelIds, data[0]["comments"][i]["id"]];
+        }
 
-        let random = JSON.stringify(data);
+        var fetchedData = [];
+        var fetches = [];
+        let self = this;
 
-        this.setState({
-          title: data[0]["title"],
-          description: data[0]["content"],
-          net_votes: data[0]["net_votes"],
-          photo_url: data[0]["photo_url"],
-          id: data[0]["id"],
-        });
-
-          fetch('/api/get/idea/' + this.state.id)
-          .then(results => {
-            return results.json();
-          }).then(data => {
-
-            let fetchedData = []
-            for(var i = 0; i < data[0]["comments"].length; i++)
-            {
-
-              let randomComment = {
-                content: data[0]["comments"][i]["content"],
-                net_votes: data[0]["comments"][i]["net_votes"],
-                author: data[0]["comments"][i]["userNetid"],
-                id: data[0]["comments"][i]["id"],
-                ideaId: data[0]["comments"][i]["ideaId"],
-                commentId: data[0]["comments"][i]["commentId"],
+        for(var j = 0; j < topLevelIds.length; j++)
+        {
+          fetches.push(
+            fetch('/api/get/comment/' + topLevelIds[j])
+            .then(results => {
+              return results.json();
+            }).then(data => {
+              var topLevelComment = {
+                content: data[0]["content"],
+                net_votes: data[0]["net_votes"],
+                author: data[0]["userNetid"],
+                id: data[0]["id"],
+                ideaId: data[0]["ideaId"],
+                commentId: data[0]["commentId"],
               };
 
-              fetchedData = [...fetchedData, randomComment];
+              fetchedData = [...fetchedData, topLevelComment];
 
-            }
+              for(var k = 0; k < data[0]["comments"].length; k++)
+              {
+                var replyComment = {
+                  content: data[0]["comments"][k]["content"],
+                  net_votes: data[0]["comments"][k]["net_votes"],
+                  author: data[0]["comments"][k]["userNetid"],
+                  id: data[0]["comments"][k]["id"],
+                  ideaId: data[0]["comments"][k]["ideaId"],
+                  commentId: data[0]["comments"][k]["commentId"],
+                };
 
+                fetchedData = [...fetchedData, replyComment];
+              }
+            })
 
-            this.setState({
-              commentList: [
-              ...this.state.commentList,
-              ...fetchedData
-              ]
-            });
+          );
+        }
 
-            console.log(this.state.commentList);
-
-          })
-
+        Promise.all(fetches).then(function() {
+          self.setState({
+            commentList: [
+            ...self.state.commentList,
+            ...fetchedData
+            ],
+            title: data[0]["title"],
+            description: data[0]["content"],
+            net_votes: data[0]["net_votes"],
+            photo_url: data[0]["photo_url"],
+          });
+        });
       });
 
     }

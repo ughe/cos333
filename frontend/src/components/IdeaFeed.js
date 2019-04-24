@@ -90,7 +90,6 @@ class IdeaFeed extends React.Component {
 
       let random = JSON.stringify(data);
       //let dataArray = this.state.list.splice();
-      console.log(random);
       
       let fetchedData = []
       for(var i = 0; i < data.length; i++)
@@ -107,8 +106,6 @@ class IdeaFeed extends React.Component {
         fetchedData = [randomIdea,...fetchedData];
 
       }
-
-      console.log(fetchedData);
 
       this.setState({
         list: fetchedData
