@@ -19,9 +19,9 @@ import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   card: {
-    float: 'right',
     maxWidth: '600px',
-    margin: '10px 5px 50px',
+    margin: '0 auto',
+    marginTop: '30px',
   },
   actions: {
     display: "flex"
