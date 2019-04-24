@@ -269,14 +269,15 @@ app.get('/api', (req, res) => res.json({
   votes: '/api/get/vote/idea/:ideaId/:netid',
   votes: '/api/get/vote/comment/:commentId/:netid',
   comments: '/api/get/comment',
-  comment_comments: '/api/get/comment/372/comments',
-  comment_votes: '/api/get/comment/732/votes',
+  comment_comments: '/api/get/comment/:id/comments',
+  comment_votes: '/api/get/comment/:id/votes',
   set_idea: '/api/set/idea/',
   set_comment: '/api/set/comment/',
   filter: '/api/get/idea/tag/name_of_the_tag',
   search: '/api/get/idea/search/query',
   del: '/api/del/vote/idea/:ideaId/:netid',
   del: '/api/del/vote/comment/:commentId/:netid',
+  del: '/api/del/idea/:id',
 }));
 
 
@@ -373,7 +374,7 @@ app.post('/api/set/idea', ensureAuth, function(req, res) {
     .then(function(data) { res.json(data); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   } else {
-    if (req.body.userNetid != req.user) { return res.send("403"); } // FORBIDDEN
+    if (req.body.userNetid !== req.user) { return res.send("403"); } // FORBIDDEN
     Idea.create(req.body)
     .then(function(data) { res.json(data); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
@@ -388,7 +389,7 @@ app.post('/api/set/comment', ensureAuth, function(req, res) {
     .then(function(data) { res.json(data); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   } else {
-    if (req.body.userNetid != req.user) { return res.send("403"); } // FORBIDDEN
+    if (req.body.userNetid !== req.user) { return res.send("403"); } // FORBIDDEN
     Comment.create(req.body)
     .then(function(data) { res.json(data); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
@@ -399,35 +400,26 @@ app.post('/api/set/comment', ensureAuth, function(req, res) {
 app.post('/api/set/vote', ensureAuth, function(req, res) {
   const id = req.body.id;
   if (id) {
-    Vote.update(req.body, {where : { id: id, userNetid: req.user } })
+    Vote.update(req.body, {where : { id: id, netid: req.user } })
     .then(function(data) { res.json(data); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   } else {
-    if (req.body.userNetid != req.user) { return res.send("403"); } // FORBIDDEN
+    if (req.body.netid !== req.user) { return res.send("403"); } // FORBIDDEN
     Vote.create(req.body)
     .then(function(data) { res.json(data); })
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
   }
 });
 
-// PROTECTED
 app.post('/api/set/tag', ensureAuth, function(req, res) {
-  const id = req.body.id;
-  if (id) {
-    Tag.update(req.body, {where : { id: id, userNetid: req.user } })
-    .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
-  } else {
-    if (req.body.userNetid != req.user) { return res.send("403"); } // FORBIDDEN
-    Tag.create(req.body)
-    .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
-  }
+  Tag.create(req.body)
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
 // PROTECTED
 app.use('/api/del/vote/idea/:ideaId/:netid', ensureAuth, function(req, res) {
-  if (req.params.netid != req.user) { return res.send("403"); } // FORBIDDEN
+  if (req.params.netid !== req.user) { return res.send("403"); } // FORBIDDEN
   Vote.destroy({where: {netid: req.params.netid, ideaId: req.params.ideaId, }})
   .then(function(data) {
     res.redirect('/');
@@ -439,7 +431,7 @@ app.use('/api/del/vote/idea/:ideaId/:netid', ensureAuth, function(req, res) {
 
 // PROTECTED
 app.use('/api/del/vote/comment/:commentId/:netid', ensureAuth, function(req, res) {
-  if (req.params.netid != req.user) { return res.send("403"); } // FORBIDDEN
+  if (req.params.netid !== req.user) { return res.send("403"); } // FORBIDDEN
   Vote.destroy({where: {netid: req.params.netid, commentId: req.params.commentId, }})
   .then(function(data) {
     res.redirect('/');
@@ -449,10 +441,10 @@ app.use('/api/del/vote/comment/:commentId/:netid', ensureAuth, function(req, res
   });
 });
 
-/*
-// DELETE IDEA ENDPOINT - no permissions required!
-app.use('/api/del/idea/:id', function(req, res) {
-  Idea.destroy({where: {id: req.params.id,}})
+// PROTECTED
+app.use('/api/del/idea/:id', ensureAuth, function(req, res) {
+  if (req.params.userNetid !== req.user) { return res.send("403"); } // FORBIDDEN
+  Idea.destroy({where: {id: req.params.id, userNetid: req.user}})
   .then(function(data) {
     console.log('SUCCESS!');
     res.redirect('/');
@@ -461,6 +453,5 @@ app.use('/api/del/idea/:id', function(req, res) {
     if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
   });
 });
-*/
 
 app.listen(port);
