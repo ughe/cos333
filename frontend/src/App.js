@@ -46,16 +46,16 @@ class App extends Component {
         window.location.assign('/login');
       });
     }
-    
+
   }
 
   render() {
 
 
     return (
-      
 
-      <div className="App" onClick={this.handleLogin}>
+
+      <div className="App">
         <Helmet>
           <style>{'body { background-color: #D3D3D3; }'}</style>
         </Helmet>
@@ -75,12 +75,12 @@ class App extends Component {
               <a href="#about" className="w3-bar-item w3-button">About</a>
             </div>
 
-           
+
 
 
             <form className="w3-bar-item search-container center">
                 <input id="search" type="text" id="search-bar" placeholder="..." onChange={this.handleChange}/>
-                <a href="#"><img className="search-icon" 
+                <a href="#"><img className="search-icon"
                 src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"/></a>
             </form>
 
@@ -88,7 +88,7 @@ class App extends Component {
         </div>
 
         <IdeaFeed query={this.state.query}/>
-        
+
       </div>
 
     );
