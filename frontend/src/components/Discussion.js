@@ -19,21 +19,16 @@ import "../w3.css";
 
 const styles = theme => ({
 	card: {
-		margin: 'auto',
+		margin: '10px auto',
 		backgroundColor: "",
-		maxWidth: '2000px',
-    margin: '5px 5px 5px',
-    width: 'calc(100% - 10px)',
-    display: 'inline-block',
-    float: 'right',
+		maxWidth: '1000px',
   },
   reply: {
-    margin: 'auto',
+    margin: '0 auto',
     backgroundColor: "",
     maxWidth: '2000px',
     margin: '10px 2px 2px',
     width: "99%",
-    display: 'inline-block',
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
@@ -116,7 +111,7 @@ class Discussion extends React.Component {
                 id: data[0]["comments"][i]["id"],
               };
 
-              fetchedData = [randomComment,...fetchedData];
+              fetchedData = [...fetchedData, randomComment];
 
             }
 
