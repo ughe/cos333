@@ -255,8 +255,9 @@ app.get('/api', (req, res) => res.json({
   logout: '/api/logout',
   users: '/api/get/user',
   ideas: '/api/get/idea',
-  idea_comments: '/api/get/idea/372/comments',
-  idea_votes: '/api/get/idea/372/votes',
+  idea: '/api/get/idea/372',
+  votes: '/api/get/vote/idea/:ideaId/:netid',
+  votes: '/api/get/vote/comment/:commentId/:netid',
   comments: '/api/get/comment',
   comment_comments: '/api/get/comment/372/comments',
   comment_votes: '/api/get/comment/732/votes',
@@ -332,6 +333,27 @@ app.use('/api/get/vote/:id?', function(req, res) {
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
+
+app.use('/api/get/vote/idea/:ideaId/:netid', function(req, res) {
+  const whoami = req.user;
+  const netid = req.body.netid;
+  //if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+
+  Vote.findAll({where: {netid: req.params.netid, ideaId: req.params.ideaId, }})
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
+
+app.use('/api/del/vote/comment/:commentId/:netid', function(req, res) {
+  const whoami = req.user;
+  const netid = req.body.netid;
+  //if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+
+  Vote.findAll({where: {netid: req.params.netid, commentId: req.params.commentId, }})
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
+
 
 
 app.use('/api/set/user', ensureAuth, function(req, res) {
