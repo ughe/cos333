@@ -17,6 +17,9 @@ import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Button from '@material-ui/core/Button';
 
+import NewCommentReply from "./NewCommentReply"
+import "../w3.css";
+
 const styles = theme => ({
   card: {
     maxWidth: '600px',
@@ -51,6 +54,8 @@ class Comment extends React.Component {
         net_votes: "",
         author: "",
         id: "",
+        ideaId: "",
+        commentId: "",
         open: false,
         expanded: true,
       }
@@ -59,14 +64,22 @@ class Comment extends React.Component {
       this.state.net_votes = this.props.net_votes;
       this.state.author = this.props.author;
       this.state.id = this.props.id;
+      this.state.ideaId = this.props.ideaId;
+      this.state.commentId = this.props.commentId;
     }
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
+  handleReply = (event) => {
+
+  }
+
   render() {
     const { classes } = this.props;
+
+    let isTopLevel = (this.state.ideaId !== null);
 
     if(this.state.author === null)
     {
@@ -98,6 +111,8 @@ class Comment extends React.Component {
           <IconButton aria-label="Add to favorites">
             <FavoriteIcon />
           </IconButton>
+
+          {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.update} commentId={this.state.id}/>: null}
           
         </CardActions>
       </Card>

@@ -73,71 +73,79 @@ class NewPost extends React.Component {
 
   handleSubmit = (title, content, photo_url, tags) => (e) => {
 
-    
-    const idea = {
-      userNetid: "aboppana",
-      title: this.state.title,
-      content: this.state.description,
-      photo_url: this.state.photo_url,
-      net_votes: 0,
-    };
-
-
-    let id = -1;
-
     let shouldOpen = false;
+    
+    fetch('/api/whoami')
+    .then(results => {
+      return results.json();
+    }).then(data => {
+        const idea = {
+          userNetid: data["user"],
+          title: this.state.title,
+          content: this.state.description,
+          photo_url: this.state.photo_url,
+          net_votes: 0,
+        };
 
-    //Idea Post
-    if (title === null || content === null || photo_url === null)
-    {
-      shouldOpen = true;
-    }
-    else {
-    fetch('/api/set/idea', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
 
-      body: JSON.stringify(idea)
-    })
-    .then(function(response){
-      return response.json();
-    })
-    .then(data => {
+        let id = -1;
 
-      id = data["id"];
-
-      if(typeof id !== 'undefined')
-      {
-        for(var i = 0;  i < this.state.tags.length; i++)
+        //Idea Post
+        if (title === null || content === null || photo_url === null)
         {
-
-
-          fetch('/api/set/tag', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-
-            body: JSON.stringify({
-              name: this.state.tags[i],
-              ideaId: id,
-            })
-          });
+          shouldOpen = true;
         }
+        else {
+        fetch('/api/set/idea', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+          body: JSON.stringify(idea)
+        })
+        .then(function(response){
+          return response.json();
+        })
+        .then(data => {
+
+          id = data["id"];
+
+          if(typeof id !== 'undefined')
+          {
+            for(var i = 0;  i < this.state.tags.length; i++)
+            {
+
+
+              fetch('/api/set/tag', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+
+                body: JSON.stringify({
+                  name: this.state.tags[i],
+                  ideaId: id,
+                })
+              });
+            }
+          }
+
+          window.location.reload();
+
+          
+          
+        })
+        .catch(err => {
+          window.location.assign('/login');
+          console.log(err);
+        });
       }
-
-      window.location.reload();
-
-      
-      
-    })
-    .catch(err => {
+    }).catch(err => {
       window.location.assign('/login');
-      console.log(err);
     });
-  }
+    
+    
     
 
     //Tag Post

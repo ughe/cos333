@@ -109,6 +109,8 @@ class Discussion extends React.Component {
                 net_votes: data[0]["comments"][i]["net_votes"],
                 author: data[0]["comments"][i]["userNetid"],
                 id: data[0]["comments"][i]["id"],
+                ideaId: data[0]["comments"][i]["ideaId"],
+                commentId: data[0]["comments"][i]["commentId"],
               };
 
               fetchedData = [...fetchedData, randomComment];
@@ -137,7 +139,7 @@ class Discussion extends React.Component {
 
   		const { classes } = this.props;
 
-      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id}/>);
+      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId}/>);
 
   		return (
         <React.Fragment>
