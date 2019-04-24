@@ -187,6 +187,16 @@ var cas_strategy = new cas.Strategy(
 );
 passport.use(cas_strategy);
 
+// TODO: Crawl collegefacebook
+// https://www.princeton.edu/collegefacebook/butler/?query=netid
+// https://www.princeton.edu/collegefacebook/wilson/?query=netid
+// https://www.princeton.edu/collegefacebook/forbes/?query=netid
+// https://www.princeton.edu/collegefacebook/rockefeller/?query=netid
+// https://www.princeton.edu/collegefacebook/mathey/?query=netid
+// No results or img title="First Last" class = result > photo-container > photo
+// NOTE: uses email NOT netid to search or first and last
+// Translate netid to email alias using tigerbook get api/v1/undergraduates/netid if no results
+
 // CAS login
 app.use('/login', passport.authenticate('pucas', { failureRedirect: '/failed_login' }),
   function(req, res, next) {
