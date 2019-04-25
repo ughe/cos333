@@ -412,9 +412,9 @@ app.post('/api/set/vote', ensureAuth, function(req, res) {
 });
 
 app.post('/api/set/tag', ensureAuth, function(req, res) {
-  Tag.create(req.body)
-  .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  Promise.all(req.body.tags.map(t => Tag.create(t)))
+  .then(data => res.json(data)
+  .catch(err => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
 // PROTECTED
@@ -443,15 +443,12 @@ app.use('/api/del/vote/comment/:commentId/:netid', ensureAuth, function(req, res
 
 // PROTECTED
 app.use('/api/del/idea/:id', ensureAuth, function(req, res) {
-  if (req.params.userNetid !== req.user) { return res.send("403"); } // FORBIDDEN
   Idea.destroy({where: {id: req.params.id, userNetid: req.user}})
   .then(function(data) {
     console.log('SUCCESS!');
     res.redirect('/');
   })
-  .catch(function(err) {
-    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
-  });
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
 app.listen(port);
