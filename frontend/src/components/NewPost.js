@@ -110,73 +110,47 @@ class NewPost extends React.Component {
         .then(data => {
 
           id = data["id"];
+          var tagData = [];
+          let self = this;
 
-          console.log("Check Response");
           console.log(id);
           console.log(data);
-          console.log(this.state.tags);
+
 
           if(typeof id !== 'undefined')
           {
 
-            var fetches = [];
-            let self = this;
-            console.log("hello");
-            console.log(self.state.tags[0]);
-
-            /*
-            for(var i = 0;  i < self.state.tags.length; i++)
+            console.log(self.state.tags);
+            for(var j = 0; j < self.state.tags.length; j++)
             {
-              console.log(i);
-              fetches.push(
-                fetch('/api/set/tag', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
+              var tagDict = {
+                name: self.state.tags[j],
+                ideaId: id
+              };
 
-                  body: JSON.stringify({
-                    name: self.state.tags[i],
-                    ideaId: id,
-                  })
-                })
-              );
+              tagData = [...tagData, tagDict];
             }
 
-            console.log("FINISHED looping");
-            Promise.all(fetches).then(function(){
-              self.setState({ open: shouldOpen});
-            });*/
+            console.log(tagData);
 
-            Promise.all(self.state.tags.map(tag =>
-              fetch('/api/set/tag', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
+            fetch('/api/set/tag', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
 
-                body: JSON.stringify({
-                  name: tag,
-                  ideaId: id,
-                })
+              body: JSON.stringify({
+                tags: tagData,
               })
-              .then(console.log("fetch done!"))
-              .catch(err => {
-                console.log("Fetch Error");
-                console.log(err);
-              })
-            )).then(console.log("fetches done!"));
-            
-
-            //fetches.reduce((p, fn) => p.then(fn). Promise.resolve());
-            //iterable.reduce((p, fn) => p.then(fn), Promise.resolve())
-
-            
+            })
+            .then(console.log("post done!"))
+            .catch(err => {
+              console.log("post error");
+              console.log(err);
+            });  
           }
 
           window.location.reload();
-
-          
           
         })
         .catch(err => {

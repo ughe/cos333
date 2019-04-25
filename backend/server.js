@@ -413,7 +413,7 @@ app.post('/api/set/vote', ensureAuth, function(req, res) {
 
 app.post('/api/set/tag', ensureAuth, function(req, res) {
   Promise.all(req.body.tags.map(t => Tag.create(t)))
-  .then(data => res.json(data)
+  .then(data => res.json(data))
   .catch(err => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
