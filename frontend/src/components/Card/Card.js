@@ -6,9 +6,14 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+import TextField from '@material-ui/core/TextField';
+import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import Comment from './comment.svg';
+import Discussion from '../Discussion';
 
 
 
@@ -65,6 +70,10 @@ class IdeaCard extends React.Component {
     this.props.discussion(id);
   }
 
+  discussion = (id) => (e) => {
+    this.props.discussion(id);
+  }
+
   vote = (value) => (e) => {
     const ideaId = this.state.id;
     fetch('/api/whoami')
@@ -72,8 +81,6 @@ class IdeaCard extends React.Component {
       return results.json();
     }).then( data => {
       const netid = data["user"];
-      console.log("hi");
-      console.log("JULIO");
 
       // Search for existing vote
 
@@ -84,7 +91,7 @@ class IdeaCard extends React.Component {
       // Vote
         const vote = {
         netid: netid,
-        is_upvote: (value === 1),
+        is_upvote: (value == 1),
         is_idea: true,
           ideaId: ideaId,
         };

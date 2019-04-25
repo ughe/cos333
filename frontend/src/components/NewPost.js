@@ -1,5 +1,6 @@
 import React from 'react';
-import withStyles from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -7,9 +8,12 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 
-import MuiThemeProvider from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import theme from '../theme';
+import Checkbox from '@material-ui/core/Checkbox';
 import CheckBoxes from './CheckBoxes';
 
 
@@ -53,7 +57,7 @@ class NewPost extends React.Component {
   }
 
   handleChecks (param) {
-    this.setState({
+    this.setState({ 
       tags: [...this.state.tags, param]
     });
   }
@@ -70,7 +74,7 @@ class NewPost extends React.Component {
   handleSubmit = (title, content, photo_url, tags) => (e) => {
 
     let shouldOpen = false;
-
+    
     fetch('/api/whoami')
     .then(results => {
       return results.json();
@@ -129,8 +133,8 @@ class NewPost extends React.Component {
 
           window.location.reload();
 
-
-
+          
+          
         })
         .catch(err => {
           window.location.assign('/login');
@@ -140,12 +144,12 @@ class NewPost extends React.Component {
     }).catch(err => {
       window.location.assign('/login');
     });
-
-
-
+    
+    
+    
 
     //Tag Post
-
+    
 
     this.setState({ open: shouldOpen });
 
@@ -197,7 +201,7 @@ class NewPost extends React.Component {
             <br/>
 
             <DialogContentText>
-              Enter a concise description of your idea.  Think of it as the shortened elevator pitch that describes what your idea is fundamentally about so that readers can get a quick sense of you idea.
+              Enter a concise description of your idea.  Think of it as the shortened elevator pitch that describes what your idea is fundamentally about so that readers can get a quick sense of you idea. 
             </DialogContentText>
             <TextField
               autoFocus

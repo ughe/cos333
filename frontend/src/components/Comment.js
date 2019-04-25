@@ -1,15 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import classnames from "classnames";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
+import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
+import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Button from '@material-ui/core/Button';
 
 import NewCommentReply from "./NewCommentReply"
 import "../w3.css";
@@ -82,7 +88,7 @@ class Comment extends React.Component {
 
     if(this.state.author === null)
     {
-      this.setState({author: 'No author'});
+      this.state.author = 'No author';
     }
 
     return (
@@ -112,7 +118,7 @@ class Comment extends React.Component {
           </IconButton>
 
           {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.update} commentId={this.state.id}/>: null}
-
+          
         </CardActions>
       </Card>
     );

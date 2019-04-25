@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const theme =  createMuiTheme({
 	typography: {
@@ -10,7 +10,7 @@ const theme =  createMuiTheme({
     	secondary: {main: '#FF5900'},  // orange
     	white: {main: '#FBFBFF'}, // ghost white
     	lightgray: {main: '#D3D3D3'}, // light gray
-  },
+  }, 
   	breakpoints: {
   		xs: "0",
  		sm: "600",
@@ -18,6 +18,6 @@ const theme =  createMuiTheme({
  		lg: "1280",
  		xl: "1920",
   	}
-});
+}); 
 
 export default theme;

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import IdeaCard from './Card/Card';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -19,6 +22,13 @@ const styles = theme => ({
 		margin: '10px auto',
 		backgroundColor: "",
 		maxWidth: '1000px',
+  },
+  reply: {
+    margin: '0 auto',
+    backgroundColor: "",
+    maxWidth: '2000px',
+    margin: '10px 2px 2px',
+    width: "99%",
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
@@ -152,9 +162,9 @@ class Discussion extends React.Component {
 
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"/>
-
+            
           <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
-
+           
             <CardActionArea>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="h2">
@@ -167,9 +177,9 @@ class Discussion extends React.Component {
 
               <CardMedia
                 className={classes.media}
-                image= {this.state.photo_url}
+                image= {this.state.photo_url} 
                 title="Contemplative Reptile"
-              />
+              /> 
 
             </CardActionArea>
             <CardActions>
