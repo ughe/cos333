@@ -2,15 +2,9 @@ import React, { Component } from 'react';
 import "./w3.css";
 import './App.css';
 import IdeaFeed from './components/IdeaFeed';
-import IdeaCard from './components/Card/Card'
-import NewPost from './components/NewPost';
-import SortBar from './components/SortBar';
 import Login from './components/Login';
 import Helmet from 'react-helmet';
 
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
 
 class App extends Component {
    constructor(props) {
@@ -55,7 +49,7 @@ class App extends Component {
     return (
 
 
-      <div className="App">
+      <div className="App" onClick={this.handleLogin}>
         <Helmet>
           <style>{'body { background-color: #D3D3D3; }'}</style>
         </Helmet>
@@ -79,9 +73,11 @@ class App extends Component {
 
 
             <form className="w3-bar-item search-container center">
-                <input id="search" type="text" id="search-bar" placeholder="..." onChange={this.handleChange}/>
-                <a href="#"><img className="search-icon"
-                src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"/></a>
+                <input id="search-bar" type="text" placeholder="..." onChange={this.handleChange}/>
+                {/* <a href="#"> */}
+                <img alt="" className="search-icon"
+                src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"/>
+                {/* </a> */ }
             </form>
 
           </div>

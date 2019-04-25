@@ -1,24 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import IdeaCard from './Card/Card'
 import Discussion from './Discussion'
 
 import "../w3.css";
 import NewPost from './NewPost';
 import SortBar from './SortBar';
-
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    margin: '0 auto',
-    maxWidth: '120vh',
-    paddingTop: '2vh',
-  },
-});
-
 
 class IdeaFeed extends React.Component {
   constructor(props) {
@@ -35,16 +21,13 @@ class IdeaFeed extends React.Component {
     }
   }
 
-  
+
   componentDidMount() {
     fetch('/api/get/idea')
     .then(results => {
       return results.json();
     }).then(data => {
 
-      let random = JSON.stringify(data);
-      //let dataArray = this.state.list.splice();
-      
       let fetchedData = []
       for(var i = 0; i < data.length; i++)
       {
@@ -88,9 +71,6 @@ class IdeaFeed extends React.Component {
       return results.json();
     }).then(data => {
 
-      let random = JSON.stringify(data);
-      //let dataArray = this.state.list.splice();
-      
       let fetchedData = []
       for(var i = 0; i < data.length; i++)
       {
@@ -140,13 +120,13 @@ class IdeaFeed extends React.Component {
 
 
   render () {
-    
+
     console.log("here");
     console.log(this.state.list);
     console.log(this.state.discussion);
 
     var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id}/>)
-    
+
     if (this.state.discussion)
     {
       console.log("Whoa");
@@ -169,7 +149,7 @@ class IdeaFeed extends React.Component {
       );
     }
 
-    
+
   }
 }
 
