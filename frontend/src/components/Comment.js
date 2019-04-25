@@ -24,12 +24,14 @@ const styles = theme => ({
   contain: {
     maxWidth: '600px',
     margin: '0 auto',
+    maxHeight: '300px',
   },
   card: {
     maxWidth: '600px',
     margin: '0 auto',
     marginTop: '30px',
     marginBottom: '30px',
+    maxHeight: '300px',
   },
   replyCard:{
     maxWidth: '500px',
@@ -38,6 +40,7 @@ const styles = theme => ({
     margin: '0 auto',
     marginRight: '0px',
     marginBottom: '10px',
+    maxHeight: '300px',
   },
   actions: {
     display: "flex"
@@ -126,7 +129,7 @@ class Comment extends React.Component {
               <FavoriteIcon />
             </IconButton>
 
-            {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.update} commentId={this.state.id}/>: null}
+            {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.props.update} commentId={this.state.id}/>: null}
             
           </CardActions>
         </Card>

@@ -58,6 +58,7 @@ class Discussion extends React.Component {
     	super(props)
     	this.close = this.close.bind(this)
       this.update = this.update.bind(this)
+      this.componentDidMount = this.componentDidMount.bind(this);
       this.state = {
         title: null,
         description: null,
@@ -73,9 +74,64 @@ class Discussion extends React.Component {
   	}
 
     update(){
-      console.log("HELLO2");
-      this.forceUpdate();
-      this.props.refresh(this.state.id);
+      var topLevelIds = [];
+
+      fetch('/api/get/idea/' + this.state.id)
+      .then(results => {
+        return results.json();
+      })
+      .then(data => {
+        for(var i = 0; i < data[0]["comments"].length; i++)
+        {
+          topLevelIds = [...topLevelIds, data[0]["comments"][i]["id"]];
+        }
+
+        var fetchedData = [];
+        var fetches = [];
+        let self = this;
+
+        for(var j = 0; j < topLevelIds.length; j++)
+        {
+          fetches.push(
+            fetch('/api/get/comment/' + topLevelIds[j])
+            .then(results => {
+              return results.json();
+            }).then(data => {
+              var topLevelComment = {
+                content: data[0]["content"],
+                net_votes: data[0]["net_votes"],
+                author: data[0]["userNetid"],
+                id: data[0]["id"],
+                ideaId: data[0]["ideaId"],
+                commentId: data[0]["commentId"],
+              };
+
+              fetchedData = [...fetchedData, topLevelComment];
+
+              for(var k = 0; k < data[0]["comments"].length; k++)
+              {
+                var replyComment = {
+                  content: data[0]["comments"][k]["content"],
+                  net_votes: data[0]["comments"][k]["net_votes"],
+                  author: data[0]["comments"][k]["userNetid"],
+                  id: data[0]["comments"][k]["id"],
+                  ideaId: data[0]["comments"][k]["ideaId"],
+                  commentId: data[0]["comments"][k]["commentId"],
+                };
+
+                fetchedData = [...fetchedData, replyComment];
+              }
+            })
+
+          );
+        }
+
+        Promise.all(fetches).then(function() {
+          self.setState({
+            commentList:fetchedData
+          });
+        });
+      });
     }
 
     componentDidMount() {
@@ -146,74 +202,6 @@ class Discussion extends React.Component {
         });
       });
 
-
-
- /*
-      fetch('/api/get/idea/' + this.state.id)
-      .then(results => {
-        return results.json();
-      }).then(data => {
-
-        var fetchedData = [];
-        for(var i = 0; i < data[0]["comments"].length; i++)
-        {
-
-          var randomComment = {
-            content: data[0]["comments"][i]["content"],
-            net_votes: data[0]["comments"][i]["net_votes"],
-            author: data[0]["comments"][i]["userNetid"],
-            id: data[0]["comments"][i]["id"],
-            ideaId: data[0]["comments"][i]["ideaId"],
-            commentId: data[0]["comments"][i]["commentId"],
-          };
-
-          fetchedData = [...fetchedData, randomComment];
-
-          fetch('/api/get/comment/' + randomComment.id)
-          .then(results => {
-            return results.json();
-          }).then(replyData => {
-
-            for(var j = 0; j < replyData[0]["comments"].length; j++)
-            {
-
-              var replyComment = {
-                content: replyData[0]["comments"][j]["content"],
-                net_votes: replyData[0]["comments"][j]["net_votes"],
-                author: replyData[0]["comments"][j]["userNetid"],
-                id: replyData[0]["comments"][j]["id"],
-                ideaId: replyData[0]["comments"][j]["ideaId"],
-                commentId: replyData[0]["comments"][j]["commentId"],
-              };
-
-              fetchedData = [...fetchedData, replyComment];
-              console.log("Testing Internal");
-              console.log(fetchedData);
-            }
-            console.log("First");
-            console.log(fetchedData);
-
-          });
-        }
-
-        console.log("Done Fetching");
-        console.log(fetchedData);
-        
-        this.setState({
-          commentList: [
-          ...this.state.commentList,
-          ...fetchedData
-          ],
-          title: data[0]["title"],
-          description: data[0]["content"],
-          net_votes: data[0]["net_votes"],
-          photo_url: data[0]["photo_url"],
-        });
-
-        console.log(this.state.commentList);
-
-      });
-      */
     }
 
   	render () {
@@ -222,7 +210,7 @@ class Discussion extends React.Component {
 
   		const { classes } = this.props;
 
-      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId}/>);
+      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} update={this.update}/>);
 
   		return (
         <React.Fragment>

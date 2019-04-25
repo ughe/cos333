@@ -87,6 +87,7 @@ class NewComment extends React.Component {
     	.then(data => {
     		console.log(data);
     		console.log("HELLO");
+        this.setState({ open: false });
     		this.props.update();
     	})
     	.catch(err => {
@@ -97,9 +98,6 @@ class NewComment extends React.Component {
 
     //Idea Post
     
-    
-
-    this.setState({ open: false });
 
   }
 

@@ -87,6 +87,7 @@ class NewCommentReply extends React.Component {
     		console.log(data);
     		console.log("HELLO");
     		//this.props.update();
+        this.props.update();
     	})
     	.catch(err => {
     	  window.location.assign('/login');
