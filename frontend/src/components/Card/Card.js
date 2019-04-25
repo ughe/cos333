@@ -70,6 +70,42 @@ class IdeaCard extends React.Component {
     this.props.discussion(id);
   }
 
+  vote = (value) => (e) => {
+    const ideaId = this.state.id;
+    fetch('/api/whoami')
+    .then(results => {
+    return results.json();
+    }).then( data => {
+      const netid = data["user"];
+      // Vote
+      const vote = {
+        netid: netid,
+        is_upvote: (value === 1),
+        is_idea: true,
+        ideaId: ideaId,
+      };
+
+      // Post new vote
+      fetch('/api/set/vote/idea', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify(vote)
+      })
+      .then(function(response){
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+      })
+      .catch(err => {
+        window.location.assign('/login');
+        console.log(JSON.stringify(err));
+      });
+    });
+  }
 
   render () {
 
@@ -77,10 +113,10 @@ class IdeaCard extends React.Component {
 
     return (
       <Card className={classes.card} >
-      
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>
-        
+
         <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
 
         <CardActionArea>
@@ -95,28 +131,29 @@ class IdeaCard extends React.Component {
 
           <CardMedia
             className={classes.media}
-            image= {this.state.photo_url} 
+            image= {this.state.photo_url}
             title="Contemplative Reptile"
             onClick={this.discussion(this.state.id)}
-          /> 
+          />
 
         </CardActionArea>
         <CardActions>
 
-          <IconButton className={classes.buttonUp} aria-label="arrow_upward">
+          <IconButton className={classes.buttonUp} aria-label="arrow_upward"
+            onClick={this.vote(1)}>
             <i className="material-icons">
               arrow_upward
             </i>
           </IconButton>
 
-          <IconButton className={classes.buttonDown} aria-label="arrow_downward">
+          <IconButton className={classes.buttonDown} aria-label="arrow_downward"
+            onClick={this.vote(-1)}>
             <i className="material-icons">
               arrow_downward
             </i>
           </IconButton>
 
           <div className={classes.net_votes}> {this.state.net_votes} </div>
-
           <IconButton className={classes.buttonMsg} aria-label="comment" onClick={this.discussion(this.state.id)}>
             <i className="icon ion-md-text"></i>
           </IconButton>
