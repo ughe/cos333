@@ -21,15 +21,23 @@ import NewCommentReply from "./NewCommentReply"
 import "../w3.css";
 
 const styles = theme => ({
+  contain: {
+    maxWidth: '600px',
+    margin: '0 auto',
+  },
   card: {
     maxWidth: '600px',
     margin: '0 auto',
     marginTop: '30px',
+    marginBottom: '30px',
   },
   replyCard:{
-    maxWidth: '400px',
-    margin: '0 auto',
+    maxWidth: '500px',
     marginTop: '10px',
+    clear: 'both',
+    margin: '0 auto',
+    marginRight: '0px',
+    marginBottom: '10px',
   },
   actions: {
     display: "flex"
@@ -92,35 +100,37 @@ class Comment extends React.Component {
     }
 
     return (
-      <Card className={isTopLevel ? classes.card : classes.replyCard}>
-        <CardHeader
-          avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              {this.state.author.substring(0,2).toUpperCase()}
-            </Avatar>
-          }
-          action={
-            <IconButton>
-              <MoreVertIcon />
+      <div className={classes.contain}>
+        <Card className={isTopLevel ? classes.card : classes.replyCard}>
+          <CardHeader
+            avatar={
+              <Avatar aria-label="Recipe" className={classes.avatar}>
+                {this.state.author.substring(0,2).toUpperCase()}
+              </Avatar>
+            }
+            action={
+              <IconButton>
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={this.props.author}
+            subheader="Recently"
+          />
+          <CardContent>
+            <Typography component="p">
+              {this.props.content}
+            </Typography>
+          </CardContent>
+          <CardActions className={classes.actions} disableActionSpacing>
+            <IconButton aria-label="Add to favorites">
+              <FavoriteIcon />
             </IconButton>
-          }
-          title={this.props.author}
-          subheader="Recently"
-        />
-        <CardContent>
-          <Typography component="p">
-            {this.props.content}
-          </Typography>
-        </CardContent>
-        <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
-          </IconButton>
 
-          {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.update} commentId={this.state.id}/>: null}
-          
-        </CardActions>
-      </Card>
+            {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.update} commentId={this.state.id}/>: null}
+            
+          </CardActions>
+        </Card>
+      </div>
     );
   }
 }

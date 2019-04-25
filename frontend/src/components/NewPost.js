@@ -74,7 +74,7 @@ class NewPost extends React.Component {
   handleSubmit = (title, content, photo_url, tags) => (e) => {
 
     let shouldOpen = false;
-    
+
     fetch('/api/whoami')
     .then(results => {
       return results.json();
@@ -111,12 +111,44 @@ class NewPost extends React.Component {
 
           id = data["id"];
 
+          console.log("Check Response");
+          console.log(id);
+          console.log(data);
+          console.log(this.state.tags);
+
           if(typeof id !== 'undefined')
           {
-            for(var i = 0;  i < this.state.tags.length; i++)
+
+            var fetches = [];
+            let self = this;
+            console.log("hello");
+            console.log(self.state.tags[0]);
+
+            /*
+            for(var i = 0;  i < self.state.tags.length; i++)
             {
+              console.log(i);
+              fetches.push(
+                fetch('/api/set/tag', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
 
+                  body: JSON.stringify({
+                    name: self.state.tags[i],
+                    ideaId: id,
+                  })
+                })
+              );
+            }
 
+            console.log("FINISHED looping");
+            Promise.all(fetches).then(function(){
+              self.setState({ open: shouldOpen});
+            });*/
+
+            Promise.all(self.state.tags.map(tag =>
               fetch('/api/set/tag', {
                 method: 'POST',
                 headers: {
@@ -124,11 +156,22 @@ class NewPost extends React.Component {
                 },
 
                 body: JSON.stringify({
-                  name: this.state.tags[i],
+                  name: tag,
                   ideaId: id,
                 })
-              });
-            }
+              })
+              .then(console.log("fetch done!"))
+              .catch(err => {
+                console.log("Fetch Error");
+                console.log(err);
+              })
+            )).then(console.log("fetches done!"));
+            
+
+            //fetches.reduce((p, fn) => p.then(fn). Promise.resolve());
+            //iterable.reduce((p, fn) => p.then(fn), Promise.resolve())
+
+            
           }
 
           window.location.reload();
@@ -151,7 +194,7 @@ class NewPost extends React.Component {
     //Tag Post
     
 
-    this.setState({ open: shouldOpen });
+    //this.setState({ open: shouldOpen });
 
   }
 

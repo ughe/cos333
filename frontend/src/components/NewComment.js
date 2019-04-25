@@ -17,6 +17,7 @@ import theme from '../theme';
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
+    clear: 'both',
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
@@ -110,14 +111,6 @@ class NewComment extends React.Component {
       <MuiThemeProvider theme={theme}>
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 
-        <Button variant="contained" color="secondary" className={classes.button} onClick={this.handleClickOpen}>
-                Add a comment
-              <i className="material-icons rightIcon">
-                create
-              </i>
-        </Button>
-
-
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
@@ -155,6 +148,14 @@ class NewComment extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
+
+        <Button variant="contained" color="secondary" className={classes.button} onClick={this.handleClickOpen}>
+                Add a comment
+              <i className="material-icons rightIcon">
+                create
+              </i>
+        </Button>
+        
       </MuiThemeProvider>
     );
   }

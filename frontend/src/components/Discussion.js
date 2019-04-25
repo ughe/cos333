@@ -146,6 +146,74 @@ class Discussion extends React.Component {
         });
       });
 
+
+
+ /*
+      fetch('/api/get/idea/' + this.state.id)
+      .then(results => {
+        return results.json();
+      }).then(data => {
+
+        var fetchedData = [];
+        for(var i = 0; i < data[0]["comments"].length; i++)
+        {
+
+          var randomComment = {
+            content: data[0]["comments"][i]["content"],
+            net_votes: data[0]["comments"][i]["net_votes"],
+            author: data[0]["comments"][i]["userNetid"],
+            id: data[0]["comments"][i]["id"],
+            ideaId: data[0]["comments"][i]["ideaId"],
+            commentId: data[0]["comments"][i]["commentId"],
+          };
+
+          fetchedData = [...fetchedData, randomComment];
+
+          fetch('/api/get/comment/' + randomComment.id)
+          .then(results => {
+            return results.json();
+          }).then(replyData => {
+
+            for(var j = 0; j < replyData[0]["comments"].length; j++)
+            {
+
+              var replyComment = {
+                content: replyData[0]["comments"][j]["content"],
+                net_votes: replyData[0]["comments"][j]["net_votes"],
+                author: replyData[0]["comments"][j]["userNetid"],
+                id: replyData[0]["comments"][j]["id"],
+                ideaId: replyData[0]["comments"][j]["ideaId"],
+                commentId: replyData[0]["comments"][j]["commentId"],
+              };
+
+              fetchedData = [...fetchedData, replyComment];
+              console.log("Testing Internal");
+              console.log(fetchedData);
+            }
+            console.log("First");
+            console.log(fetchedData);
+
+          });
+        }
+
+        console.log("Done Fetching");
+        console.log(fetchedData);
+        
+        this.setState({
+          commentList: [
+          ...this.state.commentList,
+          ...fetchedData
+          ],
+          title: data[0]["title"],
+          description: data[0]["content"],
+          net_votes: data[0]["net_votes"],
+          photo_url: data[0]["photo_url"],
+        });
+
+        console.log(this.state.commentList);
+
+      });
+      */
     }
 
   	render () {
@@ -158,7 +226,7 @@ class Discussion extends React.Component {
 
   		return (
         <React.Fragment>
-  			<Card className={classes.card} onClick={this.close}>
+  			<Card className={classes.card}>
 
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"/>
@@ -198,14 +266,16 @@ class Discussion extends React.Component {
 
               <div className={classes.net_votes}> {this.state.net_votes} </div>
 
-              <IconButton className={classes.buttonMsg} aria-label="comment" >
-                <i className="icon ion-md-text"></i>
+              <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
+
+
+              <IconButton className={classes.buttonMsg} aria-label="close" onClick={this.close}>
+                <i className="material-icons">close</i>
               </IconButton>
             </CardActions>
 
   			</Card>
         {elements}
-        <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
         </React.Fragment>
 
   		);
