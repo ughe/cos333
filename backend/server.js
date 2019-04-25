@@ -393,55 +393,70 @@ app.post('/api/set/comment', ensureAuth, function(req, res) {
 
 // PROTECTED
 app.post('/api/set/vote/idea', ensureAuth, function(req, res) {
+  const whoami = req.user;
   const ideaId = req.body.ideaId;
   const netid = req.body.netid;
   const is_upvote = req.body.is_upvote;
   const new_vote = (is_upvote ? 1 : -1);
   const is_idea = req.body.is_idea;
   if (!is_idea) { return res.send('400: /api/set/vote/idea/:ideaId must set idea not comment'); }
+  const v = req.body;
 
   // Get net_votes
-  const idea = Idea.findByPk(ideaId).then((data) => data).catch((err) => { null });
-  if (!idea) { return res.send('400 bad idea'); }
+  Idea.findByPk(ideaId)
+  .then(idea => {
 
-  // Find data
-  Vote.findOne({where: {netid: req.params.netid, ideaId: req.params.ideaId, }})
-  .then(function(vote) {
-    const previous_vote = (vote.is_upvote ? 1 : -1);
+    // Find data
+    Vote.findAll({where: {netid: netid, ideaId: ideaId, }})
+    .then(function(vote_list) {
+      const vote = (vote_list.length > 0 ? vote_list[0] : null);
 
-    if (vote) {
-      console.log('/api/set/vote/idea/:ideaId [INFO] previous vote found');
+      if (vote) {
+        const previous_vote = (vote.dataValues.is_upvote ? 1 : -1);
+        console.log('[INFO] /api/set/vote/idea/:ideaId previous vote found');
 
-      // Modify vote
-      Vote.update({is_upvote: is_upvote}, {where : { id: vote.id, netid: req.user } })
-      .then(function(data) {
+        // Modify vote
+        Vote.update({is_upvote: is_upvote}, {where : { id: vote.id, netid: whoami } })
+        .then(function(data) {
 
-        // Update ideaId's net_votes
-        const new_total = (idea.net_votes + new_vote - previous_vote);
-        Idea.update({net_votes: new_total}, {where : { id: vote.id, userNetid: req.user } })
-        .then((data) => { res.send('200') })
-        .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+          // Update ideaId's net_votes
+          const new_total = (idea.dataValues.net_votes + new_vote - previous_vote);
+          const uni = idea.dataValues.userNetid;
+          Idea.update({net_votes: new_total}, {where : { id: ideaId, userNetid: uni } })
+          .then((data) => {
+              console.log('updated net_votes from ' + idea.dataValues.net_votes + ' to ' + new_total);
+              res.send('200')
+          })
+          .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(err); } });
 
-      })
-      .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+        })
+        .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
-    } else {
-      console.log('/api/set/vote/idea/:ideaId [INFO] previous vote NOT found');
+      } else {
+        console.log('[INFO] /api/set/vote/idea/:ideaId previous vote NOT found');
 
-      // Create vote
-      Vote.create(req.body)
-      .then(function(data) {
+        // Create vote
+        Vote.create(v)
+        .then(function(data) {
 
-        // Update ideaId's net_votes
-        const new_total = (idea.net_votes + new_vote);
-        Idea.update({net_votes: new_total}, {where : { id: vote.id, userNetid: req.user } })
-        .then((data) => { res.send('200') })
-        .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+          // Update ideaId's net_votes
+          const new_total = (idea.dataValues.net_votes + new_vote);
+          const uni = idea.dataValues.userNetid;
+          console.log(new_total);
+          Idea.update({net_votes: new_total}, {where : { id: vote.id, userNetid: uni } })
+          .then((data) => {
+              console.log('updated net_votes from ' + idea.dataValues.net_votes + ' to ' + new_total);
+              res.send('200')
+          })
+          .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
-      })
-      .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+        })
+        .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(' 500'); } });
 
-    }
+      }
+
+    })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
   })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
@@ -449,58 +464,75 @@ app.post('/api/set/vote/idea', ensureAuth, function(req, res) {
 
 // PROTECTED
 app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
+  const whoami = req.user;
   const commentId = req.body.commentId;
   const netid = req.body.netid;
   const is_upvote = req.body.is_upvote;
   const new_vote = (is_upvote ? 1 : -1);
   const is_idea = req.body.is_idea;
-  if (!is_idea) { return res.send('400: /api/set/vote/comment/:commentId must set comment not idea'); }
+  if (is_idea) { return res.send('400: /api/set/vote/comment/:commentId must set comment not idea'); }
+  const v = req.body;
 
   // Get net_votes
-  const comment = Idea.findByPk(commentId).then((data) => data).catch((err) => { null });
-  if (!comment) { return res.send('400 bad comment'); }
+  Comment.findByPk(commentId)
+  .then(comment => {
 
-  // Find data
-  Vote.findOne({where: {netid: req.params.netid, commentId: req.params.commentId, }})
-  .then(function(vote) {
-    const previous_vote = (vote.is_upvote ? 1 : -1);
+    // Find data
+    Vote.findAll({where: {netid: netid, commentId: commentId, }})
+    .then(function(vote_list) {
+      const vote = (vote_list.length > 0 ? vote_list[0] : null);
 
-    if (vote) {
-      console.log('/api/set/vote/comment/:commentId [INFO] previous vote found');
+      if (vote) {
+        const previous_vote = (vote.dataValues.is_upvote ? 1 : -1);
+        console.log('[INFO] /api/set/vote/comment/:commentId previous vote found');
 
-      // Modify vote
-      Vote.update({is_upvote: is_upvote}, {where : { id: vote.id, netid: req.user } })
-      .then(function(data) {
+        // Modify vote
+        Vote.update({is_upvote: is_upvote}, {where : { id: vote.id, netid: whoami } })
+        .then(function(data) {
 
-        // Update commentId's net_votes
-        const new_total = (comment.net_votes + new_vote - previous_vote);
-        Comment.update({net_votes: new_total}, {where : { id: vote.id, userNetid: req.user } })
-        .then((data) => { res.send('200') })
-        .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+          // Update commentId's net_votes
+          const new_total = (comment.dataValues.net_votes + new_vote - previous_vote);
+          const uni = comment.dataValues.userNetid;
+          Idea.update({net_votes: new_total}, {where : { id: commentId, userNetid: uni } })
+          .then((data) => {
+              console.log('updated net_votes from ' + comment.dataValues.net_votes + ' to ' + new_total);
+              res.send('200')
+          })
+          .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(err); } });
 
-      })
-      .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+        })
+        .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
-    } else {
-      console.log('/api/set/vote/comment/:commentId [INFO] previous vote NOT found');
+      } else {
+        console.log('[INFO] /api/set/vote/comment/:commentId previous vote NOT found');
 
-      // Create vote
-      Vote.create(req.body)
-      .then(function(data) {
+        // Create vote
+        Vote.create(v)
+        .then(function(data) {
 
-        // Update commentId's net_votes
-        const new_total = (comment.net_votes + new_vote);
-        Comment.update({net_votes: new_total}, {where : { id: vote.id, userNetid: req.user } })
-        .then((data) => { res.send('200') })
-        .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+          // Update commentId's net_votes
+          const new_total = (comment.dataValues.net_votes + new_vote);
+          const uni = comment.dataValues.userNetid;
+          console.log(new_total);
+          Idea.update({net_votes: new_total}, {where : { id: vote.id, userNetid: uni } })
+          .then((data) => {
+              console.log('updated net_votes from ' + comment.dataValues.net_votes + ' to ' + new_total);
+              res.send('200')
+          })
+          .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
-      })
-      .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+        })
+        .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(' 500'); } });
 
-    }
+      }
+
+    })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
   })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+
+
 });
 
 

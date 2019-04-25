@@ -35,7 +35,7 @@ class IdeaFeed extends React.Component {
     }
   }
 
-  
+
   componentDidMount() {
     fetch('/api/get/idea')
     .then(results => {
@@ -44,7 +44,7 @@ class IdeaFeed extends React.Component {
 
       let random = JSON.stringify(data);
       //let dataArray = this.state.list.splice();
-      
+
       let fetchedData = []
       for(var i = 0; i < data.length; i++)
       {
@@ -90,7 +90,7 @@ class IdeaFeed extends React.Component {
 
       let random = JSON.stringify(data);
       //let dataArray = this.state.list.splice();
-      
+
       let fetchedData = []
       for(var i = 0; i < data.length; i++)
       {
@@ -140,16 +140,11 @@ class IdeaFeed extends React.Component {
 
 
   render () {
-    
-    console.log("here");
-    console.log(this.state.list);
-    console.log(this.state.discussion);
 
     var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id}/>)
-    
+
     if (this.state.discussion)
     {
-      console.log("Whoa");
       return (
         <div>
           <Discussion idea={this.state.openIdea} close={this.closer} refresh={this.handler}/>
@@ -169,7 +164,7 @@ class IdeaFeed extends React.Component {
       );
     }
 
-    
+
   }
 }
 

@@ -70,77 +70,40 @@ class IdeaCard extends React.Component {
     this.props.discussion(id);
   }
 
-  discussion = (id) => (e) => {
-    this.props.discussion(id);
-  }
-
   vote = (value) => (e) => {
     const ideaId = this.state.id;
     fetch('/api/whoami')
     .then(results => {
-      return results.json();
+    return results.json();
     }).then( data => {
       const netid = data["user"];
-
-      // Search for existing vote
-
-
-      // Delete the existing vote
-
-
       // Vote
-        const vote = {
+      const vote = {
         netid: netid,
-        is_upvote: (value == 1),
+        is_upvote: (value === 1),
         is_idea: true,
-          ideaId: ideaId,
-        };
+        ideaId: ideaId,
+      };
 
       // Post new vote
-        fetch('/api/set/vote', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      fetch('/api/set/vote/idea', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
 
-          body: JSON.stringify(vote)
-        })
-        .then(function(response){
-          return response.json();
-        })
-        .then(data => {
-        console.log("FLAG");
+        body: JSON.stringify(vote)
+      })
+      .then(function(response){
+        return response.json();
+      })
+      .then(data => {
         console.log(data);
-        console.log("GALF");
-
-        // Update net_votes
-        fetch('/api/set/idea', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            net_votes: ideaId,
-            id: ideaId,
-          })
-        })
-        .then(function(response){
-          return response.json();
-        })
-        .then(data => {
-          console.log(data);
-          this.props.update();
-        })
-        .catch(err => {
-          window.location.assign('/login');
-          console.log(err);
-        });
-            console.log(data);
-        })
-        .catch(err => {
-          window.location.assign('/login');
-          console.log(err);
-        });
+      })
+      .catch(err => {
+        window.location.assign('/login');
+        console.log(JSON.stringify(err));
+      });
     });
   }
 
