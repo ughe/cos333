@@ -438,12 +438,10 @@ app.post('/api/set/vote/idea', ensureAuth, function(req, res) {
         // Create vote
         Vote.create(v)
         .then(function(data) {
-
           // Update ideaId's net_votes
           const new_total = (idea.dataValues.net_votes + new_vote);
           const uni = idea.dataValues.userNetid;
-          console.log(new_total);
-          Idea.update({net_votes: new_total}, {where : { id: vote.id, userNetid: uni } })
+          Idea.update({net_votes: new_total}, {where : { id: ideaId, userNetid: uni } })
           .then((data) => {
               console.log('updated net_votes from ' + idea.dataValues.net_votes + ' to ' + new_total);
               res.send('200')
@@ -493,7 +491,7 @@ app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
           // Update commentId's net_votes
           const new_total = (comment.dataValues.net_votes + new_vote - previous_vote);
           const uni = comment.dataValues.userNetid;
-          Idea.update({net_votes: new_total}, {where : { id: commentId, userNetid: uni } })
+          Comment.update({net_votes: new_total}, {where : { id: commentId, userNetid: uni } })
           .then((data) => {
               console.log('updated net_votes from ' + comment.dataValues.net_votes + ' to ' + new_total);
               res.send('200')
@@ -514,7 +512,7 @@ app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
           const new_total = (comment.dataValues.net_votes + new_vote);
           const uni = comment.dataValues.userNetid;
           console.log(new_total);
-          Idea.update({net_votes: new_total}, {where : { id: vote.id, userNetid: uni } })
+          Comment.update({net_votes: new_total}, {where : { id: commentId, userNetid: uni } })
           .then((data) => {
               console.log('updated net_votes from ' + comment.dataValues.net_votes + ' to ' + new_total);
               res.send('200')
