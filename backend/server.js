@@ -188,14 +188,8 @@ var cas_strategy = new cas.Strategy(
 passport.use(cas_strategy);
 
 // TODO: Crawl collegefacebook
-// https://www.princeton.edu/collegefacebook/butler/?query=netid
-// https://www.princeton.edu/collegefacebook/wilson/?query=netid
-// https://www.princeton.edu/collegefacebook/forbes/?query=netid
-// https://www.princeton.edu/collegefacebook/rockefeller/?query=netid
-// https://www.princeton.edu/collegefacebook/mathey/?query=netid
-// No results or img title="First Last" class = result > photo-container > photo
-// NOTE: uses email NOT netid to search or first and last
-// Translate netid to email alias using tigerbook get api/v1/undergraduates/netid if no results
+// https://tigerbook.herokuapp.com/images/netid
+// also api/v1/undergraduates/netid
 
 // CAS login
 app.use('/login', passport.authenticate('pucas', { failureRedirect: '/failed_login' }),
@@ -407,7 +401,7 @@ app.post('/api/set/vote/idea', ensureAuth, function(req, res) {
   if (!is_idea) { return res.send('400: /api/set/vote/idea/:ideaId must set idea not comment'); }
 
   // Get net_votes
-  const idea = await Idea.findByPk(ideaId).catch((err) => { return null });
+  const idea = Idea.findByPk(ideaId).then((data) => data).catch((err) => { null });
   if (!idea) { return res.send('400 bad idea'); }
 
   // Find data
@@ -425,7 +419,7 @@ app.post('/api/set/vote/idea', ensureAuth, function(req, res) {
         // Update ideaId's net_votes
         const new_total = (idea.net_votes + new_vote - previous_vote);
         Idea.update({net_votes: new_total}, {where : { id: vote.id, userNetid: req.user } })
-        .then((data) => { res.send('200') }
+        .then((data) => { res.send('200') })
         .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
       })
@@ -441,7 +435,7 @@ app.post('/api/set/vote/idea', ensureAuth, function(req, res) {
         // Update ideaId's net_votes
         const new_total = (idea.net_votes + new_vote);
         Idea.update({net_votes: new_total}, {where : { id: vote.id, userNetid: req.user } })
-        .then((data) => { res.send('200') }
+        .then((data) => { res.send('200') })
         .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
       })
@@ -463,7 +457,7 @@ app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
   if (!is_idea) { return res.send('400: /api/set/vote/comment/:commentId must set comment not idea'); }
 
   // Get net_votes
-  const comment = await Comment.findByPk(commentId).catch((err) => { return null });
+  const comment = Idea.findByPk(commentId).then((data) => data).catch((err) => { null });
   if (!comment) { return res.send('400 bad comment'); }
 
   // Find data
@@ -481,7 +475,7 @@ app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
         // Update commentId's net_votes
         const new_total = (comment.net_votes + new_vote - previous_vote);
         Comment.update({net_votes: new_total}, {where : { id: vote.id, userNetid: req.user } })
-        .then((data) => { res.send('200') }
+        .then((data) => { res.send('200') })
         .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
       })
@@ -497,7 +491,7 @@ app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
         // Update commentId's net_votes
         const new_total = (comment.net_votes + new_vote);
         Comment.update({net_votes: new_total}, {where : { id: vote.id, userNetid: req.user } })
-        .then((data) => { res.send('200') }
+        .then((data) => { res.send('200') })
         .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
       })
