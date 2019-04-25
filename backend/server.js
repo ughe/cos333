@@ -121,10 +121,221 @@ Vote.belongsTo(Comment);
 // Create object method:
 /*
 sequelize.sync().then(() => {
-  return Comment.create({
-    content: "insightful comment",
-    ideaId: 2,
-  });
+
+  let ideas = [
+    { title:      'Compostable Foam Peanuts',
+      content:    'Best for plastic beach parties',
+      photo_url:  'https://upload.wikimedia.org/wikipedia/commons/f/fb/Foam_Peanuts.jpg'
+      userNetid:  'mdhallee',
+    }, // 1
+    { title:      'Black Hole Observers',
+      content:    'Use the newly pictured black hole to help draw other ones',
+      photo_url:  'https://cdn.cnn.com/cnnnext/dam/assets/190410090959-01-black-hole-event-horizon-telescope-exlarge-169.jpg',
+      userNetid:  'aboppana',
+    }, // 2
+    { title:      'The Superfluous Novel Thought Group',
+      content:    'Join our group to explore the great ideas behind superfluous novels, with a strong focus on those various ones written by famous authors',
+      photo_url:  'https://imgc.artprintimages.com/img/print/san-giorgio-maggiore-by-twilight-c-1908_u-l-f57p6r0.jpg',
+      userNetid:  'mdhallee',
+    }, // 3
+    { title:      'Real Time Ideas',
+      content:    'Do you have great ideas? Join us in real time.',
+      photo_url:  'https://i.ytimg.com/vi/Xoe3Nn5vuBg/maxresdefault.jpg',
+      userNetid:  'aboppana',
+    }, // 4
+    { title:      'FSFA',
+      content:    'Free Salad For All',
+      photo_url:  'https://assets.bonappetit.com/photos/5ad51b07ff795274c43a0f58/16:9/w_1200,c_limit/20180403_Basically_122.jpg',
+      userNetid:  'mdhallee',
+    }, // 5
+    { title:      'Fractaculous Fractals',
+      content:    'We discovered a new word to describe fractals. How does it sound?',
+      photo_url:  'https://www.samwoolfe.com/wp-content/uploads/2012/12/Webp.net-resizeimage-1440x866.jpg',
+      userNetid:  'aboppana',
+    }, // 6
+    { title:      'Hemp Roads',
+      content:    'Hemp based road paving is the future. Have you ever dreamed of an environmentally-friendly and cost-effective paving technology? Join today.',
+      photo_url:  'http://extras.mnginteractive.com/live/media/site19/2018/0522/20180522__23ST_road_work~1.jpg',
+      userNetid:  'nsf2',
+    }, // 7
+  ];
+
+  for (int i = 0; i < ideas.length; i++) {
+    Idea.create({
+      title = ideas[i]["title"],
+      content: ideas[i]["content"],
+      photo_url: ideas[i]["photo_url"],
+      userNetid: ideas[i]["userNetid"],
+      net_votes: 0,
+    });
+  }
+
+  let comments = [
+    { content:    'Any questions?',
+      userNetid:  'mdhallee',
+      ideaId:     1,
+      commentId:  null,
+    }, // 1
+    { content:    'How do you plan on making these?',
+      userNetid:  'aboppana',
+      ideaId:     null,
+      commentId:  1,
+    }, // 2
+    { content:    'Is the picture to scale?',
+      userNetid:  'wughetta',
+      ideaId:     null,
+      commentId:  1,
+    }, // 3
+    { content:    'Super cool that it is compostable',
+      userNetid:  'nsf2',
+      ideaId:     1,
+      commentId:  null,
+    }, // 4
+    { content:    'This is amazing! Never thought I would ever see a black hole until now.',
+      userNetid:  'mdhallee',
+      ideaId:     2,
+      commentId:  null,
+    }, // 5
+    { content:    'FYI Meetings in Frist on Tuesdays'
+      userNetid:  'aboppana',
+      ideaId:     2,
+      commentId:  null,
+    }, // 6
+    { content:    'What will be read?',
+      userNetid:  'wughetta',
+      ideaId:     3,
+      commentId:  null,
+    }, // 7
+    { content:    'The Most Dangerous Game, for example',
+      userNetid:  'mdhallee',
+      ideaId:     null,
+      commentId:  7,
+    }, // 8
+    { content:    'Will it be a lot of reading?',
+      userNetid:  'aboppana',
+      ideaId:     3,
+      commentId:  null,
+    }, // 9
+    { content:    'Nope. Just a lot of fun reading.',
+      userNetid:  'mdhallee',
+      ideaId:     null,
+      commentId:  9,
+    }, // 10
+    { content:    'How will ideas actually be real time?',
+      userNetid:  'wughetta',
+      ideaId:     4,
+      commentId:  null,
+    }, // 11
+    { content:    'By using this website of course or talking in person during the designated period',
+      userNetid:  'aboppana',
+      ideaId:     null,
+      commentId:  11,
+    }, // 12
+    { content:    'Great idea! I really like it and want to participate in the spontaneous sharing of thoughts.',
+      userNetid:  'mdhallee',
+      ideaId:     4,
+      commentId:  null,
+    }, // 13
+    { content:    'How many salads will be available per person?',
+      userNetid:  'aboppana',
+      ideaId:     5,
+      commentId:  null,
+    }, // 14
+    { content:    '1',
+      userNetid:  'mdhallee',
+      ideaId:     null,
+      commentId:  14,
+    }, // 15
+    { content:    'Where will students get their free salad?',
+      userNetid:  'wughetta',
+      ideaId:     5,
+      commentId:  null,
+    }, // #
+    { content:    'Fractaculous Fractals',
+      userNetid:  'aboppana',
+      ideaId:     6,
+      commentId:  null,
+    }, // #
+    { content:    'Hemp Roads',
+      userNetid:  'nsf2',
+      ideaId:     7,
+      commentId:  null,
+    }, // #
+    { content:    '',
+      userNetid:  '',
+      ideaId:     null,
+      commentId:  null,
+    }, // #
+    { content:    '',
+      userNetid:  '',
+      ideaId:     null,
+      commentId:  null,
+    }, // #
+
+
+    { content:    '',
+      userNetid:  '',
+      ideaId:     null,
+      commentId:  null,
+    }, // #
+  ];
+
+  for (int i = 0; i < comments.length; i++) {
+    Comment.create({
+      content: comments[i]["content"],
+      userNetid: comments[i]["userNetid"],
+      ideaId: comments[i]["ideaId"],
+      commentId: comments[i]["commentId"],
+      net_votes: 0,
+    });
+  }
+
+
+  let TS = ['Entrepreneurship', 'Groups', 'Initiatives', 'Shower Thoughts'];
+
+  let tags = [
+    { name:   TS[0],
+      ideaId: 1,
+    },
+    { name:   TS[1],
+      ideaId: 1,
+    },
+    { name:   TS[2],
+      ideaId: 1,
+    },
+    { name:   TS[3],
+      ideaId: 1,
+    },
+    { name:   TS[1],
+      ideaId: 2,
+    },
+    { name:   TS[2],
+      ideaId: 3,
+    },
+    { name:   TS[3],
+      ideaId: 4,
+    },
+    { name:   TS[0],
+      ideaId: 5,
+    },
+    { name:   TS[2],
+      ideaId: 5,
+    },
+    { name:   TS[3],
+      ideaId: 5,
+    },
+    { name:   TS[0],
+      ideaId: 6,
+    },
+  ];
+
+  for (int i = 0; i < tags.length; i++) {
+    Tag.create({
+      name = tags[i]["name"],
+      ideaId: tags[i]["ideaId"],
+    });
+  }
+
 });
 */
 
