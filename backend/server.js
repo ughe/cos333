@@ -425,7 +425,7 @@ app.post('/api/set/vote/idea', ensureAuth, function(req, res) {
           Idea.update({net_votes: new_total}, {where : { id: ideaId, userNetid: uni } })
           .then((data) => {
               console.log('updated net_votes from ' + idea.dataValues.net_votes + ' to ' + new_total);
-              res.send('200')
+              res.send(new_total)
           })
           .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(err); } });
 
@@ -444,7 +444,7 @@ app.post('/api/set/vote/idea', ensureAuth, function(req, res) {
           Idea.update({net_votes: new_total}, {where : { id: ideaId, userNetid: uni } })
           .then((data) => {
               console.log('updated net_votes from ' + idea.dataValues.net_votes + ' to ' + new_total);
-              res.send('200')
+              res.send(new_total)
           })
           .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
@@ -494,7 +494,7 @@ app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
           Comment.update({net_votes: new_total}, {where : { id: commentId, userNetid: uni } })
           .then((data) => {
               console.log('updated net_votes from ' + comment.dataValues.net_votes + ' to ' + new_total);
-              res.send('200')
+              res.send(new_total)
           })
           .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(err); } });
 
@@ -515,7 +515,7 @@ app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
           Comment.update({net_votes: new_total}, {where : { id: commentId, userNetid: uni } })
           .then((data) => {
               console.log('updated net_votes from ' + comment.dataValues.net_votes + ' to ' + new_total);
-              res.send('200')
+              res.send(new_total)
           })
           .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 
