@@ -307,20 +307,32 @@ app.use('/api/get/idea/search/:query', function(req, res) {
 });
 
 app.use('/api/get/idea/:id?', function(req, res) {
+  var include;
+  if (req.user) {
+    include = [Tag, {model: Vote, where: {netid: req.user}, required: false}, Comment,];
+  } else {
+    include = [Tag, Comment,];
+  }
   const search = (req.params.id) ? {
     where:{id:req.params.id},
-    include:[Tag,Vote,Comment],
-  } : {include:[Tag,Vote,Comment]};
+    include: include,
+  } : {include: include};
   Idea.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
 app.use('/api/get/comment/:id?', function(req, res) {
+  var include;
+  if (req.user) {
+    include = [Comment, {model: Vote, where: {netid: req.user}, required: false},];
+  } else {
+    include = [Comment,];
+  }
   const search = (req.params.id) ? {
     where:{id:req.params.id},
-    include:[Comment, Vote],
-  } : {include:[Comment, Vote]};
+    include: include,
+  } : {include: include};
   Comment.findAll(search)
   .then(function(data) { res.json(data); })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
