@@ -33,11 +33,11 @@ const styles = theme => ({
     objectFit: 'cover',
     height: '140px',
   },
-  upvote: {
+  upVoteColored: {
     color: 'green',
   },
-  downvote: {
-    color: 'red',
+  downVoteColored: {
+    color: 'red'
   },
   net_votes: {
     marginLeft: '5px',
@@ -62,7 +62,8 @@ class IdeaCard extends React.Component {
       net_votes: this.props.net_votes,
       photo_url: this.props.photo_url,
       id: this.props.id,
-      open: false
+      open: false,
+      voteDirection: this.props.voteDirection
     }
   }
 
@@ -85,7 +86,7 @@ class IdeaCard extends React.Component {
         ideaId: ideaId,
       };
 
-      // Post new vote
+      // Post new vote{isUpVote ? classes.upVoteColored : classes.upVote}
       fetch('/api/set/vote/idea', {
         method: 'POST',
         headers: {
@@ -98,7 +99,10 @@ class IdeaCard extends React.Component {
         return response.json();
       })
       .then(data => {
+        console.log("Banana");
         console.log(data);
+        data["voteDirection"] = (value === 1);
+        this.setState(data)
       })
       .catch(err => {
         window.location.assign('/login');
@@ -110,6 +114,17 @@ class IdeaCard extends React.Component {
   render () {
 
     const { classes } = this.props;
+    let isUpVote = null;
+    let isDownVote = null;
+
+    if(this.state.voteDirection === null)
+    {
+      isUpVote = false;
+      isDownVote = false;
+    } else {
+      isUpVote = this.state.voteDirection;
+      isDownVote = !this.state.voteDirection;
+    }
 
     return (
       <Card className={classes.card} >
@@ -139,21 +154,22 @@ class IdeaCard extends React.Component {
         </CardActionArea>
         <CardActions>
 
-          <IconButton className={classes.buttonUp} aria-label="arrow_upward"
+          <IconButton className={isUpVote ? classes.upVoteColored : classes.upVote} aria-label="arrow_upward"
             onClick={this.vote(1)}>
             <i className="material-icons">
               arrow_upward
             </i>
           </IconButton>
 
-          <IconButton className={classes.buttonDown} aria-label="arrow_downward"
+          <div className={classes.net_votes}> {this.state.net_votes} </div>
+
+          <IconButton className={isDownVote ? classes.downVoteColored : classes.downVote} aria-label="arrow_downward"
             onClick={this.vote(-1)}>
             <i className="material-icons">
               arrow_downward
             </i>
           </IconButton>
 
-          <div className={classes.net_votes}> {this.state.net_votes} </div>
           <IconButton className={classes.buttonMsg} aria-label="comment" onClick={this.discussion(this.state.id)}>
             <i className="icon ion-md-text"></i>
           </IconButton>

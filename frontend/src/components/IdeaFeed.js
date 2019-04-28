@@ -49,12 +49,19 @@ class IdeaFeed extends React.Component {
       for(var i = 0; i < data.length; i++)
       {
 
+        let voteDirection = null;
+        if(data[i]["votes"] && data[i]["votes"].length > 0)
+        {
+          voteDirection = data[i]["votes"][0]["is_upvote"];
+        }
+
         let randomIdea = {
         title: data[i]["title"],
         description: data[i]["content"],
         net_votes: data[i]["net_votes"],
         photo_url: data[i]["photo_url"],
         id: data[i]["id"],
+        voteDirection: voteDirection,
         };
 
         fetchedData = [randomIdea,...fetchedData];
@@ -95,12 +102,19 @@ class IdeaFeed extends React.Component {
       for(var i = 0; i < data.length; i++)
       {
 
+        let voteDirection = null;
+        if(data[i]["votes"] && data[i]["votes"].length > 0)
+        {
+          voteDirection = data[i]["votes"][0]["is_upvote"];
+        }
+    
         let randomIdea = {
         title: data[i]["title"],
         description: data[i]["content"],
         net_votes: data[i]["net_votes"],
         photo_url: data[i]["photo_url"],
         id: data[i]["id"],
+        voteDirection: voteDirection,
         };
 
         fetchedData = [randomIdea,...fetchedData];
@@ -141,7 +155,7 @@ class IdeaFeed extends React.Component {
 
   render () {
 
-    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id}/>)
+    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} voteDirection={item.voteDirection}/>)
 
     if (this.state.discussion)
     {
