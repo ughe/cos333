@@ -171,7 +171,7 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   cookie: {
-    secure: false, // TODO security
+    secure: (!process.env.DEBUG_TRUE),
     maxAge: 604800,
   },
 }));
