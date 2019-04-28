@@ -155,7 +155,7 @@ class IdeaFeed extends React.Component {
 
   render () {
 
-    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} voteDirection={item.voteDirection}/>)
+    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} voteDirection={item.voteDirection} isLoggedInFunc={this.props.isLoggedInFunc}/>)
 
     if (this.state.discussion)
     {
@@ -170,7 +170,7 @@ class IdeaFeed extends React.Component {
         <div>
           <div className="w3-bar">
             <SortBar className="w3-bar-item" filter={this.filter}/>
-            <NewPost className="w3-bar-item" />
+            <NewPost className="w3-bar-item" isLoggedInFunc={this.props.isLoggedInFunc}/>
           </div>
 
           {elements}

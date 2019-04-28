@@ -11,6 +11,7 @@ import Helmet from 'react-helmet';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import PropTypes from 'prop-types';
 
 class App extends Component {
    constructor(props) {
@@ -19,7 +20,7 @@ class App extends Component {
     this.handleLogin = this.handleLogin.bind(this)
     this.state = {
       query: null,
-      logIn: false,
+      isLoggedIn: false,
     }
   }
 
@@ -27,24 +28,38 @@ class App extends Component {
     this.setState({ query: event.target.value });
   }
 
-  handleLogin = (event) => {
-    console.log(this.state.logIn);
+  handleLogin = (func) => {
 
-    if (this.state.logIn === false)
+    console.log(this.state.isLoggedIn);
+
+    if (this.state.isLoggedIn === false)
     {
-      console.log(this.state.logIn);
       fetch('/api/whoami')
       .then(results => {
-        this.setState({logIn: true});
         return results.json();
       }).then(data => {
-        console.log(data);
+        if (data["user"])
+        {
+          this.setState({isLoggedIn: true});
+          func();
+          return true;
+        }
+        else
+        {
+          window.location.assign('/login');
+          return false;
+        }
+
       })
       .catch(err => {
-        console.log("hi");
-        this.setState({logIn: true});
+        console.log("BATO err: " + err);
+        //this.setState({isLoggedIn: true});
         window.location.assign('/login');
+        return false;
       });
+    } else {
+      func();
+      return true;
     }
 
   }
@@ -87,7 +102,7 @@ class App extends Component {
           </div>
         </div>
 
-        <IdeaFeed query={this.state.query}/>
+        <IdeaFeed query={this.state.query} isLoggedInFunc={this.handleLogin}/>
 
       </div>
 

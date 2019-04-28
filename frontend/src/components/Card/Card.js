@@ -68,7 +68,11 @@ class IdeaCard extends React.Component {
   }
 
   discussion = (id) => (e) => {
-    this.props.discussion(id);
+    let n = () => {
+      this.props.discussion(id);
+    }
+    
+    this.props.isLoggedInFunc(n);
   }
 
   vote = (value) => (e) => {
