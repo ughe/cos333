@@ -244,7 +244,7 @@ function ensureAuth(req, res, next) {
   }
 }
 
-app.use('/api/whoami', ensureAuth, function(req, res) {
+app.use('/api/whoami', function(req, res) {
   res.json({user: req.user});
 });
 
