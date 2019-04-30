@@ -67,78 +67,111 @@ class NewPost extends React.Component {
      this.setState({ open: false });
   }
 
-  handleClickOpen = () => {
-    this.setState({ open: true });
+  handleClickOpen = (event) => {
+    let n = () => {
+      this.setState({ open: true });
+    }
+    this.props.isLoggedInFunc(n);
   }
 
   handleSubmit = (title, content, photo_url, tags) => (e) => {
 
-    
-    const idea = {
-      userNetid: "aboppana",
-      title: this.state.title,
-      content: this.state.description,
-      photo_url: this.state.photo_url,
-      net_votes: 0,
-    };
+    let shouldOpen = false;
+
+    fetch('/api/whoami')
+    .then(results => {
+      return results.json();
+    }).then(data => {
+        const idea = {
+          userNetid: data["user"],
+          title: this.state.title,
+          content: this.state.description,
+          photo_url: this.state.photo_url,
+          net_votes: 0,
+        };
 
 
-    let id = -1;
+        let id = -1;
 
-    //Idea Post
-    fetch('/api/set/idea', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-
-      body: JSON.stringify(idea)
-    })
-    .then(function(response){
-      return response.json();
-    })
-    .then(data => {
-
-      id = data["id"];
-
-      if(typeof id !== 'undefined')
-      {
-        for(var i = 0;  i < this.state.tags.length; i++)
+        //Idea Post
+        if (title === null || content === null || photo_url === null)
         {
-
-
-          fetch('/api/set/tag', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-
-            body: JSON.stringify({
-              name: this.state.tags[i],
-              ideaId: id,
-            })
-          });
+          shouldOpen = true;
         }
+        else {
+        fetch('/api/set/idea', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+          body: JSON.stringify(idea)
+        })
+        .then(function(response){
+          return response.json();
+        })
+        .then(data => {
+
+          id = data["id"];
+          var tagData = [];
+          let self = this;
+
+          console.log(id);
+          console.log(data);
+
+
+          if(typeof id !== 'undefined')
+          {
+
+            console.log(self.state.tags);
+            for(var j = 0; j < self.state.tags.length; j++)
+            {
+              var tagDict = {
+                name: self.state.tags[j],
+                ideaId: id
+              };
+
+              tagData = [...tagData, tagDict];
+            }
+
+            console.log(tagData);
+
+            fetch('/api/set/tag', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+
+              body: JSON.stringify({
+                tags: tagData,
+              })
+            })
+            .then(console.log("post done!"))
+            .catch(err => {
+              console.log("post error");
+              console.log(err);
+            });  
+          }
+
+          window.location.reload();
+          
+        })
+        .catch(err => {
+          window.location.assign('/login');
+          console.log(err);
+        });
       }
-
-      window.location.reload();
-
-      
-      
-    })
-    .catch(err => {
+    }).catch(err => {
       window.location.assign('/login');
-      console.log(err);
     });
-
+    
+    
     
 
     //Tag Post
     
 
-    this.setState({ open: false });
-
-
+    //this.setState({ open: shouldOpen });
 
   }
 
@@ -182,6 +215,7 @@ class NewPost extends React.Component {
               rows ="1"
               rowsMax="2"
               onChange={this.handleChangeTitle}
+              required
             />
 
             <br/>
@@ -200,6 +234,7 @@ class NewPost extends React.Component {
               rows ="2"
               rowsMax="4"
               onChange={this.handleChangeDescription}
+              required
             />
 
             <br/>
@@ -218,6 +253,7 @@ class NewPost extends React.Component {
               rows ="1"
               rowsMax="2"
               onChange={this.handleChangeUrl}
+              required
             />
 
             <DialogContentText>

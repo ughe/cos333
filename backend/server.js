@@ -116,6 +116,18 @@ Vote.belongsTo(Idea);
 Comment.hasMany(Vote);
 Vote.belongsTo(Comment);
 
+class Interest extends Sequelize.Model {}
+Interest.init({
+}, {
+  sequelize,
+  modelName: 'interest',
+});
+User.hasMany(Interest);
+Interest.belongsTo(User);
+Idea.hasMany(Interest);
+Interest.belongsTo(Idea);
+
+
 // Re-set database structure (dumps all data)
 //sequelize.sync({force: true});
 // Create object method:
@@ -171,7 +183,7 @@ app.use(session({
   saveUninitialized: false,
   resave: false,
   cookie: {
-    secure: false,
+    secure: false, // TODO security
     maxAge: 604800,
   },
 }));
@@ -186,6 +198,10 @@ var cas_strategy = new cas.Strategy(
   }
 );
 passport.use(cas_strategy);
+
+// TODO: Crawl collegefacebook
+// https://tigerbook.herokuapp.com/images/netid
+// also api/v1/undergraduates/netid
 
 // CAS login
 app.use('/login', passport.authenticate('pucas', { failureRedirect: '/failed_login' }),
@@ -205,12 +221,12 @@ app.use('/login', passport.authenticate('pucas', { failureRedirect: '/failed_log
           res.redirect('/#logged-in');
         })
         .catch(function(err) {
-          if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
+          if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); }
         });
       }
     })
     .catch(function(err) {
-      if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
+      if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); }
     });
   }
 );
@@ -240,7 +256,7 @@ function ensureAuth(req, res, next) {
   }
 }
 
-app.use('/api/whoami', ensureAuth, function(req, res) {
+app.use('/api/whoami', function(req, res) {
   res.json({user: req.user});
 });
 
@@ -255,24 +271,31 @@ app.get('/api', (req, res) => res.json({
   logout: '/api/logout',
   users: '/api/get/user',
   ideas: '/api/get/idea',
-  idea_comments: '/api/get/idea/372/comments',
-  idea_votes: '/api/get/idea/372/votes',
+  idea: '/api/get/idea/372',
+  votes: '/api/get/vote/idea/:ideaId/:netid',
+  votes: '/api/get/vote/comment/:commentId/:netid',
   comments: '/api/get/comment',
-  comment_comments: '/api/get/comment/372/comments',
-  comment_votes: '/api/get/comment/732/votes',
+  comment_comments: '/api/get/comment/:id/comments',
+  comment_votes: '/api/get/comment/:id/votes',
   set_idea: '/api/set/idea/',
   set_comment: '/api/set/comment/',
   filter: '/api/get/idea/tag/name_of_the_tag',
   search: '/api/get/idea/search/query',
+  del: '/api/del/vote/idea/:ideaId/:netid',
+  del: '/api/del/vote/comment/:commentId/:netid',
+  del: '/api/del/idea/:id',
+  interest: '/api/set/interest',
+  interest_del: '/api/del/interest/:ideaid',
 }));
 
 
+// PROTECTED
 app.use('/api/get/user/:netid?', ensureAuth, function(req, res) {
   const netid = req.params.netid;
   const search = (netid) ? {where:{netid:netid}} : {};
   User.findAll(search)
   .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
 app.use('/api/get/idea/tag/:name', function(req, res) {
@@ -281,7 +304,7 @@ app.use('/api/get/idea/tag/:name', function(req, res) {
     where: {name: req.params.name},
   }]})
   .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
 app.use('/api/get/idea/search/:query', function(req, res) {
@@ -294,155 +317,306 @@ app.use('/api/get/idea/search/:query', function(req, res) {
     },
   })
   .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
 app.use('/api/get/idea/:id?', function(req, res) {
+  var include;
+  if (req.user) {
+    include = [Tag, {model: Vote, where: {netid: req.user}, required: false}, Comment, Interest,];
+  } else {
+    include = [Tag, Comment, Interest,];
+  }
   const search = (req.params.id) ? {
     where:{id:req.params.id},
-    include:[Tag,Vote,Comment],
-  } : {include:[Tag,Vote,Comment]};
+    include: include,
+  } : {include: include};
   Idea.findAll(search)
   .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
 app.use('/api/get/comment/:id?', function(req, res) {
+  var include;
+  if (req.user) {
+    include = [Comment, {model: Vote, where: {netid: req.user}, required: false},];
+  } else {
+    include = [Comment,];
+  }
   const search = (req.params.id) ? {
     where:{id:req.params.id},
-    include:[Comment, Vote],
-  } : {include:[Comment, Vote]};
+    include: include,
+  } : {include: include};
   Comment.findAll(search)
   .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
 app.use('/api/get/tag/:name?', function(req, res) {
   const search = (req.params.name) ? {where:{name:req.params.name}} : {};
   Tag.findAll(search)
   .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
 app.use('/api/get/vote/:id?', function(req, res) {
   const search = (req.params.id) ? {where:{name:req.params.id}} : {};
   Vote.findAll(search)
   .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
-
-app.use('/api/set/user', ensureAuth, function(req, res) {
-  const whoami = req.user;
-  const netid = req.body.netid;
-  if (whoami !== netid) {
-    return res.send('403 permission denied to update: ' + netid);
-  }
-
-  User.update(req.body)
+app.use('/api/get/vote/idea/:ideaId/:netid', function(req, res) {
+  Vote.findAll({where: {netid: req.params.netid, ideaId: req.params.ideaId, }})
   .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
+app.use('/api/get/vote/comment/:commentId/:netid', function(req, res) {
+  Vote.findAll({where: {netid: req.params.netid, commentId: req.params.commentId, }})
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+});
+
+
+// PROTECTED
+app.use('/api/set/user', ensureAuth, function(req, res) {
+  User.update(req.body, {where : { netid: req.user } })
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+});
+
+// PROTECTED
 app.post('/api/set/idea', ensureAuth, function(req, res) {
-  const whoami = req.user;
-  const netid = req.body.netid;
-
-  //TODO RESOLVE BELOW
-  //if (whoami !== netid) {console.log("EarlyReturn"); return res.send('403 permission denied to update: ' + netid); }
-
   const id = req.body.id;
   if (id) {
-    Idea.update(req.body)
+    if (req.body.net_votes) { return res.send('403: may not set net_upvotes on your idea'); }
+    Idea.update(req.body, {where : { id: id, userNetid: req.user } })
     .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
   } else {
+    if (req.body.userNetid !== req.user) { return res.send('403'); } // FORBIDDEN
     Idea.create(req.body)
     .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
   }
 });
 
-app.post('/api/set/comment', ensureAuth, function(req, res) {
-  const whoami = req.user;
-  const netid = req.body.netid;
-  //if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+// PROTECTED
+app.post('/api/set/interest', ensureAuth, function(req, res) {
+  if (req.body.userNetid !== req.user) { return res.send('403'); } // FORBIDDEN
+  Interest.create(req.body)
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+});
 
+
+// PROTECTED
+app.post('/api/set/comment', ensureAuth, function(req, res) {
   const id = req.body.id;
   if (id) {
-    Comment.update(req.body)
+    Comment.update(req.body, {where : { id: id, userNetid: req.user } })
     .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
   } else {
+    if (req.body.userNetid !== req.user) { return res.send('403'); } // FORBIDDEN
     Comment.create(req.body)
     .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
   }
 });
 
-app.post('/api/set/vote', ensureAuth, function(req, res) {
+// PROTECTED
+app.post('/api/set/vote/idea', ensureAuth, function(req, res) {
   const whoami = req.user;
+  const ideaId = req.body.ideaId;
   const netid = req.body.netid;
-  //if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
+  const is_upvote = req.body.is_upvote;
+  const new_vote = (is_upvote ? 1 : -1);
+  const is_idea = req.body.is_idea;
+  if (!is_idea) { return res.send('400: /api/set/vote/idea/:ideaId must set idea not comment'); }
+  const v = req.body;
 
-  const id = req.body.id;
-  if (id) {
-    Vote.update(req.body)
-    .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
-  } else {
-    Vote.create(req.body)
-    .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
-  }
+  // Get net_votes
+  Idea.findByPk(ideaId)
+  .then(idea => {
+
+    // Find data
+    Vote.findAll({where: {netid: netid, ideaId: ideaId, }})
+    .then(function(vote_list) {
+      const vote = (vote_list.length > 0 ? vote_list[0] : null);
+
+      if (vote) {
+        const previous_vote = (vote.dataValues.is_upvote ? 1 : -1);
+        console.log('[INFO] /api/set/vote/idea/:ideaId previous vote found');
+
+        // Modify vote
+        Vote.update({is_upvote: is_upvote}, {where : { id: vote.id, netid: whoami } })
+        .then(function(data) {
+
+          // Update ideaId's net_votes
+          const new_total = (idea.dataValues.net_votes + new_vote - previous_vote);
+          const uni = idea.dataValues.userNetid;
+          Idea.update({net_votes: new_total}, {where : { id: ideaId, userNetid: uni } })
+          .then((data) => {
+              console.log('updated net_votes from ' + idea.dataValues.net_votes + ' to ' + new_total);
+              res.json({net_votes:new_total})
+          })
+          .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(err); } });
+
+        })
+        .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+
+      } else {
+        console.log('[INFO] /api/set/vote/idea/:ideaId previous vote NOT found');
+
+        // Create vote
+        Vote.create(v)
+        .then(function(data) {
+          // Update ideaId's net_votes
+          const new_total = (idea.dataValues.net_votes + new_vote);
+          const uni = idea.dataValues.userNetid;
+          Idea.update({net_votes: new_total}, {where : { id: ideaId, userNetid: uni } })
+          .then((data) => {
+              console.log('updated net_votes from ' + idea.dataValues.net_votes + ' to ' + new_total);
+              res.json({net_votes:new_total})
+          })
+          .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+
+        })
+        .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(' 500'); } });
+
+      }
+
+    })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+
+  })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
-// TODO auth
+// PROTECTED
+app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
+  const whoami = req.user;
+  const commentId = req.body.commentId;
+  const netid = req.body.netid;
+  const is_upvote = req.body.is_upvote;
+  const new_vote = (is_upvote ? 1 : -1);
+  const is_idea = req.body.is_idea;
+  if (is_idea) { return res.send('400: /api/set/vote/comment/:commentId must set comment not idea'); }
+  const v = req.body;
+
+  // Get net_votes
+  Comment.findByPk(commentId)
+  .then(comment => {
+
+    // Find data
+    Vote.findAll({where: {netid: netid, commentId: commentId, }})
+    .then(function(vote_list) {
+      const vote = (vote_list.length > 0 ? vote_list[0] : null);
+
+      if (vote) {
+        const previous_vote = (vote.dataValues.is_upvote ? 1 : -1);
+        console.log('[INFO] /api/set/vote/comment/:commentId previous vote found');
+
+        // Modify vote
+        Vote.update({is_upvote: is_upvote}, {where : { id: vote.id, netid: whoami } })
+        .then(function(data) {
+
+          // Update commentId's net_votes
+          const new_total = (comment.dataValues.net_votes + new_vote - previous_vote);
+          const uni = comment.dataValues.userNetid;
+          Comment.update({net_votes: new_total}, {where : { id: commentId, userNetid: uni } })
+          .then((data) => {
+              console.log('updated net_votes from ' + comment.dataValues.net_votes + ' to ' + new_total);
+              res.json({net_votes:new_total})
+          })
+          .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(err); } });
+
+        })
+        .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+
+      } else {
+        console.log('[INFO] /api/set/vote/comment/:commentId previous vote NOT found');
+
+        // Create vote
+        Vote.create(v)
+        .then(function(data) {
+
+          // Update commentId's net_votes
+          const new_total = (comment.dataValues.net_votes + new_vote);
+          const uni = comment.dataValues.userNetid;
+          console.log(new_total);
+          Comment.update({net_votes: new_total}, {where : { id: commentId, userNetid: uni } })
+          .then((data) => {
+              console.log('updated net_votes from ' + comment.dataValues.net_votes + ' to ' + new_total);
+              res.json({net_votes:new_total})
+          })
+          .catch((err) => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+
+        })
+        .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send(' 500'); } });
+
+      }
+
+    })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+
+  })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+
+
+});
+
+
+
+// Not protected from other logged-in users
 app.post('/api/set/tag', ensureAuth, function(req, res) {
-  const id = req.body.id;
-  if (id) {
-    Tag.update(req.body)
-    .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
-  } else {
-    Tag.create(req.body)
-    .then(function(data) { res.json(data); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
-  }
+  Promise.all(req.body.tags.map(t => Tag.create(t)))
+  .then(data => res.json(data))
+  .catch(err => { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
 
-
-
-/*
-app.use('/api/del/idea/:id', function(req, res) {
-  Idea.destroy({where: {id: req.params.id,}})
+// PROTECTED
+app.use('/api/del/vote/idea/:ideaId/:netid', ensureAuth, function(req, res) {
+  if (req.params.netid !== req.user) { return res.send('403'); } // FORBIDDEN
+  Vote.destroy({where: {netid: req.params.netid, ideaId: req.params.ideaId, }})
   .then(function(data) {
-    console.log('SUCCESS!');
     res.redirect('/');
   })
   .catch(function(err) {
-    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); }
+    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); }
   });
 });
 
-app.use('/api/set/comment', ensureAuth, function(req, res) {
-  const whoami = req.user;
-  const netid = req.body.netid;
-  if (whoami !== netid) { return res.send('403 permission denied to update: ' + netid); }
-
-  const id = req.body.id;
-  if (id) {
-    Comment.update(req.body)
-    .then(function(data) { res.json(req.body); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
-  } else {
-    Comment.create(req.body)
-    .then(function(data) { res.json(req.body); })
-    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
-  }
+// PROTECTED
+app.use('/api/del/vote/comment/:commentId/:netid', ensureAuth, function(req, res) {
+  if (req.params.netid !== req.user) { return res.send('403'); } // FORBIDDEN
+  Vote.destroy({where: {netid: req.params.netid, commentId: req.params.commentId, }})
+  .then(function(data) {
+    res.redirect('/');
+  })
+  .catch(function(err) {
+    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); }
+  });
 });
 
+// PROTECTED
+app.use('/api/del/idea/:id', ensureAuth, function(req, res) {
+  Idea.destroy({where: {id: req.params.id, userNetid: req.user}})
+  .then(function(data) {
+    res.redirect('/');
+  })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
 
-*/
+// PROTECTED
+app.use('/api/del/interest/:ideaid', ensureAuth, function(req, res) {
+  Idea.destroy({where: {ideaId: req.params.id, userNetid: req.user}})
+  .then(function(data) {
+    res.redirect('/');
+  })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
 
 app.listen(port);

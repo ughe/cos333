@@ -15,6 +15,7 @@ import Helmet from 'react-helmet';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import PropTypes from 'prop-types';
 
 
 
@@ -27,8 +28,10 @@ class App extends React.Component {
 
     super(props)
     this.handleChange = this.handleChange.bind(this)
+    this.handleLogin = this.handleLogin.bind(this)
     this.state = {
       query: null,
+      isLoggedIn: false,
     }
   }
 
@@ -37,21 +40,59 @@ class App extends React.Component {
   }
 
 
+  handleLogin = (func) => {
+
+    console.log(this.state.isLoggedIn);
+
+    if (this.state.isLoggedIn === false)
+    {
+      fetch('/api/whoami')
+      .then(results => {
+        return results.json();
+      }).then(data => {
+        if (data["user"])
+        {
+          this.setState({isLoggedIn: true});
+          func();
+          return true;
+        }
+        else
+        {
+          window.location.assign('/login');
+          return false;
+        }
+
+      })
+      .catch(err => {
+        console.log("BATO err: " + err);
+        //this.setState({isLoggedIn: true});
+        window.location.assign('/login');
+        return false;
+      });
+    } else {
+      func();
+      return true;
+    }
+
+  }
+
   render() {
 
 
     return (
-      
+
 
       <div className="App">
         <Helmet>
           <style>{'body { background-color: #D3D3D3; }'}</style>
         </Helmet>
 
+
         <TopBar search ={this.handleChange}/>
 
-        <IdeaFeed query={this.state.query}/>
-        
+
+        <IdeaFeed query={this.state.query} isLoggedInFunc={this.handleLogin}/>
+
       </div>
 
     );

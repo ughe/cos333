@@ -10,3 +10,12 @@ yarn
 yarn start
 ```
 
+## `~/.bashrc`
+The following `~/.bashrc` or `~/.bash_profile` is needed for development. For the production server equivalent vars are set on Heroku.
+``` bash
+export DEBUG_TRUE=true
+export AWS_RDS_DATABASE=''
+export AWS_RDS_USERNAME=''
+export AWS_RDS_PASSWORD=''
+export AWS_RDS_HOST=''
+```

@@ -17,11 +17,30 @@ import ShareIcon from "@material-ui/icons/Share";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Button from '@material-ui/core/Button';
 
+import NewCommentReply from "./NewCommentReply"
+import "../w3.css";
+
 const styles = theme => ({
-  card: {
-    float: 'right',
+  contain: {
     maxWidth: '600px',
-    margin: '10px 5px 50px',
+    margin: '0 auto',
+    maxHeight: '300px',
+  },
+  card: {
+    maxWidth: '600px',
+    margin: '0 auto',
+    marginTop: '30px',
+    marginBottom: '30px',
+    maxHeight: '300px',
+  },
+  replyCard:{
+    maxWidth: '500px',
+    marginTop: '10px',
+    clear: 'both',
+    margin: '0 auto',
+    marginRight: '0px',
+    marginBottom: '10px',
+    maxHeight: '300px',
   },
   actions: {
     display: "flex"
@@ -51,6 +70,8 @@ class Comment extends React.Component {
         net_votes: "",
         author: "",
         id: "",
+        ideaId: "",
+        commentId: "",
         open: false,
         expanded: true,
       }
@@ -59,14 +80,22 @@ class Comment extends React.Component {
       this.state.net_votes = this.props.net_votes;
       this.state.author = this.props.author;
       this.state.id = this.props.id;
+      this.state.ideaId = this.props.ideaId;
+      this.state.commentId = this.props.commentId;
     }
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
+  handleReply = (event) => {
+
+  }
+
   render() {
     const { classes } = this.props;
+
+    let isTopLevel = (this.state.ideaId !== null);
 
     if(this.state.author === null)
     {
@@ -74,33 +103,37 @@ class Comment extends React.Component {
     }
 
     return (
-      <Card className={classes.card}>
-        <CardHeader
-          avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              {this.state.author.substring(0,2).toUpperCase()}
-            </Avatar>
-          }
-          action={
-            <IconButton>
-              <MoreVertIcon />
+      <div className={classes.contain}>
+        <Card className={isTopLevel ? classes.card : classes.replyCard}>
+          <CardHeader
+            avatar={
+              <Avatar aria-label="Recipe" className={classes.avatar}>
+                {this.state.author.substring(0,2).toUpperCase()}
+              </Avatar>
+            }
+            action={
+              <IconButton>
+                <MoreVertIcon />
+              </IconButton>
+            }
+            title={this.props.author}
+            subheader="Recently"
+          />
+          <CardContent>
+            <Typography component="p">
+              {this.props.content}
+            </Typography>
+          </CardContent>
+          <CardActions className={classes.actions} disableActionSpacing>
+            <IconButton aria-label="Add to favorites">
+              <FavoriteIcon />
             </IconButton>
-          }
-          title={this.props.author}
-          subheader="Recently"
-        />
-        <CardContent>
-          <Typography component="p">
-            {this.props.content}
-          </Typography>
-        </CardContent>
-        <CardActions className={classes.actions} disableActionSpacing>
-          <IconButton aria-label="Add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          
-        </CardActions>
-      </Card>
+
+            {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.props.update} commentId={this.state.id}/>: null}
+            
+          </CardActions>
+        </Card>
+      </div>
     );
   }
 }

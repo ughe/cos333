@@ -17,7 +17,6 @@ import theme from '../theme';
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
-    clear: 'both',
   },
   leftIcon: {
     marginRight: theme.spacing.unit,
@@ -28,7 +27,7 @@ const styles = theme => ({
 });
 
 
-class NewComment extends React.Component {
+class NewCommentReply extends React.Component {
 
   constructor(props) {
     super(props);
@@ -36,7 +35,7 @@ class NewComment extends React.Component {
       content: null,
       net_votes: 0,
       author: null,
-      ideaId: this.props.idea,
+      commentId: this.props.commentId,
       open: false,
     }
   }
@@ -70,7 +69,7 @@ class NewComment extends React.Component {
     	  content: this.state.content,
     	  userNetid: data["user"],
     	  net_votes: 0,
-    	  ideaId: this.state.ideaId,
+    	  commentId: this.state.commentId,
     	};
 
     	fetch('/api/set/comment', {
@@ -87,8 +86,8 @@ class NewComment extends React.Component {
     	.then(data => {
     		console.log(data);
     		console.log("HELLO");
-        this.setState({ open: false });
-    		this.props.update();
+    		//this.props.update();
+        this.props.update();
     	})
     	.catch(err => {
     	  window.location.assign('/login');
@@ -98,6 +97,9 @@ class NewComment extends React.Component {
 
     //Idea Post
     
+    
+
+    this.setState({ open: false });
 
   }
 
@@ -108,6 +110,14 @@ class NewComment extends React.Component {
     return (
       <MuiThemeProvider theme={theme}>
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+        <Button variant="contained" color="secondary" className={classes.button} onClick={this.handleClickOpen}>
+                Reply
+              <i className="material-icons rightIcon">
+                reply
+              </i>
+        </Button>
+
 
         <Dialog
           open={this.state.open}
@@ -146,17 +156,9 @@ class NewComment extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-
-        <Button variant="contained" color="secondary" className={classes.button} onClick={this.handleClickOpen}>
-                Add a comment
-              <i className="material-icons rightIcon">
-                create
-              </i>
-        </Button>
-        
       </MuiThemeProvider>
     );
   }
 }
 
-export default withStyles(styles)(NewComment);
+export default withStyles(styles)(NewCommentReply);

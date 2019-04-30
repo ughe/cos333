@@ -19,21 +19,16 @@ import "../w3.css";
 
 const styles = theme => ({
 	card: {
-		margin: 'auto',
+		margin: '10px auto',
 		backgroundColor: "",
-		maxWidth: '2000px',
-    margin: '5px 5px 5px',
-    width: 'calc(100% - 10px)',
-    display: 'inline-block',
-    float: 'right',
+		maxWidth: '1000px',
   },
   reply: {
-    margin: 'auto',
+    margin: '0 auto',
     backgroundColor: "",
     maxWidth: '2000px',
     margin: '10px 2px 2px',
     width: "99%",
-    display: 'inline-block',
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
@@ -63,9 +58,11 @@ class Discussion extends React.Component {
     	super(props)
     	this.close = this.close.bind(this)
       this.update = this.update.bind(this)
+      this.componentDidMount = this.componentDidMount.bind(this);
       this.state = {
         title: null,
         description: null,
+        net_votes: null,
         photo_url: null,
         id: this.props.idea,
         commentList: [],
@@ -77,61 +74,132 @@ class Discussion extends React.Component {
   	}
 
     update(){
-      console.log("HELLO2");
-      this.forceUpdate();
-      this.props.refresh(this.state.id);
+      var topLevelIds = [];
+
+      fetch('/api/get/idea/' + this.state.id)
+      .then(results => {
+        return results.json();
+      })
+      .then(data => {
+        for(var i = 0; i < data[0]["comments"].length; i++)
+        {
+          topLevelIds = [...topLevelIds, data[0]["comments"][i]["id"]];
+        }
+
+        var fetchedData = [];
+        var fetches = [];
+        let self = this;
+
+        for(var j = 0; j < topLevelIds.length; j++)
+        {
+          fetches.push(
+            fetch('/api/get/comment/' + topLevelIds[j])
+            .then(results => {
+              return results.json();
+            }).then(data => {
+              var topLevelComment = {
+                content: data[0]["content"],
+                net_votes: data[0]["net_votes"],
+                author: data[0]["userNetid"],
+                id: data[0]["id"],
+                ideaId: data[0]["ideaId"],
+                commentId: data[0]["commentId"],
+              };
+
+              fetchedData = [...fetchedData, topLevelComment];
+
+              for(var k = 0; k < data[0]["comments"].length; k++)
+              {
+                var replyComment = {
+                  content: data[0]["comments"][k]["content"],
+                  net_votes: data[0]["comments"][k]["net_votes"],
+                  author: data[0]["comments"][k]["userNetid"],
+                  id: data[0]["comments"][k]["id"],
+                  ideaId: data[0]["comments"][k]["ideaId"],
+                  commentId: data[0]["comments"][k]["commentId"],
+                };
+
+                fetchedData = [...fetchedData, replyComment];
+              }
+            })
+
+          );
+        }
+
+        Promise.all(fetches).then(function() {
+          self.setState({
+            commentList:fetchedData
+          });
+        });
+      });
     }
 
     componentDidMount() {
-      var url = '/api/get/idea/' + this.state.id
 
-      fetch(url)
+      var topLevelIds = [];
+
+      fetch('/api/get/idea/' + this.state.id)
       .then(results => {
         return results.json();
-      }).then(data => {
+      })
+      .then(data => {
+        for(var i = 0; i < data[0]["comments"].length; i++)
+        {
+          topLevelIds = [...topLevelIds, data[0]["comments"][i]["id"]];
+        }
 
-        let random = JSON.stringify(data);
+        var fetchedData = [];
+        var fetches = [];
+        let self = this;
 
-        this.setState({
-          title: data[0]["title"],
-          description: data[0]["content"],
-          net_votes: data[0]["net_votes"],
-          photo_url: data[0]["photo_url"],
-          id: data[0]["id"],
-        });
-
-          fetch('/api/get/idea/' + this.state.id)
-          .then(results => {
-            return results.json();
-          }).then(data => {
-
-            let fetchedData = []
-            for(var i = 0; i < data[0]["comments"].length; i++)
-            {
-
-              let randomComment = {
-                content: data[0]["comments"][i]["content"],
-                net_votes: data[0]["comments"][i]["net_votes"],
-                author: data[0]["comments"][i]["userNetid"],
-                id: data[0]["comments"][i]["id"],
+        for(var j = 0; j < topLevelIds.length; j++)
+        {
+          fetches.push(
+            fetch('/api/get/comment/' + topLevelIds[j])
+            .then(results => {
+              return results.json();
+            }).then(data => {
+              var topLevelComment = {
+                content: data[0]["content"],
+                net_votes: data[0]["net_votes"],
+                author: data[0]["userNetid"],
+                id: data[0]["id"],
+                ideaId: data[0]["ideaId"],
+                commentId: data[0]["commentId"],
               };
 
-              fetchedData = [randomComment,...fetchedData];
+              fetchedData = [...fetchedData, topLevelComment];
 
-            }
+              for(var k = 0; k < data[0]["comments"].length; k++)
+              {
+                var replyComment = {
+                  content: data[0]["comments"][k]["content"],
+                  net_votes: data[0]["comments"][k]["net_votes"],
+                  author: data[0]["comments"][k]["userNetid"],
+                  id: data[0]["comments"][k]["id"],
+                  ideaId: data[0]["comments"][k]["ideaId"],
+                  commentId: data[0]["comments"][k]["commentId"],
+                };
 
+                fetchedData = [...fetchedData, replyComment];
+              }
+            })
 
-            this.setState({
-              commentList: [
-              ...this.state.commentList,
-              ...fetchedData
-              ]
-            });
+          );
+        }
 
-            console.log(this.state.commentList);
-
-          })
-
+        Promise.all(fetches).then(function() {
+          self.setState({
+            commentList: [
+            ...self.state.commentList,
+            ...fetchedData
+            ],
+            title: data[0]["title"],
+            description: data[0]["content"],
+            net_votes: data[0]["net_votes"],
+            photo_url: data[0]["photo_url"],
+          });
+        });
       });
 
     }
@@ -142,11 +210,11 @@ class Discussion extends React.Component {
 
   		const { classes } = this.props;
 
-      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id}/>);
+      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} update={this.update}/>);
 
   		return (
         <React.Fragment>
-  			<Card className={classes.card} onClick={this.close}>
+  			<Card className={classes.card}>
 
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"/>
@@ -186,14 +254,16 @@ class Discussion extends React.Component {
 
               <div className={classes.net_votes}> {this.state.net_votes} </div>
 
-              <IconButton className={classes.buttonMsg} aria-label="comment" >
-                <i className="icon ion-md-text"></i>
+              <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
+
+
+              <IconButton className={classes.buttonMsg} aria-label="close" onClick={this.close}>
+                <i className="material-icons">close</i>
               </IconButton>
             </CardActions>
 
   			</Card>
         {elements}
-        <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
         </React.Fragment>
 
   		);

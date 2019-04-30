@@ -33,11 +33,11 @@ const styles = theme => ({
     objectFit: 'cover',
     height: '140px',
   },
-  upvote: {
+  upVoteColored: {
     color: 'green',
   },
-  downvote: {
-    color: 'red',
+  downVoteColored: {
+    color: 'red'
   },
   net_votes: {
     marginLeft: '5px',
@@ -62,59 +62,117 @@ class IdeaCard extends React.Component {
       net_votes: this.props.net_votes,
       photo_url: this.props.photo_url,
       id: this.props.id,
-      open: false
+      open: false,
+      voteDirection: this.props.voteDirection
     }
   }
 
   discussion = (id) => (e) => {
-    this.props.discussion(id);
+    let n = () => {
+      this.props.discussion(id);
+    }
+    
+    this.props.isLoggedInFunc(n);
   }
 
+  vote = (value) => (e) => {
+    const ideaId = this.state.id;
+    fetch('/api/whoami')
+    .then(results => {
+    return results.json();
+    }).then( data => {
+      const netid = data["user"];
+      // Vote
+      const vote = {
+        netid: netid,
+        is_upvote: (value === 1),
+        is_idea: true,
+        ideaId: ideaId,
+      };
+
+      // Post new vote{isUpVote ? classes.upVoteColored : classes.upVote}
+      fetch('/api/set/vote/idea', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify(vote)
+      })
+      .then(function(response){
+        return response.json();
+      })
+      .then(data => {
+        console.log("Banana");
+        console.log(data);
+        data["voteDirection"] = (value === 1);
+        this.setState(data)
+      })
+      .catch(err => {
+        window.location.assign('/login');
+        console.log(JSON.stringify(err));
+      });
+    });
+  }
 
   render () {
 
     const { classes } = this.props;
+    let isUpVote = null;
+    let isDownVote = null;
+
+    if(this.state.voteDirection === null)
+    {
+      isUpVote = false;
+      isDownVote = false;
+    } else {
+      isUpVote = this.state.voteDirection;
+      isDownVote = !this.state.voteDirection;
+    }
 
     return (
-      <Card className={classes.card} onClick={this.discussion(this.state.id)}>
-      
+      <Card className={classes.card} >
+
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>
-        
+
         <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
 
         <CardActionArea>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
+            <Typography onClick={this.discussion(this.state.id)} gutterBottom variant="h5" component="h2">
               {this.state.title}
             </Typography>
-            <Typography component="p">
+            <Typography component="p" onClick={this.discussion(this.state.id)}>
               {this.state.description}
             </Typography>
           </CardContent>
 
           <CardMedia
             className={classes.media}
-            image= {this.state.photo_url} 
+            image= {this.state.photo_url}
             title="Contemplative Reptile"
-          /> 
+            onClick={this.discussion(this.state.id)}
+          />
 
         </CardActionArea>
         <CardActions>
 
-          <IconButton className={classes.buttonUp} aria-label="arrow_upward">
+          <IconButton className={isUpVote ? classes.upVoteColored : classes.upVote} aria-label="arrow_upward"
+            onClick={this.vote(1)}>
             <i className="material-icons">
               arrow_upward
             </i>
           </IconButton>
 
-          <IconButton className={classes.buttonDown} aria-label="arrow_downward">
+          <div className={classes.net_votes}> {this.state.net_votes} </div>
+
+          <IconButton className={isDownVote ? classes.downVoteColored : classes.downVote} aria-label="arrow_downward"
+            onClick={this.vote(-1)}>
             <i className="material-icons">
               arrow_downward
             </i>
           </IconButton>
-
-          <div className={classes.net_votes}> {this.state.net_votes} </div>
 
           <IconButton className={classes.buttonMsg} aria-label="comment" onClick={this.discussion(this.state.id)}>
             <i className="icon ion-md-text"></i>

@@ -35,7 +35,7 @@ class IdeaFeed extends React.Component {
     }
   }
 
-  
+
   componentDidMount() {
     fetch('/api/get/idea')
     .then(results => {
@@ -44,10 +44,16 @@ class IdeaFeed extends React.Component {
 
       let random = JSON.stringify(data);
       //let dataArray = this.state.list.splice();
-      
+
       let fetchedData = []
       for(var i = 0; i < data.length; i++)
       {
+
+        let voteDirection = null;
+        if(data[i]["votes"] && data[i]["votes"].length > 0)
+        {
+          voteDirection = data[i]["votes"][0]["is_upvote"];
+        }
 
         let randomIdea = {
         title: data[i]["title"],
@@ -55,6 +61,7 @@ class IdeaFeed extends React.Component {
         net_votes: data[i]["net_votes"],
         photo_url: data[i]["photo_url"],
         id: data[i]["id"],
+        voteDirection: voteDirection,
         };
 
         fetchedData = [randomIdea,...fetchedData];
@@ -78,7 +85,7 @@ class IdeaFeed extends React.Component {
     console.log(JSON.stringify(nextProps).query);
     let request = '/api/get/idea/search/' + nextProps["query"]
 
-    if(nextProps["query"] === '')
+    if(nextProps["query"] === '' || nextProps["query"] === null)
     {
       request = '/api/get/idea'
     }
@@ -90,25 +97,29 @@ class IdeaFeed extends React.Component {
 
       let random = JSON.stringify(data);
       //let dataArray = this.state.list.splice();
-      console.log(random);
-      
+
       let fetchedData = []
       for(var i = 0; i < data.length; i++)
       {
 
+        let voteDirection = null;
+        if(data[i]["votes"] && data[i]["votes"].length > 0)
+        {
+          voteDirection = data[i]["votes"][0]["is_upvote"];
+        }
+    
         let randomIdea = {
         title: data[i]["title"],
         description: data[i]["content"],
         net_votes: data[i]["net_votes"],
         photo_url: data[i]["photo_url"],
         id: data[i]["id"],
+        voteDirection: voteDirection,
         };
 
         fetchedData = [randomIdea,...fetchedData];
 
       }
-
-      console.log(fetchedData);
 
       this.setState({
         list: fetchedData
@@ -143,16 +154,11 @@ class IdeaFeed extends React.Component {
 
 
   render () {
-    
-    console.log("here");
-    console.log(this.state.list);
-    console.log(this.state.discussion);
 
-    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id}/>)
-    
+    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} voteDirection={item.voteDirection} isLoggedInFunc={this.props.isLoggedInFunc}/>)
+
     if (this.state.discussion)
     {
-      console.log("Whoa");
       return (
         <div>
           <Discussion idea={this.state.openIdea} close={this.closer} refresh={this.handler}/>
@@ -164,7 +170,7 @@ class IdeaFeed extends React.Component {
         <div>
           <div className="w3-bar">
             <SortBar className="w3-bar-item" filter={this.filter}/>
-            <NewPost className="w3-bar-item" />
+            <NewPost className="w3-bar-item" isLoggedInFunc={this.props.isLoggedInFunc}/>
           </div>
 
           {elements}
@@ -172,7 +178,7 @@ class IdeaFeed extends React.Component {
       );
     }
 
-    
+
   }
 }
 
