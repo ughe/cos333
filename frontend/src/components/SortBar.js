@@ -41,6 +41,7 @@ class SortBar extends React.Component {
   }
 
   handleClick = event => {
+    console.log(event);
     this.setState({ anchorEl: event.currentTarget });
   };
 

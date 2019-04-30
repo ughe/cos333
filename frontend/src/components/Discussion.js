@@ -15,6 +15,7 @@ import CardContent from '@material-ui/core/CardContent';
 
 import Comment from "./Comment"
 import NewComment from "./NewComment"
+import Interested from "./Interested"
 import "../w3.css";
 
 const styles = theme => ({
@@ -59,6 +60,7 @@ class Discussion extends React.Component {
     	this.close = this.close.bind(this)
       this.update = this.update.bind(this)
       this.componentDidMount = this.componentDidMount.bind(this);
+      this.addInterest = this.addInterest.bind(this);
       this.state = {
         title: null,
         description: null,
@@ -72,6 +74,38 @@ class Discussion extends React.Component {
   	close = (event) => {
   		this.props.close();
   	}
+
+    addInterest = (event) => {
+      fetch('/api/whoami')
+      .then(results => {
+        return results.json();
+      }).then(data => {
+        fetch('/api/set/interest', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', 
+          },
+
+          body: JSON.stringify({
+            userNetid: data["user"],
+            ideaId: this.state.id,
+          })
+        })
+        .then(res => {
+          console.log("Response " + JSON.stringify(res));
+          window.alert("Your interested has been added!");
+        })
+        .catch(err => {
+          console.log("post error!");
+          console.log(err);
+        });
+        
+      })
+      .catch(err => {
+        window.location.assign('/login');
+        console.log(err);
+      })
+    }
 
     update(){
       var topLevelIds = [];
@@ -256,7 +290,8 @@ class Discussion extends React.Component {
 
               <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
 
-
+              <Button onClick={this.addInterest} idea={this.state.id}> Im Interested </Button>
+              <Interested className="w3-bar-item" ideaId={this.state.id}/>
               <IconButton className={classes.buttonMsg} aria-label="close" onClick={this.close}>
                 <i className="material-icons">close</i>
               </IconButton>
