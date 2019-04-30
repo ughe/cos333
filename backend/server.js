@@ -116,6 +116,18 @@ Vote.belongsTo(Idea);
 Comment.hasMany(Vote);
 Vote.belongsTo(Comment);
 
+class Interest extends Sequelize.Model {}
+Interest.init({
+}, {
+  sequelize,
+  modelName: 'interest',
+});
+User.hasMany(Interest);
+Interest.belongsTo(User);
+Idea.hasMany(Interest);
+Interest.belongsTo(Idea);
+
+
 // Re-set database structure (dumps all data)
 //sequelize.sync({force: true});
 // Create object method:
@@ -272,6 +284,8 @@ app.get('/api', (req, res) => res.json({
   del: '/api/del/vote/idea/:ideaId/:netid',
   del: '/api/del/vote/comment/:commentId/:netid',
   del: '/api/del/idea/:id',
+  interest: '/api/set/interest',
+  interest_del: '/api/del/interest/:ideaid',
 }));
 
 
@@ -309,9 +323,9 @@ app.use('/api/get/idea/search/:query', function(req, res) {
 app.use('/api/get/idea/:id?', function(req, res) {
   var include;
   if (req.user) {
-    include = [Tag, {model: Vote, where: {netid: req.user}, required: false}, Comment,];
+    include = [Tag, {model: Vote, where: {netid: req.user}, required: false}, Comment, Interest,];
   } else {
-    include = [Tag, Comment,];
+    include = [Tag, Comment, Interest,];
   }
   const search = (req.params.id) ? {
     where:{id:req.params.id},
@@ -387,6 +401,15 @@ app.post('/api/set/idea', ensureAuth, function(req, res) {
     .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
   }
 });
+
+// PROTECTED
+app.post('/api/set/interest', ensureAuth, function(req, res) {
+  if (req.body.userNetid !== req.user) { return res.send('403'); } // FORBIDDEN
+  Interest.create(req.body)
+  .then(function(data) { res.json(data); })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+});
+
 
 // PROTECTED
 app.post('/api/set/comment', ensureAuth, function(req, res) {
@@ -582,7 +605,15 @@ app.use('/api/del/vote/comment/:commentId/:netid', ensureAuth, function(req, res
 app.use('/api/del/idea/:id', ensureAuth, function(req, res) {
   Idea.destroy({where: {id: req.params.id, userNetid: req.user}})
   .then(function(data) {
-    console.log('SUCCESS!');
+    res.redirect('/');
+  })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
+
+// PROTECTED
+app.use('/api/del/interest/:ideaid', ensureAuth, function(req, res) {
+  Idea.destroy({where: {ideaId: req.params.id, userNetid: req.user}})
+  .then(function(data) {
     res.redirect('/');
   })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
