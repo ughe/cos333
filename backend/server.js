@@ -407,7 +407,7 @@ app.post('/api/set/interest', ensureAuth, function(req, res) {
   if (req.body.userNetid !== req.user) { return res.send('403'); } // FORBIDDEN
 
   // Check if already exists
-  Interest.findOne({where: {userNetid: req.user, ideaId: req.params.ideaId}})
+  Interest.findOne({where: {userNetid: req.user, ideaId: req.body.ideaId}})
   .then(function(idea) {
     if (idea && idea.dataValues.userNetid === req.user) {
       res.send('200');
