@@ -405,9 +405,22 @@ app.post('/api/set/idea', ensureAuth, function(req, res) {
 // PROTECTED
 app.post('/api/set/interest', ensureAuth, function(req, res) {
   if (req.body.userNetid !== req.user) { return res.send('403'); } // FORBIDDEN
-  Interest.create(req.body)
-  .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+
+  // Check if already exists
+  Interest.findOne({where: {userNetid: req.user, ideaId: req.params.ideaId}})
+  .then(function(idea) {
+    if (idea && idea.dataValues.userNetid === req.user) {
+      res.send('200');
+    } else {
+      // Otherwise create the interest
+      Interest.create(req.body)
+      .then(function(data) { res.json(data); })
+      .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+    }
+  }
+  .catch(function(err) {
+    if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); }
+  });
 });
 
 
