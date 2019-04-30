@@ -417,7 +417,7 @@ app.post('/api/set/interest', ensureAuth, function(req, res) {
       .then(function(data) { res.json(data); })
       .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
     }
-  }
+  })
   .catch(function(err) {
     if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); }
   });
