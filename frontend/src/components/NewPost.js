@@ -67,8 +67,11 @@ class NewPost extends React.Component {
      this.setState({ open: false });
   }
 
-  handleClickOpen = () => {
-    this.setState({ open: true });
+  handleClickOpen = (event) => {
+    let n = () => {
+      this.setState({ open: true });
+    }
+    this.props.isLoggedInFunc(n);
   }
 
   handleSubmit = (title, content, photo_url, tags) => (e) => {
