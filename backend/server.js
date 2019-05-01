@@ -336,6 +336,7 @@ app.use('/api/get/idea/:id?', function(req, res) {
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
+// TODO ensureAuth here. Make sure doesn't break any assumptions.
 app.use('/api/get/comment/:id?', function(req, res) {
   var include;
   if (req.user) {
@@ -359,12 +360,22 @@ app.use('/api/get/tag/:name?', function(req, res) {
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
 });
 
-app.use('/api/get/vote/:id?', function(req, res) {
-  const search = (req.params.id) ? {where:{name:req.params.id}} : {};
-  Vote.findAll(search)
-  .then(function(data) { res.json(data); })
-  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
-});
+// DEBUG ONLY
+if (process.env.DEBUG_TRUE) {
+  app.use('/api/get/vote/:id?', function(req, res) {
+    const search = (req.params.id) ? {where:{name:req.params.id}} : {};
+    Vote.findAll(search)
+    .then(function(data) { res.json(data); })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+  });
+
+  app.use('/api/get/interest/:id?', function(req, res) {
+    const search = (req.params.id) ? {where:{name:req.params.id}} : {};
+    Interest.findAll(search)
+    .then(function(data) { res.json(data); })
+    .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send('500'); } });
+  });
+}
 
 app.use('/api/get/vote/idea/:ideaId/:netid', function(req, res) {
   Vote.findAll({where: {netid: req.params.netid, ideaId: req.params.ideaId, }})
@@ -407,7 +418,7 @@ app.post('/api/set/interest', ensureAuth, function(req, res) {
   if (req.body.userNetid !== req.user) { return res.send('403'); } // FORBIDDEN
 
   // Check if already exists
-  Interest.findOne({where: {userNetid: req.user, ideaId: req.params.ideaId}})
+  Interest.findOne({where: {userNetid: req.body.userNetid, ideaId: req.body.ideaId}})
   .then(function(idea) {
     if (idea && idea.dataValues.userNetid === req.user) {
       res.send('200');
@@ -581,8 +592,6 @@ app.post('/api/set/vote/comment', ensureAuth, function(req, res) {
 
 });
 
-
-
 // Not protected from other logged-in users
 app.post('/api/set/tag', ensureAuth, function(req, res) {
   Promise.all(req.body.tags.map(t => Tag.create(t)))
@@ -616,7 +625,12 @@ app.use('/api/del/vote/comment/:commentId/:netid', ensureAuth, function(req, res
 
 // PROTECTED
 app.use('/api/del/idea/:id', ensureAuth, function(req, res) {
-  Idea.destroy({where: {id: req.params.id, userNetid: req.user}})
+  let cond = {where: {id: req.params.id, userNetid: req.user}};
+  if (process.env.DEBUG_TRUE) {
+    // Allow arbitrary deletion when in DEBUG mode
+    cond =  {where: {id: req.params.id}};
+  }
+  Idea.destroy(cond)
   .then(function(data) {
     res.redirect('/');
   })

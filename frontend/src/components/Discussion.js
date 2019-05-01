@@ -15,7 +15,9 @@ import CardContent from '@material-ui/core/CardContent';
 
 import Comment from "./Comment"
 import NewComment from "./NewComment"
+import Interested from "./Interested"
 import "../w3.css";
+
 
 const styles = theme => ({
 	card: {
@@ -35,11 +37,11 @@ const styles = theme => ({
     objectFit: 'cover',
     height: '140px',
   },
-  upvote: {
+  upVoteColored: {
     color: 'green',
   },
-  downvote: {
-    color: 'red',
+  downVoteColored: {
+    color: 'red'
   },
   net_votes: {
     marginLeft: '5px',
@@ -59,6 +61,7 @@ class Discussion extends React.Component {
     	this.close = this.close.bind(this)
       this.update = this.update.bind(this)
       this.componentDidMount = this.componentDidMount.bind(this);
+      this.addInterest = this.addInterest.bind(this);
       this.state = {
         title: null,
         description: null,
@@ -66,12 +69,45 @@ class Discussion extends React.Component {
         photo_url: null,
         id: this.props.idea,
         commentList: [],
+        voteDirecton: null,
       }
   	}
 
   	close = (event) => {
   		this.props.close();
   	}
+
+    addInterest = (event) => {
+      fetch('/api/whoami')
+      .then(results => {
+        return results.json();
+      }).then(data => {
+        fetch('/api/set/interest', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', 
+          },
+
+          body: JSON.stringify({
+            userNetid: data["user"],
+            ideaId: this.state.id,
+          })
+        })
+        .then(res => {
+          console.log("Response " + JSON.stringify(res));
+          window.alert("Your interested has been added!");
+        })
+        .catch(err => {
+          console.log("post error!");
+          console.log(err);
+        });
+        
+      })
+      .catch(err => {
+        window.location.assign('/login');
+        console.log(err);
+      })
+    }
 
     update(){
       var topLevelIds = [];
@@ -97,6 +133,13 @@ class Discussion extends React.Component {
             .then(results => {
               return results.json();
             }).then(data => {
+
+              let voteDirectionTopComment = null;
+              if(data[0]["votes"] && data[0]["votes"].length > 0)
+              {
+                voteDirectionTopComment = data[0]["votes"][0]["is_upvote"];
+              }
+
               var topLevelComment = {
                 content: data[0]["content"],
                 net_votes: data[0]["net_votes"],
@@ -104,6 +147,7 @@ class Discussion extends React.Component {
                 id: data[0]["id"],
                 ideaId: data[0]["ideaId"],
                 commentId: data[0]["commentId"],
+                voteDirection: voteDirectionTopComment,
               };
 
               fetchedData = [...fetchedData, topLevelComment];
@@ -159,6 +203,13 @@ class Discussion extends React.Component {
             .then(results => {
               return results.json();
             }).then(data => {
+
+              let voteDirectionTopComment = null;
+              if(data[0]["votes"] && data[0]["votes"].length > 0)
+              {
+                voteDirectionTopComment = data[0]["votes"][0]["is_upvote"];
+              }
+
               var topLevelComment = {
                 content: data[0]["content"],
                 net_votes: data[0]["net_votes"],
@@ -166,12 +217,14 @@ class Discussion extends React.Component {
                 id: data[0]["id"],
                 ideaId: data[0]["ideaId"],
                 commentId: data[0]["commentId"],
+                voteDirection: voteDirectionTopComment,
               };
 
               fetchedData = [...fetchedData, topLevelComment];
 
               for(var k = 0; k < data[0]["comments"].length; k++)
               {
+
                 var replyComment = {
                   content: data[0]["comments"][k]["content"],
                   net_votes: data[0]["comments"][k]["net_votes"],
@@ -188,6 +241,12 @@ class Discussion extends React.Component {
           );
         }
 
+        let voteDirection = null;
+        if(data[0]["votes"] && data[0]["votes"].length > 0)
+        {
+          voteDirection = data[0]["votes"][0]["is_upvote"];
+        }
+
         Promise.all(fetches).then(function() {
           self.setState({
             commentList: [
@@ -198,22 +257,74 @@ class Discussion extends React.Component {
             description: data[0]["content"],
             net_votes: data[0]["net_votes"],
             photo_url: data[0]["photo_url"],
+            voteDirection: voteDirection,
           });
         });
       });
 
     }
 
+    vote = (value) => (e) => {
+      const ideaId = this.state.id;
+      fetch('/api/whoami')
+      .then(results => {
+      return results.json();
+      }).then( data => {
+        const netid = data["user"];
+        // Vote
+        const vote = {
+          netid: netid,
+          is_upvote: (value === 1),
+          is_idea: true,
+          ideaId: ideaId,
+        };
+
+        // Post new vote{isUpVote ? classes.upVoteColored : classes.upVote}
+        fetch('/api/set/vote/idea', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+          body: JSON.stringify(vote)
+        })
+        .then(function(response){
+          return response.json();
+        })
+        .then(data => {
+          console.log("Banana");
+          console.log(data);
+          data["voteDirection"] = (value === 1);
+          this.setState(data)
+        })
+        .catch(err => {
+          window.location.assign('/login');
+          console.log(JSON.stringify(err));
+        });
+      });
+    }
+
   	render () {
-
-
 
   		const { classes } = this.props;
 
-      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} update={this.update}/>);
+      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} voteDirection={item.voteDirection} update={this.update}/>);
+
+      let isUpVote = null;
+      let isDownVote = null;
+
+      if(this.state.voteDirection === null)
+      {
+        isUpVote = false;
+        isDownVote = false;
+      } else {
+        isUpVote = this.state.voteDirection;
+        isDownVote = !this.state.voteDirection;
+      }
 
   		return (
         <React.Fragment>
+
   			<Card className={classes.card}>
 
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -240,23 +351,28 @@ class Discussion extends React.Component {
             </CardActionArea>
             <CardActions>
 
-              <IconButton className={classes.buttonUp} aria-label="arrow_upward">
+              <IconButton className={isUpVote ? classes.upVoteColored : classes.upVote} aria-label="arrow_upward"
+                onClick={this.vote(1)}>
                 <i className="material-icons">
                   arrow_upward
                 </i>
               </IconButton>
 
-              <IconButton className={classes.buttonDown} aria-label="arrow_downward">
+              <div className={classes.net_votes}> {this.state.net_votes} </div>
+
+              <IconButton className={isDownVote ? classes.downVoteColored : classes.downVote} aria-label="arrow_downward"
+                onClick={this.vote(-1)}>
                 <i className="material-icons">
                   arrow_downward
                 </i>
               </IconButton>
 
-              <div className={classes.net_votes}> {this.state.net_votes} </div>
+              
 
               <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
 
-
+              <Button onClick={this.addInterest} idea={this.state.id}> Im Interested </Button>
+              <Interested className="w3-bar-item" ideaId={this.state.id}/>
               <IconButton className={classes.buttonMsg} aria-label="close" onClick={this.close}>
                 <i className="material-icons">close</i>
               </IconButton>

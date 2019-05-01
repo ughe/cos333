@@ -35,39 +35,53 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loggedIn: this.props.isLoggedIn,
     }
   }
 
-  state = {
-    open: false,
-  };
-
   handleClickOpen = () => {
-    this.setState({ open: true });
-    window.location.assign('/login');
+    let n = () => {
+      this.setState( {loggedIn: true});
+    }
+
+    this.props.isLoggedInFunc(n)
+    .then(res => {
+        this.setState( {loggedIn: true});
+    });
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
+  componentWillReceiveProps(nextProps){
+    console.log("HELLO!");
+    this.setState( {loggedIn: nextProps["isLoggedIn"]});
+  }
 
   render() {
 
     const { classes } = this.props;
 
+    const notLoggedIn = !this.state.loggedIn;
+
+    console.log("Am I not logged in: " + notLoggedIn);
+
     return (
       <MuiThemeProvider theme={theme}>
-
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>
 
-        <Button variant="contained"  className={classes.button} onClick={this.handleClickOpen}>
+        {notLoggedIn ?
+        <Button variant="contained" color="white" className={classes.button} onClick={this.handleClickOpen}>
                 Login
 				<i className ="material-icons">
 					person_outline
 				</i>
-
         </Button>
+        : 
+        <Button variant="contained" color="white" className={classes.button}>
+                Welcome!
+        <i class="material-icons">
+          person_outline
+        </i>
+        </Button>}
       </MuiThemeProvider>
     );
   }
