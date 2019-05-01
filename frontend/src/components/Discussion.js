@@ -133,6 +133,13 @@ class Discussion extends React.Component {
             .then(results => {
               return results.json();
             }).then(data => {
+              
+              let voteDirectionTopComment = null;
+              if(data[0]["votes"] && data[0]["votes"].length > 0)
+              {
+                voteDirectionTopComment = data[0]["votes"][0]["is_upvote"];
+              }
+
               var topLevelComment = {
                 content: data[0]["content"],
                 net_votes: data[0]["net_votes"],
@@ -140,6 +147,7 @@ class Discussion extends React.Component {
                 id: data[0]["id"],
                 ideaId: data[0]["ideaId"],
                 commentId: data[0]["commentId"],
+                voteDirection: voteDirectionTopComment,
               };
 
               fetchedData = [...fetchedData, topLevelComment];
@@ -195,6 +203,15 @@ class Discussion extends React.Component {
             .then(results => {
               return results.json();
             }).then(data => {
+
+              let voteDirectionTopComment = null;
+              if(data[0]["votes"] && data[0]["votes"].length > 0)
+              {
+                voteDirectionTopComment = data[0]["votes"][0]["is_upvote"];
+              }
+
+              console.log("VOTE DIRECTION:" + voteDirectionTopComment);
+
               var topLevelComment = {
                 content: data[0]["content"],
                 net_votes: data[0]["net_votes"],
@@ -202,12 +219,14 @@ class Discussion extends React.Component {
                 id: data[0]["id"],
                 ideaId: data[0]["ideaId"],
                 commentId: data[0]["commentId"],
+                voteDirection: voteDirectionTopComment,
               };
 
               fetchedData = [...fetchedData, topLevelComment];
 
               for(var k = 0; k < data[0]["comments"].length; k++)
               {
+
                 var replyComment = {
                   content: data[0]["comments"][k]["content"],
                   net_votes: data[0]["comments"][k]["net_votes"],
@@ -291,7 +310,7 @@ class Discussion extends React.Component {
 
   		const { classes } = this.props;
 
-      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} update={this.update}/>);
+      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} voteDirection={item.voteDirection} update={this.update}/>);
 
       let isUpVote = null;
       let isDownVote = null;
