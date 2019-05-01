@@ -21,7 +21,9 @@ class App extends Component {
     this.state = {
       query: null,
       isLoggedIn: false,
+      user: "",
     }
+
   }
 
   handleChange = (event) => {
@@ -40,20 +42,26 @@ class App extends Component {
       }).then(data => {
         if (data["user"])
         {
+          localStorage.clear();
           this.setState({isLoggedIn: true});
           func();
           return true;
         }
         else
         {
+          localStorage.setItem('login', true);
           window.location.assign('/login');
+
+          console.log("AFTER ASSIGN");
+          //this.setState({isLoggedIn: !this.state.isLoggedIn})
+          func();
           return false;
         }
 
       })
       .catch(err => {
         console.log("BATO err: " + err);
-        //this.setState({isLoggedIn: true});
+        localStorage.setItem('login', true);
         window.location.assign('/login');
         return false;
       });
@@ -64,12 +72,38 @@ class App extends Component {
 
   }
 
+  componentDidMount()
+  {
+    fetch('/api/whoami')
+    .then(results => {
+      return results.json();
+    }).then(data => {
+      console.log("user: " + data["user"]);
+      this.setState({user: data["user"]});
+    });
+  }
+
   render() {
 
     console.log("Should only appear once");
+    let login = this.state.isLoggedIn;
+    console.log(login);
+
+    if(!this.state.isLoggedIn)
+    {
+      if(localStorage.getItem('login'))
+      {
+        login = true;
+      }
+    } else {
+      login = true;
+    }
+
+    console.log("LOG: " + login);
+    console.log("STATE " + this.state.isLoggedIn);
+    localStorage.clear();
+
     return (
-
-
       <div className="App">
         <Helmet>
           <style>{'body { background-color: #D3D3D3; }'}</style>
@@ -81,7 +115,7 @@ class App extends Component {
             <a href="#home" className="w3-bar-item w3-button">Tiger<b>TEAMS</b></a>
 
             <div className="w3-bar-item w3-hide-small w3-right">
-              <Login className="w3-bar-item w3-hide-small w3-right" isLoggedInFunc={this.handleLogin} isLoggedIn={this.state.isLoggedIn}/>
+              <Login className="w3-bar-item w3-hide-small w3-right" user={this.state.user} isLoggedInFunc={this.handleLogin} isLoggedIn={login}/>
             </div>
 
 
