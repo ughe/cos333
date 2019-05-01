@@ -66,7 +66,7 @@ class App extends Component {
 
   render() {
 
-
+    console.log("Should only appear once");
     return (
 
 
@@ -81,7 +81,7 @@ class App extends Component {
             <a href="#home" className="w3-bar-item w3-button">Tiger<b>TEAMS</b></a>
 
             <div className="w3-bar-item w3-hide-small w3-right">
-              <Login className="w3-bar-item w3-hide-small w3-right" />
+              <Login className="w3-bar-item w3-hide-small w3-right" isLoggedInFunc={this.handleLogin} isLoggedIn={this.state.isLoggedIn}/>
             </div>
 
 

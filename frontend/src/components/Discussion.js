@@ -133,7 +133,7 @@ class Discussion extends React.Component {
             .then(results => {
               return results.json();
             }).then(data => {
-              
+
               let voteDirectionTopComment = null;
               if(data[0]["votes"] && data[0]["votes"].length > 0)
               {
@@ -209,8 +209,6 @@ class Discussion extends React.Component {
               {
                 voteDirectionTopComment = data[0]["votes"][0]["is_upvote"];
               }
-
-              console.log("VOTE DIRECTION:" + voteDirectionTopComment);
 
               var topLevelComment = {
                 content: data[0]["content"],
