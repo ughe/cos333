@@ -18,6 +18,7 @@ import NewComment from "./NewComment"
 import Interested from "./Interested"
 import "../w3.css";
 
+
 const styles = theme => ({
 	card: {
 		margin: '10px auto',
@@ -36,11 +37,11 @@ const styles = theme => ({
     objectFit: 'cover',
     height: '140px',
   },
-  upvote: {
+  upVoteColored: {
     color: 'green',
   },
-  downvote: {
-    color: 'red',
+  downVoteColored: {
+    color: 'red'
   },
   net_votes: {
     marginLeft: '5px',
@@ -68,6 +69,7 @@ class Discussion extends React.Component {
         photo_url: null,
         id: this.props.idea,
         commentList: [],
+        voteDirecton: null,
       }
   	}
 
@@ -222,6 +224,12 @@ class Discussion extends React.Component {
           );
         }
 
+        let voteDirection = null;
+        if(data[0]["votes"] && data[0]["votes"].length > 0)
+        {
+          voteDirection = data[0]["votes"][0]["is_upvote"];
+        }
+
         Promise.all(fetches).then(function() {
           self.setState({
             commentList: [
@@ -232,22 +240,74 @@ class Discussion extends React.Component {
             description: data[0]["content"],
             net_votes: data[0]["net_votes"],
             photo_url: data[0]["photo_url"],
+            voteDirection: voteDirection,
           });
         });
       });
 
     }
 
+    vote = (value) => (e) => {
+      const ideaId = this.state.id;
+      fetch('/api/whoami')
+      .then(results => {
+      return results.json();
+      }).then( data => {
+        const netid = data["user"];
+        // Vote
+        const vote = {
+          netid: netid,
+          is_upvote: (value === 1),
+          is_idea: true,
+          ideaId: ideaId,
+        };
+
+        // Post new vote{isUpVote ? classes.upVoteColored : classes.upVote}
+        fetch('/api/set/vote/idea', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+
+          body: JSON.stringify(vote)
+        })
+        .then(function(response){
+          return response.json();
+        })
+        .then(data => {
+          console.log("Banana");
+          console.log(data);
+          data["voteDirection"] = (value === 1);
+          this.setState(data)
+        })
+        .catch(err => {
+          window.location.assign('/login');
+          console.log(JSON.stringify(err));
+        });
+      });
+    }
+
   	render () {
-
-
 
   		const { classes } = this.props;
 
       var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} update={this.update}/>);
 
+      let isUpVote = null;
+      let isDownVote = null;
+
+      if(this.state.voteDirection === null)
+      {
+        isUpVote = false;
+        isDownVote = false;
+      } else {
+        isUpVote = this.state.voteDirection;
+        isDownVote = !this.state.voteDirection;
+      }
+
   		return (
         <React.Fragment>
+
   			<Card className={classes.card}>
 
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -274,19 +334,23 @@ class Discussion extends React.Component {
             </CardActionArea>
             <CardActions>
 
-              <IconButton className={classes.buttonUp} aria-label="arrow_upward">
+              <IconButton className={isUpVote ? classes.upVoteColored : classes.upVote} aria-label="arrow_upward"
+                onClick={this.vote(1)}>
                 <i className="material-icons">
                   arrow_upward
                 </i>
               </IconButton>
 
-              <IconButton className={classes.buttonDown} aria-label="arrow_downward">
+              <div className={classes.net_votes}> {this.state.net_votes} </div>
+
+              <IconButton className={isDownVote ? classes.downVoteColored : classes.downVote} aria-label="arrow_downward"
+                onClick={this.vote(-1)}>
                 <i className="material-icons">
                   arrow_downward
                 </i>
               </IconButton>
 
-              <div className={classes.net_votes}> {this.state.net_votes} </div>
+              
 
               <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
 
