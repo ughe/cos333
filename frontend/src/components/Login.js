@@ -61,9 +61,9 @@ class Login extends React.Component {
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>
 
-        <Button variant="contained" color="white" className={classes.button} onClick={this.handleClickOpen}>
+        <Button variant="contained"  className={classes.button} onClick={this.handleClickOpen}>
                 Login
-				<i class="material-icons">
+				<i className ="material-icons">
 					person_outline
 				</i>
 

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Route, Switch, BrowserRouter, Link, generatePath } from 'react-router-dom';
 import * as Yup from 'yup';
 import Location from 'react-app-location';
