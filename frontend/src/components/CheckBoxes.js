@@ -20,7 +20,46 @@ class Checkboxes extends React.Component {
   };
 
   handleChecks = (checkedVal) => (e) => {
-    this.props.tags(checkedVal);
+    let name = "";
+    let tagUpdate = [];
+    
+    console.log("STATE " + JSON.stringify(this.state));
+    
+    if(checkedVal === "entreprenuership")
+    {
+      name = "ent";
+    } else if (checkedVal === "club") {
+      name = "club";
+    } else if (checkedVal === "initiative")
+    {
+      name = "init";
+    } else if (checkedVal === "shower thought")
+    {
+      name = "shower";
+    }
+
+    if(this.state.ent)
+      tagUpdate = [...tagUpdate, "entreprenuership"];
+    if(this.state.club)
+      tagUpdate = [...tagUpdate, "club"];
+    if(this.state.init)
+      tagUpdate = [...tagUpdate, "initiative"];
+    if(this.state.shower)
+      tagUpdate = [...tagUpdate, "shower thought"];
+
+    if(tagUpdate.indexOf(checkedVal) !== -1)
+    {
+      tagUpdate.splice(tagUpdate.indexOf(checkedVal), 1);
+    }
+
+    if(e.target.checked)
+    {
+      tagUpdate = [...tagUpdate, checkedVal];
+    }
+
+    this.props.tags(tagUpdate);
+
+    this.setState({ [name]: e.target.checked });
   }
 
   render() {
