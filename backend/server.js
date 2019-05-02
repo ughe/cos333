@@ -624,6 +624,15 @@ app.use('/api/del/vote/comment/:commentId/:netid', ensureAuth, function(req, res
 });
 
 // PROTECTED
+app.use('/api/del/comment/:id', ensureAuth, function(req, res) {
+  Comment.destroy({where: {id: req.params.id, userNetid: req.user}})
+  .then(function(data) {
+    res.redirect('/');
+  })
+  .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
+});
+
+// PROTECTED
 app.use('/api/del/idea/:id', ensureAuth, function(req, res) {
   let cond = {where: {id: req.params.id, userNetid: req.user}};
   if (process.env.DEBUG_TRUE) {
