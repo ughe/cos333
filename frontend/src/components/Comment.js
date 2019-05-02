@@ -42,6 +42,12 @@ const styles = theme => ({
     marginBottom: '10px',
     maxHeight: '300px',
   },
+  upVoteColored: {
+    color: 'green',
+  },
+  downVoteColored: {
+    color: 'red'
+  },
   actions: {
     display: "flex"
   },
@@ -67,13 +73,14 @@ class Comment extends React.Component {
       super(props)
       this.state = {
         content: "",
-        net_votes: "",
+        net_votes: null,
         author: "",
         id: "",
         ideaId: "",
         commentId: "",
         open: false,
         expanded: true,
+        voteDirection: null,
       }
 
       this.state.content = this.props.content;
@@ -82,6 +89,7 @@ class Comment extends React.Component {
       this.state.id = this.props.id;
       this.state.ideaId = this.props.ideaId;
       this.state.commentId = this.props.commentId;
+      this.state.voteDirection = this.props.voteDirection;
     }
 
   handleExpandClick = () => {
@@ -92,6 +100,46 @@ class Comment extends React.Component {
 
   }
 
+  vote = (value) => (e) => {
+    const commentId = this.state.id;
+    fetch('/api/whoami')
+    .then(results => {
+    return results.json();
+    }).then( data => {
+      const netid = data["user"];
+      // Vote
+      const vote = {
+        netid: netid,
+        is_upvote: (value === 1),
+        is_idea: false,
+        commentId: commentId,
+      };
+
+      // Post new vote{isUpVote ? classes.upVoteColored : classes.upVote}
+      fetch('/api/set/vote/comment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify(vote)
+      })
+      .then(function(response){
+        return response.json();
+      })
+      .then(data => {
+        console.log("Banana");
+        console.log(data);
+        data["voteDirection"] = (value === 1);
+        this.setState(data)
+      })
+      .catch(err => {
+        window.location.assign('/login');
+        console.log(JSON.stringify(err));
+      });
+    });
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -100,6 +148,18 @@ class Comment extends React.Component {
     if(this.state.author === null)
     {
       this.state.author = 'No author';
+    }
+
+    let isUpVote = null;
+    let isDownVote = null;
+
+    if(this.state.voteDirection === null)
+    {
+      isUpVote = false;
+      isDownVote = false;
+    } else {
+      isUpVote = this.state.voteDirection;
+      isDownVote = !this.state.voteDirection;
     }
 
     return (
@@ -125,9 +185,26 @@ class Comment extends React.Component {
             </Typography>
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
-            <IconButton aria-label="Add to favorites">
-              <FavoriteIcon />
-            </IconButton>
+            
+            {isTopLevel ? 
+            <div>
+              <IconButton className={isUpVote ? classes.upVoteColored : classes.upVote} aria-label="arrow_upward"
+                onClick={this.vote(1)}>
+                <i className="material-icons">
+                  arrow_upward
+                </i>
+              </IconButton>
+
+              <div className={classes.net_votes}> {this.state.net_votes} </div>
+
+              <IconButton className={isDownVote ? classes.downVoteColored : classes.downVote} aria-label="arrow_downward"
+                onClick={this.vote(-1)}>
+                <i className="material-icons">
+                  arrow_downward
+                </i>
+              </IconButton>
+            </div>
+            : null}
 
             {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.props.update} commentId={this.state.id}/>: null}
             

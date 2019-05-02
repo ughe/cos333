@@ -35,39 +35,70 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loggedIn: false,
+      user: null,
     }
   }
 
-  state = {
-    open: false,
-  };
-
   handleClickOpen = () => {
-    this.setState({ open: true });
-    window.location.assign('/login');
+    let n = () => {
+      fetch('/api/whoami')
+      .then(results => {
+        return results.json();
+      })
+      .then(data => {
+        console.log("data " + data["user"]);
+        this.setState({
+          loggedIn: true,
+          user: data["user"],
+        });
+      });
+      //this.setState( {loggedIn: true});
+    }
+
+    this.props.isLoggedInFunc(n);
   };
 
-  handleClose = () => {
-    this.setState({ open: false });
-  };
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      loggedIn: true,
+      user: nextProps["user"],
+    });
+    //this.setState( {loggedIn: nextProps["isLoggedIn"]});
+  }
 
   render() {
 
     const { classes } = this.props;
 
+    let notLoggedIn = !this.state.loggedIn;
+
+    if (!this.state.user)
+    {
+      notLoggedIn = true;
+    }
+
+    console.log("Uhoh: " + notLoggedIn);
+
     return (
       <MuiThemeProvider theme={theme}>
-
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>
 
+        {notLoggedIn ?
         <Button variant="contained" color="white" className={classes.button} onClick={this.handleClickOpen}>
                 Login
 				<i class="material-icons">
 					person_outline
 				</i>
-
         </Button>
+        : 
+        <Button variant="contained" color="white" className={classes.button} onClick={this.handleClickOpen}>
+                Welcome, {this.state.user}!
+        <i class="material-icons">
+          person_outline
+        </i>
+        </Button>}
       </MuiThemeProvider>
     );
   }

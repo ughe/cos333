@@ -58,7 +58,7 @@ class NewPost extends React.Component {
 
   handleChecks (param) {
     this.setState({ 
-      tags: [...this.state.tags, param]
+      tags: param
     });
   }
 

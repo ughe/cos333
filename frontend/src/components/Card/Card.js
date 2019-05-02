@@ -71,7 +71,7 @@ class IdeaCard extends React.Component {
     let n = () => {
       this.props.discussion(id);
     }
-    
+
     this.props.isLoggedInFunc(n);
   }
 
@@ -138,7 +138,7 @@ class IdeaCard extends React.Component {
 
         <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
 
-        <CardActionArea>
+        <CardActionArea onClick={this.discussion(this.state.id)}>
           <CardContent>
             <Typography onClick={this.discussion(this.state.id)} gutterBottom variant="h5" component="h2">
               {this.state.title}
