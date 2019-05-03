@@ -323,9 +323,37 @@ app.use('/api/get/idea/search/:query', function(req, res) {
 app.use('/api/get/idea/:id?', function(req, res) {
   var include;
   if (req.user) {
-    include = [Tag, {model: Vote, where: {netid: req.user}, required: false}, {model: Comment, include: [Comment]}, Interest,];
+    include = [
+      Tag,
+      {
+        model: Vote,
+        where: {netid: req.user},
+        required: false,
+      },
+      {
+        model: Comment,
+        include: [
+          Comment,
+          {
+            model: Vote,
+            where: {netid: req.user},
+            required: false,
+          },
+        ]
+      },
+      Interest,
+    ];
   } else {
-    include = [Tag, {model: Comment, include: [Comment]}, Interest,];
+    include = [
+      Tag,
+      {
+        model: Comment,
+        include: [
+          Comment,
+        ]
+      },
+      Interest,
+    ];
   }
   const search = (req.params.id) ? {
     where:{id:req.params.id},
