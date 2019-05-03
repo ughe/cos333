@@ -27,6 +27,7 @@ class IdeaFeed extends React.Component {
     this.handler = this.handler.bind(this)
     this.closer = this.closer.bind(this)
     this.filter = this.filter.bind(this)
+    this.del = this.del.bind(this)
 
     this.state = {
       list: [],
@@ -62,6 +63,7 @@ class IdeaFeed extends React.Component {
         photo_url: data[i]["photo_url"],
         id: data[i]["id"],
         voteDirection: voteDirection,
+        author: data[i]["userNetid"]
         };
 
         fetchedData = [randomIdea,...fetchedData];
@@ -70,10 +72,7 @@ class IdeaFeed extends React.Component {
 
 
       this.setState({
-        list: [
-        ...this.state.list,
-        ...fetchedData
-        ]
+        list: fetchedData
       });
 
     });
@@ -115,6 +114,7 @@ class IdeaFeed extends React.Component {
         photo_url: data[i]["photo_url"],
         id: data[i]["id"],
         voteDirection: voteDirection,
+        author: data[i]["userNetid"]
         };
 
         fetchedData = [randomIdea,...fetchedData];
@@ -152,16 +152,20 @@ class IdeaFeed extends React.Component {
     console.log(this.state.list);
   }
 
+  del(){
+    this.componentDidMount();
+  }
+
 
   render () {
 
-    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} voteDirection={item.voteDirection} isLoggedInFunc={this.props.isLoggedInFunc}/>)
+    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} author={item.author} user={this.props.user} voteDirection={item.voteDirection} isLoggedInFunc={this.props.isLoggedInFunc} del={this.del}/>)
 
     if (this.state.discussion)
     {
       return (
         <div>
-          <Discussion idea={this.state.openIdea} close={this.closer} refresh={this.handler}/>
+          <Discussion idea={this.state.openIdea}  close={this.closer} refresh={this.handler}/>
         </div>
 
       );

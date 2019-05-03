@@ -63,7 +63,8 @@ class IdeaCard extends React.Component {
       photo_url: this.props.photo_url,
       id: this.props.id,
       open: false,
-      voteDirection: this.props.voteDirection
+      voteDirection: this.props.voteDirection,
+      author: this.props.author,
     }
   }
 
@@ -73,6 +74,13 @@ class IdeaCard extends React.Component {
     }
 
     this.props.isLoggedInFunc(n);
+  }
+
+  delete = (event) => {
+    alert("Your idea has been deleted.");
+
+    fetch('/api/del/idea/' + this.state.id)
+    .then(this.props.del());
   }
 
   vote = (value) => (e) => {
@@ -115,11 +123,13 @@ class IdeaCard extends React.Component {
     });
   }
 
+
   render () {
 
     const { classes } = this.props;
     let isUpVote = null;
     let isDownVote = null;
+    let remove = (this.state.author === this.props.user);
 
     if(this.state.voteDirection === null)
     {
@@ -178,6 +188,13 @@ class IdeaCard extends React.Component {
             <i className="icon ion-md-text"></i>
           </IconButton>
 
+          {remove ?
+          <IconButton className={classes.buttonDelete} aria-label="delete" onClick={this.delete}>
+            <i className="material-icons">
+              delete
+            </i>
+          </IconButton>
+          : null}
 
 
         </CardActions>

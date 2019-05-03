@@ -136,7 +136,7 @@ class App extends Component {
           </div>
         </div>
 
-        <IdeaFeed query={this.state.query} isLoggedInFunc={this.handleLogin}/>
+        <IdeaFeed query={this.state.query} isLoggedInFunc={this.handleLogin} user={this.state.user}/>
 
       </div>
 
