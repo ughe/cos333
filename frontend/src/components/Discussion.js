@@ -117,6 +117,44 @@ class Discussion extends React.Component {
         return results.json();
       })
       .then(data => {
+        var fetchedData = [];
+        let self = this;
+        for(var i = 0; i < data[0]["comments"].length; i++)
+        {
+          let voteDirectionTopComment = null;
+          if(data[0]["comments"][i]["votes"] && data[0]["comments"][i]["votes"].length > 0)
+          {
+            voteDirectionTopComment = data[0]["comments"][i]["votes"][0]["is_upvote"];
+          }
+
+          var topLevelComment = {
+            content: data[0]["comments"][i]["content"],
+            net_votes: data[0]["comments"][i]["net_votes"],
+            author: data[0]["comments"][i]["userNetid"],
+            id: data[0]["comments"][i]["id"],
+            ideaId: data[0]["comments"][i]["ideaId"],
+            commentId: data[0]["comments"][i]["commentId"],
+            voteDirection: voteDirectionTopComment,
+          };
+
+          fetchedData = [...fetchedData, topLevelComment];
+
+          for(var j = 0; j < data[0]["comments"][i]["comments"].length; j++)
+          {
+            var replyComment = {
+              content: data[0]["comments"][i]["comments"][j]["content"],
+              net_votes: data[0]["comments"][i]["comments"][j]["net_votes"],
+              author: data[0]["comments"][i]["comments"][j]["userNetid"],
+              id: data[0]["comments"][i]["comments"][j]["id"],
+              ideaId: data[0]["comments"][i]["comments"][j]["ideaId"],
+              commentId: data[0]["comments"][i]["comments"][j]["commentId"],
+            };
+
+            fetchedData = [...fetchedData, replyComment];
+          }
+
+        }
+        /*
         for(var i = 0; i < data[0]["comments"].length; i++)
         {
           topLevelIds = [...topLevelIds, data[0]["comments"][i]["id"]];
@@ -169,11 +207,17 @@ class Discussion extends React.Component {
 
           );
         }
+        */
 
+        /*
         Promise.all(fetches).then(function() {
           self.setState({
             commentList:fetchedData
           });
+        });
+        */
+        self.setState({
+          commentList: fetchedData
         });
       });
     }
@@ -187,6 +231,7 @@ class Discussion extends React.Component {
         return results.json();
       })
       .then(data => {
+        /*
         for(var i = 0; i < data[0]["comments"].length; i++)
         {
           topLevelIds = [...topLevelIds, data[0]["comments"][i]["id"]];
@@ -240,6 +285,46 @@ class Discussion extends React.Component {
 
           );
         }
+        */
+        var fetchedData = [];
+        let self = this;
+        for(var i = 0; i < data[0]["comments"].length; i++)
+        {
+          
+          let voteDirectionTopComment = null;
+          if(data[0]["comments"][i]["votes"] && data[0]["comments"][i]["votes"].length > 0)
+          {
+            voteDirectionTopComment = data[0]["comments"][i]["votes"][0]["is_upvote"];
+          }
+          
+
+          var topLevelComment = {
+            content: data[0]["comments"][i]["content"],
+            net_votes: data[0]["comments"][i]["net_votes"],
+            author: data[0]["comments"][i]["userNetid"],
+            id: data[0]["comments"][i]["id"],
+            ideaId: data[0]["comments"][i]["ideaId"],
+            commentId: data[0]["comments"][i]["commentId"],
+            voteDirection: voteDirectionTopComment,
+          };
+
+          fetchedData = [...fetchedData, topLevelComment];
+
+          for(var j = 0; j < data[0]["comments"][i]["comments"].length; j++)
+          {
+            var replyComment = {
+              content: data[0]["comments"][i]["comments"][j]["content"],
+              net_votes: data[0]["comments"][i]["comments"][j]["net_votes"],
+              author: data[0]["comments"][i]["comments"][j]["userNetid"],
+              id: data[0]["comments"][i]["comments"][j]["id"],
+              ideaId: data[0]["comments"][i]["comments"][j]["ideaId"],
+              commentId: data[0]["comments"][i]["comments"][j]["commentId"],
+            };
+
+            fetchedData = [...fetchedData, replyComment];
+          }
+
+        }
 
         let voteDirection = null;
         if(data[0]["votes"] && data[0]["votes"].length > 0)
@@ -247,6 +332,16 @@ class Discussion extends React.Component {
           voteDirection = data[0]["votes"][0]["is_upvote"];
         }
 
+        self.setState({
+          commentList: fetchedData,
+          title: data[0]["title"],
+          description: data[0]["content"],
+          net_votes: data[0]["net_votes"],
+          photo_url: data[0]["photo_url"],
+          voteDirection: voteDirection,
+        });
+
+        /*
         Promise.all(fetches).then(function() {
           self.setState({
             commentList: [
@@ -260,6 +355,7 @@ class Discussion extends React.Component {
             voteDirection: voteDirection,
           });
         });
+        */
       });
 
     }
