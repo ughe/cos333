@@ -62,6 +62,7 @@ class Discussion extends React.Component {
       this.update = this.update.bind(this)
       this.componentDidMount = this.componentDidMount.bind(this);
       this.addInterest = this.addInterest.bind(this);
+      this.del = this.del.bind(this)
       this.state = {
         title: null,
         description: null,
@@ -70,6 +71,7 @@ class Discussion extends React.Component {
         id: this.props.idea,
         commentList: [],
         voteDirecton: null,
+        author: "",
       }
   	}
 
@@ -154,68 +156,7 @@ class Discussion extends React.Component {
           }
 
         }
-        /*
-        for(var i = 0; i < data[0]["comments"].length; i++)
-        {
-          topLevelIds = [...topLevelIds, data[0]["comments"][i]["id"]];
-        }
-
-        var fetchedData = [];
-        var fetches = [];
-        let self = this;
-
-        for(var j = 0; j < topLevelIds.length; j++)
-        {
-          fetches.push(
-            fetch('/api/get/comment/' + topLevelIds[j])
-            .then(results => {
-              return results.json();
-            }).then(data => {
-
-              let voteDirectionTopComment = null;
-              if(data[0]["votes"] && data[0]["votes"].length > 0)
-              {
-                voteDirectionTopComment = data[0]["votes"][0]["is_upvote"];
-              }
-
-              var topLevelComment = {
-                content: data[0]["content"],
-                net_votes: data[0]["net_votes"],
-                author: data[0]["userNetid"],
-                id: data[0]["id"],
-                ideaId: data[0]["ideaId"],
-                commentId: data[0]["commentId"],
-                voteDirection: voteDirectionTopComment,
-              };
-
-              fetchedData = [...fetchedData, topLevelComment];
-
-              for(var k = 0; k < data[0]["comments"].length; k++)
-              {
-                var replyComment = {
-                  content: data[0]["comments"][k]["content"],
-                  net_votes: data[0]["comments"][k]["net_votes"],
-                  author: data[0]["comments"][k]["userNetid"],
-                  id: data[0]["comments"][k]["id"],
-                  ideaId: data[0]["comments"][k]["ideaId"],
-                  commentId: data[0]["comments"][k]["commentId"],
-                };
-
-                fetchedData = [...fetchedData, replyComment];
-              }
-            })
-
-          );
-        }
-        */
-
-        /*
-        Promise.all(fetches).then(function() {
-          self.setState({
-            commentList:fetchedData
-          });
-        });
-        */
+        
         self.setState({
           commentList: fetchedData
         });
@@ -231,61 +172,7 @@ class Discussion extends React.Component {
         return results.json();
       })
       .then(data => {
-        /*
-        for(var i = 0; i < data[0]["comments"].length; i++)
-        {
-          topLevelIds = [...topLevelIds, data[0]["comments"][i]["id"]];
-        }
-
-        var fetchedData = [];
-        var fetches = [];
-        let self = this;
-
-        for(var j = 0; j < topLevelIds.length; j++)
-        {
-          fetches.push(
-            fetch('/api/get/comment/' + topLevelIds[j])
-            .then(results => {
-              return results.json();
-            }).then(data => {
-
-              let voteDirectionTopComment = null;
-              if(data[0]["votes"] && data[0]["votes"].length > 0)
-              {
-                voteDirectionTopComment = data[0]["votes"][0]["is_upvote"];
-              }
-
-              var topLevelComment = {
-                content: data[0]["content"],
-                net_votes: data[0]["net_votes"],
-                author: data[0]["userNetid"],
-                id: data[0]["id"],
-                ideaId: data[0]["ideaId"],
-                commentId: data[0]["commentId"],
-                voteDirection: voteDirectionTopComment,
-              };
-
-              fetchedData = [...fetchedData, topLevelComment];
-
-              for(var k = 0; k < data[0]["comments"].length; k++)
-              {
-
-                var replyComment = {
-                  content: data[0]["comments"][k]["content"],
-                  net_votes: data[0]["comments"][k]["net_votes"],
-                  author: data[0]["comments"][k]["userNetid"],
-                  id: data[0]["comments"][k]["id"],
-                  ideaId: data[0]["comments"][k]["ideaId"],
-                  commentId: data[0]["comments"][k]["commentId"],
-                };
-
-                fetchedData = [...fetchedData, replyComment];
-              }
-            })
-
-          );
-        }
-        */
+        
         var fetchedData = [];
         let self = this;
         for(var i = 0; i < data[0]["comments"].length; i++)
@@ -339,23 +226,9 @@ class Discussion extends React.Component {
           net_votes: data[0]["net_votes"],
           photo_url: data[0]["photo_url"],
           voteDirection: voteDirection,
+          author: data[0]["userNetid"]
         });
 
-        /*
-        Promise.all(fetches).then(function() {
-          self.setState({
-            commentList: [
-            ...self.state.commentList,
-            ...fetchedData
-            ],
-            title: data[0]["title"],
-            description: data[0]["content"],
-            net_votes: data[0]["net_votes"],
-            photo_url: data[0]["photo_url"],
-            voteDirection: voteDirection,
-          });
-        });
-        */
       });
 
     }
@@ -400,11 +273,15 @@ class Discussion extends React.Component {
       });
     }
 
+    del() {
+      this.componentDidMount();
+    }
+
   	render () {
 
   		const { classes } = this.props;
 
-      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} voteDirection={item.voteDirection} update={this.update}/>);
+      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} voteDirection={item.voteDirection} user={this.props.user} update={this.update} del={this.del}/>);
 
       let isUpVote = null;
       let isDownVote = null;

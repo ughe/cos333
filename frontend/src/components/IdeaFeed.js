@@ -165,7 +165,7 @@ class IdeaFeed extends React.Component {
     {
       return (
         <div>
-          <Discussion idea={this.state.openIdea}  close={this.closer} refresh={this.handler}/>
+          <Discussion idea={this.state.openIdea}  close={this.closer} refresh={this.handler} user={this.props.user}/>
         </div>
 
       );

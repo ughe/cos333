@@ -96,10 +96,6 @@ class Comment extends React.Component {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
-  handleReply = (event) => {
-
-  }
-
   vote = (value) => (e) => {
     const commentId = this.state.id;
     fetch('/api/whoami')
@@ -140,6 +136,25 @@ class Comment extends React.Component {
     });
   }
 
+  delete = (event) => {
+    alert("Your comment has been deleted.");
+
+    fetch('/api/get/comment/' + this.state.id)
+    .then(results => {
+      return results.json();
+    }).then(data => {
+      let subCommentIds = data[0]["comments"].map(subComment => subComment.id);
+
+      for(var i = 0; i < subCommentIds.length; i++)
+      {
+        fetch('/api/del/comment/' + subCommentIds[i]);
+      }
+
+      fetch('/api/del/comment/' + this.state.id)
+      .then(this.props.del());
+    });
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -161,6 +176,8 @@ class Comment extends React.Component {
       isUpVote = this.state.voteDirection;
       isDownVote = !this.state.voteDirection;
     }
+
+    let remove = (this.state.author === this.props.user);
 
     return (
       <div className={classes.contain}>
@@ -207,6 +224,14 @@ class Comment extends React.Component {
             : null}
 
             {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.props.update} commentId={this.state.id}/>: null}
+
+            {remove ?
+            <IconButton className={classes.buttonDelete} aria-label="delete" onClick={this.delete}>
+              <i className="material-icons">
+                delete
+              </i>
+            </IconButton>
+            : null}
             
           </CardActions>
         </Card>
