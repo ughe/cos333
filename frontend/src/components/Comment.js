@@ -137,22 +137,27 @@ class Comment extends React.Component {
   }
 
   delete = (event) => {
-    alert("Your comment has been deleted.");
+    let deleteConfirmed = window.confirm("Are you sure?");
+    if(deleteConfirmed)
+    {
+      fetch('/api/get/comment/' + this.state.id)
+      .then(results => {
+        return results.json();
+      }).then(data => {
+        let subCommentIds = data[0]["comments"].map(subComment => subComment.id);
 
-    fetch('/api/get/comment/' + this.state.id)
-    .then(results => {
-      return results.json();
-    }).then(data => {
-      let subCommentIds = data[0]["comments"].map(subComment => subComment.id);
+        for(var i = 0; i < subCommentIds.length; i++)
+        {
+          fetch('/api/del/comment/' + subCommentIds[i]);
+        }
 
-      for(var i = 0; i < subCommentIds.length; i++)
-      {
-        fetch('/api/del/comment/' + subCommentIds[i]);
-      }
-
-      fetch('/api/del/comment/' + this.state.id)
-      .then(this.props.del());
-    });
+        fetch('/api/del/comment/' + this.state.id)
+        .then(res => {
+          this.props.del();
+          alert("Your comment has been deleted.");
+        });
+      });
+    }
   }
 
   render() {
