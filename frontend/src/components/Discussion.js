@@ -182,7 +182,9 @@ class Discussion extends React.Component {
 
       var topLevelIds = [];
 
-      fetch('/api/get/idea/' + this.state.id)
+      const { params } = this.props.match
+
+      fetch('/api/get/idea/' + params.id)
       .then(results => {
         return results.json();
       })
@@ -305,6 +307,8 @@ class Discussion extends React.Component {
     }
 
   	render () {
+
+      console.log(this.props)
 
   		const { classes } = this.props;
 

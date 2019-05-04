@@ -16,9 +16,15 @@ const port = process.env.PORT || 4000;
 const app = express();
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.urlencoded({
-  extended: true,
-}));
+app.use(express.static(path.join(__dirname, 'dist')));
+//catch react router paths and redirect to index.js
+app.get('/*', function(req, res) {
+  res.sendFile(path.resolve('../frontend/src/index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
+})
 
 if (process.env.DEBUG_TRUE) {
   app.set('showStackError', true);
@@ -139,6 +145,9 @@ sequelize.sync().then(() => {
   });
 });
 */
+
+
+
 
 // Route for checking databse connection
 app.get('/db', (req, res) =>
@@ -645,5 +654,6 @@ app.use('/api/del/interest/:ideaid', ensureAuth, function(req, res) {
   })
   .catch(function(err) { if (process.env.DEBUG_TRUE) { res.send(err); } else { res.send("500"); } });
 });
+
 
 app.listen(port);

@@ -15,6 +15,8 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
+import Login from './components/Login';
+import User from './components/User';
 
 
 
@@ -80,33 +82,15 @@ class App extends React.Component {
     console.log("Should only appear once");
     return (
 
+      <BrowserRouter>
 
-      <div className="App">
-        <Helmet>
-          <style>{'body { background-color: #D3D3D3; }'}</style>
-        </Helmet>
+      <Switch>
+        <Route exact path="/" component={Login} />
+        <Route path="/user" component={User} />
+        <Route component={Login} />
+      </Switch>
 
-        {/* TOP BAR */}
-        <div>
-          <div className="w3-bar w3-white w3-wide w3-padding w3-card w3-large">
-            <a href="#home" className="w3-bar-item w3-button">Tiger<b>TEAMS</b></a>
-
-            <div className="w3-bar-item w3-hide-small w3-right">
-              <Login className="w3-bar-item w3-hide-small w3-right" isLoggedInFunc={this.handleLogin} isLoggedIn={this.state.isLoggedIn}/>
-            </div>
-
-
-
-            <div className="w3-bar-item w3-hide-small w3-right">
-              <a href="#about" className="w3-bar-item w3-button">About</a>
-            </div>
-
-        <TopBar search ={this.handleChange}/>
-
-
-        <IdeaFeed query={this.state.query} isLoggedInFunc={this.handleLogin}/>
-
-      </div>
+      </BrowserRouter>
 
     );
   }

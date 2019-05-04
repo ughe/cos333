@@ -155,7 +155,10 @@ class IdeaFeed extends React.Component {
 
   render () {
 
-    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} voteDirection={item.voteDirection} isLoggedInFunc={this.props.isLoggedInFunc}/>)
+    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} 
+      key={item.id} title={item.title} description={item.description} 
+      net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} 
+      voteDirection={item.voteDirection} isLoggedInFunc={this.props.isLoggedInFunc}/>)
 
     if (this.state.discussion)
     {
