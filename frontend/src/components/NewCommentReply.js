@@ -17,6 +17,8 @@ import theme from '../theme';
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
+    marginLeft: 'auto',
+    marginRight: '0',
   },
   leftIcon: {
     marginRight: theme.spacing.unit,

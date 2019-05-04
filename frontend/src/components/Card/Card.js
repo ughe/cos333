@@ -78,10 +78,13 @@ class IdeaCard extends React.Component {
   }
 
   delete = (event) => {
-    alert("Your idea has been deleted.");
+    let deleteConfirmed = window.confirm("Are you sure?");
+    if(deleteConfirmed){
+      alert("Your idea has been deleted.");
 
-    fetch('/api/del/idea/' + this.state.id)
-    .then(this.props.del());
+      fetch('/api/del/idea/' + this.state.id)
+      .then(this.props.del());
+    }
   }
 
   vote = (value) => (e) => {
