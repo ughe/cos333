@@ -104,7 +104,7 @@ class Interested extends React.Component {
       rel="stylesheet"/>
 
         <Button aria-owns={anchorEl ? 'simple-menu' : undefined} aria-haspopup="true" variant="contained" color="primary" className={classes.button} onClick={this.handleClick}>
-                Collaborate
+                Get in Touch
               <i className="material-icons rightIcon">
                 sort
               </i>

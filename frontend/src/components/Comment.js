@@ -32,6 +32,7 @@ const styles = theme => ({
     marginTop: '30px',
     marginBottom: '30px',
     maxHeight: '300px',
+    background: 'rgba(255, 255, 255, 0.85)',
   },
   replyCard:{
     maxWidth: '500px',
@@ -41,6 +42,7 @@ const styles = theme => ({
     marginRight: '0px',
     marginBottom: '10px',
     maxHeight: '300px',
+    background: 'rgba(255, 255, 255, 0.85)',
   },
   upVoteColored: {
     color: 'green',

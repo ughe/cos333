@@ -22,8 +22,8 @@ import "../w3.css";
 const styles = theme => ({
 	card: {
 		margin: '10px auto',
-		backgroundColor: "",
 		maxWidth: '1000px',
+    background: 'rgba(255, 255, 255, 0.85)',
   },
   reply: {
     margin: '0 auto',
@@ -34,8 +34,12 @@ const styles = theme => ({
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
-    objectFit: 'cover',
-    height: '140px',
+    height: 'auto',
+    width: 'auto',
+    maxWidth: "70%",
+    maxHeight: "70%",
+    display: 'block',
+    margin: '0 auto',
   },
   upVoteColored: {
     color: 'green',
@@ -316,9 +320,11 @@ class Discussion extends React.Component {
               </CardContent>
 
               <CardMedia
+                component="img"
+                alt="Image not loaded"
                 className={classes.media}
                 image= {this.state.photo_url} 
-                title="Contemplative Reptile"
+                title="Image Title"
               /> 
 
             </CardActionArea>

@@ -12,6 +12,7 @@ import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
+import BackgroundImage from './components/BackgroundImage';
 
 class App extends Component {
    constructor(props) {
@@ -106,7 +107,8 @@ class App extends Component {
     return (
       <div className="App">
         <Helmet>
-          <style>{'body { background-color: #D3D3D3; }'}</style>
+        
+
         </Helmet>
 
         {/* TOP BAR */}

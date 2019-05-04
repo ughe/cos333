@@ -17,6 +17,14 @@ const styles = theme => ({
     maxWidth: '120vh',
     paddingTop: '2vh',
   },
+  bkg: {
+    backgroundImage: 'url("./tigerteamsbackground.png")',
+    minHeight: '500px',
+    backgroundAttachment: 'fixed',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
+  },
 });
 
 
@@ -159,6 +167,8 @@ class IdeaFeed extends React.Component {
 
   render () {
 
+    const { classes } = this.props;
+
     var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} author={item.author} user={this.props.user} voteDirection={item.voteDirection} isLoggedInFunc={this.props.isLoggedInFunc} del={this.del}/>)
 
     if (this.state.discussion)
@@ -171,7 +181,7 @@ class IdeaFeed extends React.Component {
       );
     } else {
       return (
-        <div>
+        <div className = {classes.bkg}>
           <div className="w3-bar">
             <SortBar className="w3-bar-item" filter={this.filter}/>
             <NewPost className="w3-bar-item" isLoggedInFunc={this.props.isLoggedInFunc}/>
@@ -186,4 +196,4 @@ class IdeaFeed extends React.Component {
   }
 }
 
-export default IdeaFeed
+export default withStyles(styles)(IdeaFeed);

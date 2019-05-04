@@ -27,6 +27,7 @@ const styles = theme => ({
     },
     margin: '10px 10px',
     display: 'inline-block',
+    background: 'rgba(255, 255, 255, 0.85)',
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
