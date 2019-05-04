@@ -84,6 +84,10 @@ const styles = theme => ({
   buttonDelete: {
     float: 'right',
   },
+  buttonDeleteReply: {
+    marginRight: '0',
+    marginLeft: 'auto',
+  },
   expand: {
     transform: "rotate(0deg)",
     marginLeft: "auto",
@@ -269,13 +273,12 @@ class Comment extends React.Component {
             {isTopLevel ? <NewCommentReply className="w3-bar-item" style={style1} update={this.props.update} commentId={this.state.id}/>: null}
 
             {remove ?
-            <IconButton className={classes.buttonDelete} aria-label="delete" onClick={this.delete}>
+            <IconButton className={isTopLevel ? classes.buttonDelete : classes.buttonDeleteReply} aria-label="delete" onClick={this.delete}>
               <i className="material-icons">
                 delete
               </i>
             </IconButton>
             : null}
-            
           </CardActions>
         </Card>
       </div>

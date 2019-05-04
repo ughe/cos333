@@ -359,6 +359,7 @@ class Discussion extends React.Component {
 
   			</Card>
         {elements}
+        <div style={{height: 400}}> </div>
         </React.Fragment>
 
   		);
