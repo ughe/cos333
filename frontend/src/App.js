@@ -33,7 +33,7 @@ class App extends Component {
   handleLogin = (func) => {
 
     console.log(this.state.isLoggedIn);
-
+    
     if (this.state.isLoggedIn === false)
     {
       fetch('/api/whoami')
@@ -69,6 +69,8 @@ class App extends Component {
       func();
       return true;
     }
+    
+    func();
 
   }
 

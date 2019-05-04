@@ -42,14 +42,45 @@ const styles = theme => ({
     marginBottom: '10px',
     maxHeight: '300px',
   },
+  header:{
+    paddingBottom: '0px',
+  },
   upVoteColored: {
     color: 'green',
+    display: 'inline-block',
+    float: 'left',
   },
   downVoteColored: {
-    color: 'red'
+    color: 'red',
+    display: 'inline-block',
+    float: 'left',
+  },
+  upVote: {
+    display: 'inline-block',
+    float: 'left',
+  },
+  downVote: {
+    display: 'inline-block',
+    float: 'left',
+  },
+  net_votes: {
+    display: 'inline-block',
+    float: 'left',
+    marginTop: '12px',
   },
   actions: {
     display: "flex"
+  },
+  content: {
+    marginTop: '0',
+    display: 'inline-block',
+    float: 'left',
+    marginBottom: '0',
+    textAlign: 'center',
+    paddingTop: '16px',
+  },
+  buttonDelete: {
+    float: 'right',
   },
   expand: {
     transform: "rotate(0deg)",
@@ -184,51 +215,56 @@ class Comment extends React.Component {
 
     let remove = (this.state.author === this.props.user);
 
+    var style1 = {
+      marginLeft: 'auto',
+      marginRight: '0',
+    };
+
     return (
       <div className={classes.contain}>
         <Card className={isTopLevel ? classes.card : classes.replyCard}>
           <CardHeader
+            className={classes.header}
             avatar={
               <Avatar aria-label="Recipe" className={classes.avatar}>
                 {this.state.author.substring(0,2).toUpperCase()}
               </Avatar>
             }
-            action={
-              <IconButton>
-                <MoreVertIcon />
-              </IconButton>
-            }
+            
+            
+
             title={this.props.author}
             subheader="Recently"
+            action={
+              isTopLevel ? 
+              <span>
+                <IconButton className={isUpVote ? classes.upVoteColored : classes.upVote} aria-label="arrow_upward"
+                  onClick={this.vote(1)}>
+                  <i className="material-icons">
+                    arrow_upward
+                  </i>
+                </IconButton>
+
+                <div className={classes.net_votes}> {this.state.net_votes} </div>
+
+                <IconButton className={isDownVote ? classes.downVoteColored : classes.downVote} aria-label="arrow_downward"
+                  onClick={this.vote(-1)}>
+                  <i className="material-icons">
+                    arrow_downward
+                  </i>
+                </IconButton>
+              </span>
+              : null
+            }
           />
-          <CardContent>
-            <Typography component="p">
+          <CardContent className = {classes.content} align="center">
+            <Typography className={classes.content} align="center" component="p">
               {this.props.content}
             </Typography>
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
             
-            {isTopLevel ? 
-            <div>
-              <IconButton className={isUpVote ? classes.upVoteColored : classes.upVote} aria-label="arrow_upward"
-                onClick={this.vote(1)}>
-                <i className="material-icons">
-                  arrow_upward
-                </i>
-              </IconButton>
-
-              <div className={classes.net_votes}> {this.state.net_votes} </div>
-
-              <IconButton className={isDownVote ? classes.downVoteColored : classes.downVote} aria-label="arrow_downward"
-                onClick={this.vote(-1)}>
-                <i className="material-icons">
-                  arrow_downward
-                </i>
-              </IconButton>
-            </div>
-            : null}
-
-            {isTopLevel ? <NewCommentReply className="w3-bar-item" update={this.props.update} commentId={this.state.id}/>: null}
+            {isTopLevel ? <NewCommentReply className="w3-bar-item" style={style1} update={this.props.update} commentId={this.state.id}/>: null}
 
             {remove ?
             <IconButton className={classes.buttonDelete} aria-label="delete" onClick={this.delete}>
