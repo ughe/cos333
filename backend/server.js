@@ -63,7 +63,7 @@ User.init({
 class Idea extends Sequelize.Model {}
 Idea.init({
   title: Sequelize.STRING,
-  content: Sequelize.STRING,
+  content: Sequelize.TEXT,
   photo_url: Sequelize.STRING,
   net_votes: Sequelize.INTEGER,
 }, {
@@ -76,7 +76,7 @@ Idea.belongsTo(User);
 
 class Comment extends Sequelize.Model {}
 Comment.init({
-  content: Sequelize.STRING,
+  content: Sequelize.TEXT,
   net_votes: Sequelize.INTEGER,
 }, {
   sequelize,
