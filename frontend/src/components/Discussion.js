@@ -358,9 +358,7 @@ class Discussion extends React.Component {
             </CardActions>
 
   			</Card>
-        <Scrollable>
-          {elements}
-        </Scrollable>
+        {elements}
         <div style={{height: 400}}> </div>
         </React.Fragment>
 
