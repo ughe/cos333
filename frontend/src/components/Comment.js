@@ -19,6 +19,8 @@ import Button from '@material-ui/core/Button';
 
 import NewCommentReply from "./NewCommentReply"
 import "../w3.css";
+var ColorHash = require('color-hash');
+var colorHash = new ColorHash({saturation: 0.5});
 
 const styles = theme => ({
   contain: {
@@ -232,7 +234,7 @@ class Comment extends React.Component {
           <CardHeader
             className={classes.header}
             avatar={
-              <Avatar aria-label="Recipe" className={classes.avatar}>
+              <Avatar aria-label="Recipe" className={classes.avatar} style={{backgroundColor: colorHash.hex(this.props.author)}}>
                 {this.state.author.substring(0,2).toUpperCase()}
               </Avatar>
             }
