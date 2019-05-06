@@ -13,9 +13,10 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 
-import Comment from "./Comment"
-import NewComment from "./NewComment"
-import Interested from "./Interested"
+import Comment from "./Comment";
+import NewComment from "./NewComment";
+import Interested from "./Interested";
+import AddInterest from "./AddInterest";
 import "../w3.css";
 
 
@@ -349,8 +350,7 @@ class Discussion extends React.Component {
               
 
               <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
-
-              <Button onClick={this.addInterest} idea={this.state.id}> Im Interested </Button>
+              <AddInterest className="w3-bar-item" ideaId={this.state.id}/>
               <Interested className="w3-bar-item" ideaId={this.state.id}/>
               <IconButton className={classes.buttonMsg} aria-label="close" onClick={this.close}>
                 <i className="material-icons">close</i>
@@ -358,7 +358,9 @@ class Discussion extends React.Component {
             </CardActions>
 
   			</Card>
-        {elements}
+        <Scrollable>
+          {elements}
+        </Scrollable>
         <div style={{height: 400}}> </div>
         </React.Fragment>
 

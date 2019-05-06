@@ -99,6 +99,7 @@ class NewPost extends React.Component {
           shouldOpen = true;
         }
         else {
+          
         fetch('/api/set/idea', {
           method: 'POST',
           headers: {
