@@ -121,14 +121,9 @@ class NewPost extends React.Component {
                 var tagData = [];
                 let self = this;
 
-                console.log(id);
-                console.log(data);
-
-
                 if(typeof id !== 'undefined')
                 {
 
-                  console.log(self.state.tags);
                   for(var j = 0; j < self.state.tags.length; j++)
                   {
                     var tagDict = {
@@ -138,8 +133,6 @@ class NewPost extends React.Component {
 
                     tagData = [...tagData, tagDict];
                   }
-
-                  console.log(tagData);
 
                   fetch('/api/set/tag', {
                     method: 'POST',
@@ -166,7 +159,7 @@ class NewPost extends React.Component {
               });
             }
             else {
-              alert("Please enter a valid picture url.");
+              alert("Please enter a valid image url.");
             }
           });
 
@@ -257,7 +250,7 @@ class NewPost extends React.Component {
               autoFocus
               margin="dense"
               id="name"
-              label="Image"
+              label="Image Url"
               type="email"
               fullWidth
               multiline

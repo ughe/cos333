@@ -31,18 +31,18 @@ const styles = theme => ({
   card: {
     maxWidth: '600px',
     margin: '0 auto',
-    marginTop: '30px',
-    marginBottom: '30px',
+    marginTop: '5px',
+    marginBottom: '5px',
     maxHeight: '300px',
     background: 'rgba(255, 255, 255, 0.85)',
   },
   replyCard:{
     maxWidth: '500px',
-    marginTop: '10px',
+    marginTop: '5px',
     clear: 'both',
     margin: '0 auto',
     marginRight: '0px',
-    marginBottom: '10px',
+    marginBottom: '5px',
     maxHeight: '300px',
     background: 'rgba(255, 255, 255, 0.85)',
   },
@@ -163,8 +163,6 @@ class Comment extends React.Component {
         return response.json();
       })
       .then(data => {
-        console.log("Banana");
-        console.log(data);
         data["voteDirection"] = (value === 1);
         this.setState(data)
       })

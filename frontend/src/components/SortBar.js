@@ -41,7 +41,6 @@ class SortBar extends React.Component {
   }
 
   handleClick = event => {
-    console.log(event);
     this.setState({ anchorEl: event.currentTarget });
   };
 
@@ -60,8 +59,6 @@ class SortBar extends React.Component {
     } else {
       request = '/api/get/idea/tag/' + keyWord;
     }
-
-    console.log(request);
 
     fetch(request)
     .then(results => {

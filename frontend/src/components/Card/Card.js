@@ -115,8 +115,6 @@ class IdeaCard extends React.Component {
         return response.json();
       })
       .then(data => {
-        console.log("Banana");
-        console.log(data);
         data["voteDirection"] = (value === 1);
         this.setState(data)
       })

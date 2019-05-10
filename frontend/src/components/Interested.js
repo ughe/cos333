@@ -53,28 +53,22 @@ class Interested extends React.Component {
       anchorEl: event.currentTarget,
     });
     const eventStore = event;
-    console.log(eventStore);
     localStorage.setItem('buttonClick', event.currentTarget);
     fetch('/api/get/idea/' + this.props.ideaId)
     .then(results => {
       return results.json();
     }).then(data => {
       let dataRet = data[0]["interests"];
-      console.log("fetched interests" + data);
 
-      console.log(dataRet);
       let fetchedData = [];
-      console.log("reached");
+      
       for(var i = 0; i < dataRet.length; i++)
       {
         let user = dataRet[i]["userNetid"];
         fetchedData = [...fetchedData, user];
       }
 
-      console.log(fetchedData);
-      console.log("Event Value");
-      console.log(event.currentTarget);
-      console.log(eventStore);
+      
       this.setState({
         anchorEl: localStorage.getItem('buttonClick'),
         interests: fetchedData,

@@ -53,9 +53,11 @@ const styles = theme => ({
     maxWidth: '50px',
     color: 'blue',
   },
-  buttonMsg: {
-    color: '#123456',
+  buttonClose: {
+    color: 'red',
     marginLeft: 'auto',
+    display: 'inline-block',
+    float: 'right',
   },
 });
 
@@ -266,8 +268,6 @@ class Discussion extends React.Component {
           return response.json();
         })
         .then(data => {
-          console.log("Banana");
-          console.log(data);
           data["voteDirection"] = (value === 1);
           this.setState(data)
         })
@@ -312,6 +312,9 @@ class Discussion extends React.Component {
            
             <CardActionArea>
               <CardContent>
+                <IconButton className={classes.buttonClose} aria-label="close" onClick={this.close}>
+                  <i className="material-icons">close</i>
+                </IconButton>
                 <Typography gutterBottom variant="h5" component="h2">
                   {this.state.title}
                 </Typography>
@@ -352,9 +355,6 @@ class Discussion extends React.Component {
               <NewComment className="w3-bar-item" update={this.update} idea={this.state.id}/>
               <AddInterest className="w3-bar-item" ideaId={this.state.id}/>
               <Interested className="w3-bar-item" ideaId={this.state.id}/>
-              <IconButton className={classes.buttonMsg} aria-label="close" onClick={this.close}>
-                <i className="material-icons">close</i>
-              </IconButton>
             </CardActions>
 
   			</Card>

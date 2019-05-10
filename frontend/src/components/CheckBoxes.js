@@ -23,7 +23,6 @@ class Checkboxes extends React.Component {
     let name = "";
     let tagUpdate = [];
     
-    console.log("STATE " + JSON.stringify(this.state));
     
     if(checkedVal === "entreprenuership")
     {
