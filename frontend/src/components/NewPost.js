@@ -99,68 +99,78 @@ class NewPost extends React.Component {
           shouldOpen = true;
         }
         else {
+
+          var imageExists = require('image-exists');
           
-        fetch('/api/set/idea', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          imageExists(this.state.photo_url, function(exists) {
+            if (exists) {
+              fetch('/api/set/idea', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
 
-          body: JSON.stringify(idea)
-        })
-        .then(function(response){
-          return response.json();
-        })
-        .then(data => {
-
-          id = data["id"];
-          var tagData = [];
-          let self = this;
-
-          console.log(id);
-          console.log(data);
-
-
-          if(typeof id !== 'undefined')
-          {
-
-            console.log(self.state.tags);
-            for(var j = 0; j < self.state.tags.length; j++)
-            {
-              var tagDict = {
-                name: self.state.tags[j],
-                ideaId: id
-              };
-
-              tagData = [...tagData, tagDict];
-            }
-
-            console.log(tagData);
-
-            fetch('/api/set/tag', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-
-              body: JSON.stringify({
-                tags: tagData,
+                body: JSON.stringify(idea)
               })
-            })
-            .then(console.log("post done!"))
-            .catch(err => {
-              console.log("post error");
-              console.log(err);
-            });  
-          }
+              .then(function(response){
+                return response.json();
+              })
+              .then(data => {
 
-          window.location.reload();
+                id = data["id"];
+                var tagData = [];
+                let self = this;
+
+                console.log(id);
+                console.log(data);
+
+
+                if(typeof id !== 'undefined')
+                {
+
+                  console.log(self.state.tags);
+                  for(var j = 0; j < self.state.tags.length; j++)
+                  {
+                    var tagDict = {
+                      name: self.state.tags[j],
+                      ideaId: id
+                    };
+
+                    tagData = [...tagData, tagDict];
+                  }
+
+                  console.log(tagData);
+
+                  fetch('/api/set/tag', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+
+                    body: JSON.stringify({
+                      tags: tagData,
+                    })
+                  })
+                  .then(console.log("post done!"))
+                  .catch(err => {
+                    console.log("post error");
+                    console.log(err);
+                  });  
+                }
+
+                window.location.reload();
+                
+              })
+              .catch(err => {
+                window.location.assign('/login');
+              });
+            }
+            else {
+              alert("Please enter a valid picture url.");
+            }
+          });
+
           
-        })
-        .catch(err => {
-          window.location.assign('/login');
-          console.log(err);
-        });
       }
     }).catch(err => {
       window.location.assign('/login');
