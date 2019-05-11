@@ -17,14 +17,6 @@ const styles = theme => ({
     maxWidth: '120vh',
     paddingTop: '2vh',
   },
-  bkg: {
-    backgroundImage: 'url("./tigerteamsbackground.png")',
-    minHeight: '500px',
-    backgroundAttachment: 'fixed',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-  },
 });
 
 
@@ -181,7 +173,7 @@ class IdeaFeed extends React.Component {
       );
     } else {
       return (
-        <div className = {classes.bkg}>
+        <div>
           <div className="w3-bar">
             <SortBar className="w3-bar-item" filter={this.filter}/>
             <NewPost className="w3-bar-item" isLoggedInFunc={this.props.isLoggedInFunc}/>
