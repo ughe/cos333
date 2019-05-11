@@ -118,6 +118,7 @@ class Comment extends React.Component {
         open: false,
         expanded: true,
         voteDirection: null,
+        date: "",
       }
 
       this.state.content = this.props.content;
@@ -127,6 +128,8 @@ class Comment extends React.Component {
       this.state.ideaId = this.props.ideaId;
       this.state.commentId = this.props.commentId;
       this.state.voteDirection = this.props.voteDirection;
+
+      this.state.date = this.timeSince(new Date (this.props.date));
     }
 
   handleExpandClick = () => {
@@ -197,6 +200,56 @@ class Comment extends React.Component {
     }
   }
 
+   timeSince(date) {
+
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = Math.floor(seconds / 2592000);
+
+    if (interval > 1) {
+      var dd = date.getDate();
+      var mm = date.getMonth()+1; //January is 0!
+      var yyyy = date.getFullYear();
+
+      if(dd<10) {
+          dd='0'+dd
+      } 
+
+      if(mm<10) {
+          mm='0'+mm
+      } 
+      var format = mm+'/'+dd+'/'+yyyy
+
+      return format;
+    }
+
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+      return interval + " days ago";
+    }
+    console.log("INTERVAL: " + interval + "SECONDS: " + seconds);
+    if (interval == 1) {
+      return interval + " day ago";
+    }
+
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+      return interval + " hours ago";
+    }
+
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+      return interval + " minutes ago";
+    }
+    return " just now";
+  }
+
+  // createdAt ": " 2019-05-06T16:50:45.000Z "
+
+  //var aDay = 24*60*60*1000
+  //console.log(timeSince(new Date(Date.now()-aDay)));
+  //console.log(timeSince(new Date(Date.now()-aDay*2)));
+
   render() {
     const { classes } = this.props;
 
@@ -240,7 +293,9 @@ class Comment extends React.Component {
             
 
             title={this.props.author}
-            subheader="Recently"
+
+
+            subheader= {this.state.date}
             action={
               isTopLevel ? 
               <span>

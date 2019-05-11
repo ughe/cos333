@@ -169,7 +169,11 @@ class IdeaFeed extends React.Component {
 
     const { classes } = this.props;
 
-    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} key={item.id} title={item.title} description={item.description} net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} author={item.author} user={this.props.user} voteDirection={item.voteDirection} isLoggedInFunc={this.props.isLoggedInFunc} del={this.del}/>)
+    var elements = this.state.list.map((item, id) => <IdeaCard discussion={this.handler} 
+      key={item.id} title={item.title} description={item.description} 
+      net_votes={item.net_votes} photo_url={item.photo_url} id={item.id} 
+      author={item.author} user={this.props.user} voteDirection={item.voteDirection} 
+      isLoggedInFunc={this.props.isLoggedInFunc} del={this.del}/>)
 
     if (this.state.discussion)
     {

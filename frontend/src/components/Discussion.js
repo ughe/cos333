@@ -8,10 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
 import Card from '@material-ui/core/Card';
+import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import Avatar from "@material-ui/core/Avatar";
 
 import Comment from "./Comment"
 import NewComment from "./NewComment"
@@ -55,6 +57,13 @@ const styles = theme => ({
   buttonMsg: {
     color: '#123456',
     marginLeft: 'auto',
+  },
+  header: {
+  },
+
+  title: {
+    color: 'black',
+    fontSize: 30,
   },
 });
 
@@ -197,6 +206,7 @@ class Discussion extends React.Component {
             ideaId: data[0]["comments"][i]["ideaId"],
             commentId: data[0]["comments"][i]["commentId"],
             voteDirection: voteDirectionTopComment,
+            date: data[0]["comments"][i]["createdAt"],
           };
 
           fetchedData = [...fetchedData, topLevelComment];
@@ -210,6 +220,7 @@ class Discussion extends React.Component {
               id: data[0]["comments"][i]["comments"][j]["id"],
               ideaId: data[0]["comments"][i]["comments"][j]["ideaId"],
               commentId: data[0]["comments"][i]["comments"][j]["commentId"],
+              date: data[0]["comments"][i]["comments"][j]["createdAt"],
             };
 
             fetchedData = [...fetchedData, replyComment];
@@ -285,7 +296,10 @@ class Discussion extends React.Component {
 
   		const { classes } = this.props;
 
-      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} net_votes={item.net_votes} author={item.author} id={item.id} ideaId={item.ideaId} commentId={item.commentId} voteDirection={item.voteDirection} user={this.props.user} update={this.update} del={this.del}/>);
+      var elements = this.state.commentList.map((item, id) => <Comment key={item.id} content={item.content} 
+        net_votes={item.net_votes} author={item.author} id={item.id} 
+        ideaId={item.ideaId} commentId={item.commentId} voteDirection={item.voteDirection} 
+        user={this.props.user} update={this.update} del={this.del} date={item.date}/>);
 
       let isUpVote = null;
       let isDownVote = null;
@@ -307,13 +321,21 @@ class Discussion extends React.Component {
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet"/>
             
-          <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
+        <link href="https://unpkg.com/ionicons@4.5.5/dist/css/ionicons.min.css" rel="stylesheet"/>
            
+        <CardHeader  
+            classes={{title: classes.title,}}
+            avatar={
+              <Avatar aria-label="Recipe" className={classes.avatar}>
+                {this.state.author.substring(0,2).toUpperCase()}
+              </Avatar>
+            }
+            title =  {this.state.title}
+            subheader= {this.state.author}
+        />
+
             <CardActionArea>
               <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {this.state.title}
-                </Typography>
                 <Typography component="p">
                   {this.state.description}
                 </Typography>
