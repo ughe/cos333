@@ -333,17 +333,15 @@ class Discussion extends React.Component {
             }
             title =  {this.state.title}
             subheader= {this.state.author}
+            action = {
+              <IconButton className={classes.buttonClose} aria-label="close" onClick={this.close}>
+                <i className="material-icons">close</i>
+              </IconButton>
+            }
         />
 
             <CardActionArea>
               <CardContent>
-
-                <IconButton className={classes.buttonClose} aria-label="close" onClick={this.close}>
-                  <i className="material-icons">close</i>
-                </IconButton>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {this.state.title}
-                </Typography>
                 <Typography component="p">
                   {this.state.description}
                 </Typography>
