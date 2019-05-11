@@ -88,8 +88,6 @@ class IdeaFeed extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps["query"]);
-    console.log(JSON.stringify(nextProps).query);
     let request = '/api/get/idea/search/' + nextProps["query"]
 
     if(nextProps["query"] === '' || nextProps["query"] === null)
@@ -156,8 +154,6 @@ class IdeaFeed extends React.Component {
     this.setState({
       list: param
     });
-
-    console.log(this.state.list);
   }
 
   del(){

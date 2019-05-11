@@ -122,10 +122,6 @@ class App extends Component {
               <Login className="w3-bar-item w3-hide-small w3-right" user={this.state.user} isLoggedInFunc={this.handleLogin} isLoggedIn={login}/>
             </div>
 
-            <div className="w3-bar-item w3-hide-small w3-right">
-              <a href="#about" className="w3-bar-item w3-button">About</a>
-            </div>
-
             <form className="w3-bar-item search-container center">
                 <input id="search" type="text" id="search-bar" placeholder="..." onChange={this.handleChange}/>
                 <a href="#"><img className="search-icon"

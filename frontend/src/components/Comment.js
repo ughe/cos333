@@ -19,6 +19,8 @@ import Button from '@material-ui/core/Button';
 
 import NewCommentReply from "./NewCommentReply"
 import "../w3.css";
+var ColorHash = require('color-hash');
+var colorHash = new ColorHash({saturation: 0.5});
 
 const styles = theme => ({
   contain: {
@@ -29,18 +31,18 @@ const styles = theme => ({
   card: {
     maxWidth: '600px',
     margin: '0 auto',
-    marginTop: '30px',
-    marginBottom: '30px',
+    marginTop: '5px',
+    marginBottom: '5px',
     maxHeight: '300px',
     background: 'rgba(255, 255, 255, 0.85)',
   },
   replyCard:{
     maxWidth: '500px',
-    marginTop: '10px',
+    marginTop: '5px',
     clear: 'both',
     margin: '0 auto',
     marginRight: '0px',
-    marginBottom: '10px',
+    marginBottom: '5px',
     maxHeight: '300px',
     background: 'rgba(255, 255, 255, 0.85)',
   },
@@ -164,8 +166,6 @@ class Comment extends React.Component {
         return response.json();
       })
       .then(data => {
-        console.log("Banana");
-        console.log(data);
         data["voteDirection"] = (value === 1);
         this.setState(data)
       })
@@ -285,7 +285,7 @@ class Comment extends React.Component {
           <CardHeader
             className={classes.header}
             avatar={
-              <Avatar aria-label="Recipe" className={classes.avatar}>
+              <Avatar aria-label="Recipe" className={classes.avatar} style={{backgroundColor: colorHash.hex(this.props.author)}}>
                 {this.state.author.substring(0,2).toUpperCase()}
               </Avatar>
             }

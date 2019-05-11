@@ -85,8 +85,6 @@ class NewComment extends React.Component {
     	  return response.json();
     	})
     	.then(data => {
-    		console.log(data);
-    		console.log("HELLO");
         this.setState({ open: false });
     		this.props.update();
     	})

@@ -37,57 +37,51 @@ const styles = theme => ({
 });
 
 
-class Interested extends React.Component {
+class AddInterest extends React.Component {
 
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.state = {
-      anchorEl: null,
-      interests: [],
+      ideaId: this.props.ideaId,
     };
   }
 
   handleClick = (event) => {
-    this.setState({
-      anchorEl: event.currentTarget,
-    });
-    const eventStore = event;
-    localStorage.setItem('buttonClick', event.currentTarget);
-    fetch('/api/get/idea/' + this.props.ideaId)
+    fetch('/api/whoami')
     .then(results => {
       return results.json();
     }).then(data => {
-      let dataRet = data[0]["interests"];
+      fetch('/api/set/interest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', 
+        },
 
-      let fetchedData = [];
-      
-      for(var i = 0; i < dataRet.length; i++)
-      {
-        let user = dataRet[i]["userNetid"];
-        fetchedData = [...fetchedData, user];
-      }
-
-      
-      this.setState({
-        anchorEl: localStorage.getItem('buttonClick'),
-        interests: fetchedData,
+        body: JSON.stringify({
+          userNetid: data["user"],
+          ideaId: this.state.ideaId,
+        })
+      })
+      .then(res => {
+        console.log("Response " + JSON.stringify(res));
+        window.alert("Your interested has been added!");
+      })
+      .catch(err => {
+        console.log("post error!");
+        console.log(err);
       });
+      
     })
     .catch(err => {
-      console.log("Error " + err);
-    });
+      window.location.assign('/login');
+      console.log(err);
+    })
   };  
-    
-
-  handleClose = (keyWord) => {
-    this.setState({ anchorEl: null });
-  };
 
   render() {
 
     const { classes } = this.props;
-    const anchorEl = this.state.anchorEl;
 
     const interests = this.state.interests;
 
@@ -97,35 +91,12 @@ class Interested extends React.Component {
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"/>
 
-        <Button aria-owns={anchorEl ? 'simple-menu' : undefined} aria-haspopup="true" variant="contained" color="primary" className={classes.button} onClick={this.handleClick}>
-                Members &nbsp;
+        <Button aria-haspopup="false" variant="contained" color="primary" className={classes.button} onClick={this.handleClick}>
+                Join &nbsp;
               <i className="material-icons rightIcon">
-                group
+                group_add
               </i>
         </Button>
-        
-        <Dialog open={Boolean(anchorEl)}>
-          <DialogTitle id="form-dialog-title">Interested People</DialogTitle>
-          <List onClose={this.handleClose}>
-          {interests.map(interest => (
-            <ListItem button key={interest}>
-              <ListItemAvatar>
-                <Avatar className={classes.avatar}>
-                  <PersonIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={interest} />
-            </ListItem>
-          ))}
-          </List>
-
-          <Button onClick={this.handleClose} color="primary">
-            Cancel
-          </Button>
-
-        </Dialog>
-
-
 
       </MuiThemeProvider>
 
@@ -133,4 +104,4 @@ class Interested extends React.Component {
   }
 }
 
-export default withStyles(styles)(Interested);
+export default withStyles(styles)(AddInterest);

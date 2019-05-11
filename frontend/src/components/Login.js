@@ -78,7 +78,7 @@ class Login extends React.Component {
       notLoggedIn = true;
     }
 
-    console.log("Uhoh: " + notLoggedIn);
+    
 
     return (
       <MuiThemeProvider theme={theme}>
