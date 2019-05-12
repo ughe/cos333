@@ -28,6 +28,7 @@ const styles = theme => ({
     margin: '10px 10px',
     display: 'inline-block',
     background: 'rgba(255, 255, 255, 0.85)',
+    maxHeight: '320px'
   },
   media: {
     // ⚠️ object-fit is not supported by IE 11.
@@ -48,6 +49,20 @@ const styles = theme => ({
   buttonMsg: {
     color: '#123456',
     marginLeft: 'auto',
+  },
+  title: {
+    maxHeight: '30px',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflowX: 'hidden',
+  },
+  content: {
+    maxHeight: '40px',
+    whiteSpace: 'prewrap',
+    textOverflow: 'ellipsis',
+    overflowX: 'hidden',
+    minHeight: '40px',
+    overflowY: 'hidden',
   },
 });
 
@@ -142,6 +157,15 @@ class IdeaCard extends React.Component {
       isDownVote = !this.state.voteDirection;
     }
 
+    let displayDescription = "";
+    if(this.state.description.length > 158)
+    {
+      displayDescription = this.state.description.substring(0, 155) + "...";
+    }
+    else {
+      displayDescription = this.state.description;
+    }
+
     return (
       <Card className={classes.card} >
 
@@ -152,11 +176,11 @@ class IdeaCard extends React.Component {
 
         <CardActionArea onClick={this.discussion(this.state.id)}>
           <CardContent>
-            <Typography onClick={this.discussion(this.state.id)} gutterBottom variant="h5" component="h2">
+            <Typography className={classes.title} onClick={this.discussion(this.state.id)} gutterBottom variant="h5" component="h2">
               {this.state.title}
             </Typography>
-            <Typography component="p" onClick={this.discussion(this.state.id)}>
-              {this.state.description}
+            <Typography className={classes.content} component="p" onClick={this.discussion(this.state.id)}>
+              {displayDescription}
             </Typography>
           </CardContent>
 
