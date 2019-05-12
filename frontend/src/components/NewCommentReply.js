@@ -108,7 +108,7 @@ class NewCommentReply extends React.Component {
     const { classes } = this.props;
 
     return (
-      <MuiThemeProvider theme={theme}>
+      <MuiThemeProvider theme={theme} className={classes.container}>
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 
         <Button variant="contained" color="secondary" className={classes.button} onClick={this.handleClickOpen}>

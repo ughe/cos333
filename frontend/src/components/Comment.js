@@ -26,14 +26,14 @@ const styles = theme => ({
   contain: {
     maxWidth: '600px',
     margin: '0 auto',
-    maxHeight: '300px',
+    //maxHeight: '300px',
   },
   card: {
     maxWidth: '600px',
     margin: '0 auto',
     marginTop: '5px',
     marginBottom: '5px',
-    maxHeight: '300px',
+    //maxHeight: '300px',
     background: 'rgba(255, 255, 255, 0.85)',
   },
   replyCard:{
@@ -43,7 +43,7 @@ const styles = theme => ({
     margin: '0 auto',
     marginRight: '0px',
     marginBottom: '5px',
-    maxHeight: '300px',
+    //maxHeight: '300px',
     background: 'rgba(255, 255, 255, 0.85)',
   },
   header:{
@@ -80,8 +80,9 @@ const styles = theme => ({
     display: 'inline-block',
     float: 'left',
     marginBottom: '0',
-    textAlign: 'center',
+    textAlign: 'left',
     paddingTop: '16px',
+    maxWidth: '450px'
   },
   buttonDelete: {
     float: 'right',

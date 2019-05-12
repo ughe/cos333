@@ -94,7 +94,7 @@ class NewPost extends React.Component {
         let id = -1;
 
         //Idea Post
-        if (title === null || content === null || photo_url === null)
+        if (title === null || content === null || photo_url === null || content.length < 2)
         {
           shouldOpen = true;
         }
@@ -165,6 +165,7 @@ class NewPost extends React.Component {
 
           
       }
+      this.setState({ open: shouldOpen });
     }).catch(err => {
       window.location.assign('/login');
     });
@@ -175,7 +176,7 @@ class NewPost extends React.Component {
     //Tag Post
     
 
-    //this.setState({ open: shouldOpen });
+    //
 
   }
 
