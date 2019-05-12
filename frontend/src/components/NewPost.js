@@ -57,7 +57,7 @@ class NewPost extends React.Component {
   }
 
   handleChecks (param) {
-    this.setState({ 
+    this.setState({
       tags: param
     });
   }
@@ -101,7 +101,7 @@ class NewPost extends React.Component {
         else {
 
           var imageExists = require('image-exists');
-          
+
           imageExists(this.state.photo_url, function(exists) {
             if (exists) {
               fetch('/api/set/idea', {
@@ -148,11 +148,11 @@ class NewPost extends React.Component {
                   .catch(err => {
                     console.log("post error");
                     console.log(err);
-                  });  
+                  });
                 }
 
                 window.location.reload();
-                
+
               })
               .catch(err => {
                 window.location.assign('/login');
@@ -163,17 +163,17 @@ class NewPost extends React.Component {
             }
           });
 
-          
+
       }
     }).catch(err => {
       window.location.assign('/login');
     });
-    
-    
-    
+
+
+
 
     //Tag Post
-    
+
 
     //this.setState({ open: shouldOpen });
 
@@ -225,7 +225,7 @@ class NewPost extends React.Component {
             <br/>
 
             <DialogContentText>
-              Enter a concise description of your idea.  Think of it as the shortened elevator pitch that describes what your idea is fundamentally about so that readers can get a quick sense of you idea. 
+              Enter a concise description of your idea.  Think of it as the shortened elevator pitch that describes what your idea is fundamentally about so that readers can get a quick sense of you idea.
             </DialogContentText>
             <TextField
               autoFocus
@@ -274,7 +274,7 @@ class NewPost extends React.Component {
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleSubmit(this.state.title, this.state.content, this.state.photo_url, this.state.tags)} color="secondary">
+            <Button onClick={this.handleSubmit(this.state.title, this.state.description, this.state.photo_url, this.state.tags)} color="secondary">
               Post
             </Button>
           </DialogActions>
