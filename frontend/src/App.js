@@ -34,7 +34,7 @@ class App extends Component {
   handleLogin = (func) => {
 
     console.log(this.state.isLoggedIn);
-    
+
     if (this.state.isLoggedIn === false)
     {
       fetch('/api/whoami')
@@ -70,7 +70,7 @@ class App extends Component {
       func();
       return true;
     }
-    
+
     func();
 
   }
@@ -109,14 +109,14 @@ class App extends Component {
     return (
       <div className="App">
         <Helmet>
-        
+
 
         </Helmet>
 
         {/* TOP BAR */}
         <div>
           <div className="w3-bar w3-white w3-wide w3-padding w3-card w3-large">
-            <a href="#home" className="w3-bar-item w3-button">Tiger<b>TEAMS</b></a>
+            <a href="/login" className="w3-bar-item w3-button">Tiger<b>TEAMS</b></a>
 
             <div className="w3-bar-item w3-hide-small w3-right">
               <Login className="w3-bar-item w3-hide-small w3-right" user={this.state.user} isLoggedInFunc={this.handleLogin} isLoggedIn={login}/>
